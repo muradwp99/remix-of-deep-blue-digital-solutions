@@ -13,9 +13,12 @@ import { Route as WorksRouteImport } from './routes/works'
 import { Route as UiUxDesignRouteImport } from './routes/ui-ux-design'
 import { Route as SolutionsRouteImport } from './routes/solutions'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SaasRouteImport } from './routes/saas'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as OurStoryRouteImport } from './routes/our-story'
 import { Route as MobileAppsRouteImport } from './routes/mobile-apps'
+import { Route as DigitalTransformationRouteImport } from './routes/digital-transformation'
 import { Route as CustomSoftwareRouteImport } from './routes/custom-software'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
@@ -41,6 +44,11 @@ const ServicesRoute = ServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SaasRoute = SaasRouteImport.update({
+  id: '/saas',
+  path: '/saas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
@@ -51,9 +59,19 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OurStoryRoute = OurStoryRouteImport.update({
+  id: '/our-story',
+  path: '/our-story',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MobileAppsRoute = MobileAppsRouteImport.update({
   id: '/mobile-apps',
   path: '/mobile-apps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DigitalTransformationRoute = DigitalTransformationRouteImport.update({
+  id: '/digital-transformation',
+  path: '/digital-transformation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CustomSoftwareRoute = CustomSoftwareRouteImport.update({
@@ -82,9 +100,12 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/custom-software': typeof CustomSoftwareRoute
+  '/digital-transformation': typeof DigitalTransformationRoute
   '/mobile-apps': typeof MobileAppsRoute
+  '/our-story': typeof OurStoryRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
+  '/saas': typeof SaasRoute
   '/services': typeof ServicesRoute
   '/solutions': typeof SolutionsRoute
   '/ui-ux-design': typeof UiUxDesignRoute
@@ -95,9 +116,12 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/custom-software': typeof CustomSoftwareRoute
+  '/digital-transformation': typeof DigitalTransformationRoute
   '/mobile-apps': typeof MobileAppsRoute
+  '/our-story': typeof OurStoryRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
+  '/saas': typeof SaasRoute
   '/services': typeof ServicesRoute
   '/solutions': typeof SolutionsRoute
   '/ui-ux-design': typeof UiUxDesignRoute
@@ -109,9 +133,12 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/custom-software': typeof CustomSoftwareRoute
+  '/digital-transformation': typeof DigitalTransformationRoute
   '/mobile-apps': typeof MobileAppsRoute
+  '/our-story': typeof OurStoryRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
+  '/saas': typeof SaasRoute
   '/services': typeof ServicesRoute
   '/solutions': typeof SolutionsRoute
   '/ui-ux-design': typeof UiUxDesignRoute
@@ -124,9 +151,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/custom-software'
+    | '/digital-transformation'
     | '/mobile-apps'
+    | '/our-story'
     | '/pricing'
     | '/resources'
+    | '/saas'
     | '/services'
     | '/solutions'
     | '/ui-ux-design'
@@ -137,9 +167,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/custom-software'
+    | '/digital-transformation'
     | '/mobile-apps'
+    | '/our-story'
     | '/pricing'
     | '/resources'
+    | '/saas'
     | '/services'
     | '/solutions'
     | '/ui-ux-design'
@@ -150,9 +183,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/custom-software'
+    | '/digital-transformation'
     | '/mobile-apps'
+    | '/our-story'
     | '/pricing'
     | '/resources'
+    | '/saas'
     | '/services'
     | '/solutions'
     | '/ui-ux-design'
@@ -164,9 +200,12 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   CustomSoftwareRoute: typeof CustomSoftwareRoute
+  DigitalTransformationRoute: typeof DigitalTransformationRoute
   MobileAppsRoute: typeof MobileAppsRoute
+  OurStoryRoute: typeof OurStoryRoute
   PricingRoute: typeof PricingRoute
   ResourcesRoute: typeof ResourcesRoute
+  SaasRoute: typeof SaasRoute
   ServicesRoute: typeof ServicesRoute
   SolutionsRoute: typeof SolutionsRoute
   UiUxDesignRoute: typeof UiUxDesignRoute
@@ -203,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/saas': {
+      id: '/saas'
+      path: '/saas'
+      fullPath: '/saas'
+      preLoaderRoute: typeof SaasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/resources': {
       id: '/resources'
       path: '/resources'
@@ -217,11 +263,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/our-story': {
+      id: '/our-story'
+      path: '/our-story'
+      fullPath: '/our-story'
+      preLoaderRoute: typeof OurStoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mobile-apps': {
       id: '/mobile-apps'
       path: '/mobile-apps'
       fullPath: '/mobile-apps'
       preLoaderRoute: typeof MobileAppsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/digital-transformation': {
+      id: '/digital-transformation'
+      path: '/digital-transformation'
+      fullPath: '/digital-transformation'
+      preLoaderRoute: typeof DigitalTransformationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/custom-software': {
@@ -260,9 +320,12 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   CustomSoftwareRoute: CustomSoftwareRoute,
+  DigitalTransformationRoute: DigitalTransformationRoute,
   MobileAppsRoute: MobileAppsRoute,
+  OurStoryRoute: OurStoryRoute,
   PricingRoute: PricingRoute,
   ResourcesRoute: ResourcesRoute,
+  SaasRoute: SaasRoute,
   ServicesRoute: ServicesRoute,
   SolutionsRoute: SolutionsRoute,
   UiUxDesignRoute: UiUxDesignRoute,
