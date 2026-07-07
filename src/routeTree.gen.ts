@@ -18,9 +18,12 @@ import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OurStoryRouteImport } from './routes/our-story'
 import { Route as MobileAppsRouteImport } from './routes/mobile-apps'
+import { Route as LeadershipRouteImport } from './routes/leadership'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DigitalTransformationRouteImport } from './routes/digital-transformation'
 import { Route as CustomSoftwareRouteImport } from './routes/custom-software'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -69,6 +72,16 @@ const MobileAppsRoute = MobileAppsRouteImport.update({
   path: '/mobile-apps',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeadershipRoute = LeadershipRouteImport.update({
+  id: '/leadership',
+  path: '/leadership',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DigitalTransformationRoute = DigitalTransformationRouteImport.update({
   id: '/digital-transformation',
   path: '/digital-transformation',
@@ -82,6 +95,11 @@ const CustomSoftwareRoute = CustomSoftwareRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -98,9 +116,12 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/custom-software': typeof CustomSoftwareRoute
   '/digital-transformation': typeof DigitalTransformationRoute
+  '/faq': typeof FaqRoute
+  '/leadership': typeof LeadershipRoute
   '/mobile-apps': typeof MobileAppsRoute
   '/our-story': typeof OurStoryRoute
   '/pricing': typeof PricingRoute
@@ -114,9 +135,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/custom-software': typeof CustomSoftwareRoute
   '/digital-transformation': typeof DigitalTransformationRoute
+  '/faq': typeof FaqRoute
+  '/leadership': typeof LeadershipRoute
   '/mobile-apps': typeof MobileAppsRoute
   '/our-story': typeof OurStoryRoute
   '/pricing': typeof PricingRoute
@@ -131,9 +155,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/custom-software': typeof CustomSoftwareRoute
   '/digital-transformation': typeof DigitalTransformationRoute
+  '/faq': typeof FaqRoute
+  '/leadership': typeof LeadershipRoute
   '/mobile-apps': typeof MobileAppsRoute
   '/our-story': typeof OurStoryRoute
   '/pricing': typeof PricingRoute
@@ -149,9 +176,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/careers'
     | '/contact'
     | '/custom-software'
     | '/digital-transformation'
+    | '/faq'
+    | '/leadership'
     | '/mobile-apps'
     | '/our-story'
     | '/pricing'
@@ -165,9 +195,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/careers'
     | '/contact'
     | '/custom-software'
     | '/digital-transformation'
+    | '/faq'
+    | '/leadership'
     | '/mobile-apps'
     | '/our-story'
     | '/pricing'
@@ -181,9 +214,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/careers'
     | '/contact'
     | '/custom-software'
     | '/digital-transformation'
+    | '/faq'
+    | '/leadership'
     | '/mobile-apps'
     | '/our-story'
     | '/pricing'
@@ -198,9 +234,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
   CustomSoftwareRoute: typeof CustomSoftwareRoute
   DigitalTransformationRoute: typeof DigitalTransformationRoute
+  FaqRoute: typeof FaqRoute
+  LeadershipRoute: typeof LeadershipRoute
   MobileAppsRoute: typeof MobileAppsRoute
   OurStoryRoute: typeof OurStoryRoute
   PricingRoute: typeof PricingRoute
@@ -277,6 +316,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MobileAppsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/leadership': {
+      id: '/leadership'
+      path: '/leadership'
+      fullPath: '/leadership'
+      preLoaderRoute: typeof LeadershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/digital-transformation': {
       id: '/digital-transformation'
       path: '/digital-transformation'
@@ -296,6 +349,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -318,9 +378,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
   CustomSoftwareRoute: CustomSoftwareRoute,
   DigitalTransformationRoute: DigitalTransformationRoute,
+  FaqRoute: FaqRoute,
+  LeadershipRoute: LeadershipRoute,
   MobileAppsRoute: MobileAppsRoute,
   OurStoryRoute: OurStoryRoute,
   PricingRoute: PricingRoute,
