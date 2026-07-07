@@ -63,13 +63,15 @@
   --muted: oklch(0.21 0.03 265);
   --muted-foreground: oklch(0.72 0.02 260);
 
-  --accent: oklch(0.62 0.15 250);
+  --accent: oklch(0.45 0.06 260);
   --accent-foreground: oklch(0.98 0.005 250);
 
-  --gold: oklch(0.82 0.13 85);
+  /* Dark yellow accent (replaces green/orange) */
+  --gold: oklch(0.80 0.13 88);
   --gold-foreground: oklch(0.15 0.028 265);
 
-  --lime: oklch(0.9 0.19 125);
+  /* "lime" token repurposed as dark yellow so legacy classes stay on-brand */
+  --lime: oklch(0.82 0.14 90);
   --lime-foreground: oklch(0.15 0.028 265);
 
   --destructive: oklch(0.62 0.22 25);
@@ -77,14 +79,14 @@
 
   --border: oklch(0.28 0.03 265 / 60%);
   --input: oklch(0.28 0.03 265);
-  --ring: oklch(0.62 0.15 250);
+  --ring: oklch(0.55 0.07 90);
 
-  --gradient-hero: radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.32 0.09 265 / 0.55), transparent 70%);
-  --gradient-glow: linear-gradient(135deg, oklch(0.62 0.15 250), oklch(0.82 0.13 85));
-  --gradient-lime: linear-gradient(135deg, oklch(0.9 0.19 125), oklch(0.75 0.16 145));
+  --gradient-hero: radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.30 0.07 265 / 0.65), transparent 70%);
+  --gradient-glow: linear-gradient(135deg, oklch(0.34 0.06 265), oklch(0.80 0.14 88));
+  --gradient-lime: linear-gradient(135deg, oklch(0.82 0.14 90), oklch(0.66 0.12 82));
   --gradient-card: linear-gradient(135deg, oklch(0.22 0.04 265 / 0.6), oklch(0.16 0.03 265 / 0.3));
-  --gradient-card-gold: linear-gradient(135deg, oklch(0.35 0.09 85 / 0.35), oklch(0.16 0.03 265 / 0.3));
-  --shadow-elegant: 0 30px 80px -30px oklch(0.62 0.15 250 / 0.35);
+  --gradient-card-gold: linear-gradient(135deg, oklch(0.34 0.08 88 / 0.32), oklch(0.16 0.03 265 / 0.35));
+  --shadow-elegant: 0 30px 80px -30px oklch(0.35 0.06 265 / 0.55);
   --shadow-panel: 0 40px 120px -40px oklch(0 0 0 / 0.7);
 }
 
@@ -107,7 +109,7 @@
   }
 
   ::selection {
-    background: oklch(0.9 0.19 125 / 0.4);
+    background: oklch(0.82 0.14 90 / 0.4);
   }
 
   /* Custom scrollbar */
@@ -181,3 +183,61 @@
 .hero-fade { animation-name:heroFadeUp; animation-duration:1s; }
 .hero-zoom { animation:heroZoom 1.8s cubic-bezier(0.16,1,0.3,1) forwards; }
 @media (prefers-reduced-motion: reduce){ .hero-anim,.hero-zoom{ animation:none; opacity:1; } }
+
+/* ---- Smooth, unique interactions ---- */
+@keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+@keyframes spinSlow { to { transform: rotate(360deg); } }
+@keyframes megaIn { 0%{opacity:0; transform:translateY(8px) scale(0.98)} 100%{opacity:1; transform:translateY(0) scale(1)} }
+
+.animate-float { animation: floatY 6s ease-in-out infinite; }
+.animate-mega-in { animation: megaIn 0.22s cubic-bezier(0.16,1,0.3,1) forwards; }
+.spin-slow { animation: spinSlow 14s linear infinite; }
+
+/* Magnetic-ish lift used across cards & buttons */
+.lift {
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+.lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px -24px oklch(0 0 0 / 0.7);
+}
+
+/* Shine sweep on hover */
+.shine { position: relative; overflow: hidden; }
+.shine::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 30%, oklch(1 0 0 / 0.14) 50%, transparent 70%);
+  background-size: 200% 100%;
+  transform: translateX(-100%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.shine:hover::after { transform: translateX(100%); }
+
+/* Animated underline link */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute; left: 0; bottom: -2px;
+  height: 1.5px; width: 100%;
+  background: var(--lime);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.link-underline:hover::after { transform: scaleX(1); transform-origin: left; }
+
+/* Primary navy button */
+@utility btn-navy {
+  background: linear-gradient(135deg, var(--surface-2), var(--surface));
+  color: var(--foreground);
+  border: 1px solid oklch(1 0 0 / 0.1);
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .animate-float, .spin-slow { animation: none; }
+}
