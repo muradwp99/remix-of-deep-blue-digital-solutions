@@ -10,10 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorksRouteImport } from './routes/works'
+import { Route as UiUxDesignRouteImport } from './routes/ui-ux-design'
 import { Route as SolutionsRouteImport } from './routes/solutions'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as MobileAppsRouteImport } from './routes/mobile-apps'
+import { Route as CustomSoftwareRouteImport } from './routes/custom-software'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -21,6 +24,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const WorksRoute = WorksRouteImport.update({
   id: '/works',
   path: '/works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UiUxDesignRoute = UiUxDesignRouteImport.update({
+  id: '/ui-ux-design',
+  path: '/ui-ux-design',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SolutionsRoute = SolutionsRouteImport.update({
@@ -43,6 +51,16 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MobileAppsRoute = MobileAppsRouteImport.update({
+  id: '/mobile-apps',
+  path: '/mobile-apps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CustomSoftwareRoute = CustomSoftwareRouteImport.update({
+  id: '/custom-software',
+  path: '/custom-software',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -63,20 +81,26 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/custom-software': typeof CustomSoftwareRoute
+  '/mobile-apps': typeof MobileAppsRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/services': typeof ServicesRoute
   '/solutions': typeof SolutionsRoute
+  '/ui-ux-design': typeof UiUxDesignRoute
   '/works': typeof WorksRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/custom-software': typeof CustomSoftwareRoute
+  '/mobile-apps': typeof MobileAppsRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/services': typeof ServicesRoute
   '/solutions': typeof SolutionsRoute
+  '/ui-ux-design': typeof UiUxDesignRoute
   '/works': typeof WorksRoute
 }
 export interface FileRoutesById {
@@ -84,10 +108,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/custom-software': typeof CustomSoftwareRoute
+  '/mobile-apps': typeof MobileAppsRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/services': typeof ServicesRoute
   '/solutions': typeof SolutionsRoute
+  '/ui-ux-design': typeof UiUxDesignRoute
   '/works': typeof WorksRoute
 }
 export interface FileRouteTypes {
@@ -96,30 +123,39 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/custom-software'
+    | '/mobile-apps'
     | '/pricing'
     | '/resources'
     | '/services'
     | '/solutions'
+    | '/ui-ux-design'
     | '/works'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/contact'
+    | '/custom-software'
+    | '/mobile-apps'
     | '/pricing'
     | '/resources'
     | '/services'
     | '/solutions'
+    | '/ui-ux-design'
     | '/works'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/contact'
+    | '/custom-software'
+    | '/mobile-apps'
     | '/pricing'
     | '/resources'
     | '/services'
     | '/solutions'
+    | '/ui-ux-design'
     | '/works'
   fileRoutesById: FileRoutesById
 }
@@ -127,10 +163,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
+  CustomSoftwareRoute: typeof CustomSoftwareRoute
+  MobileAppsRoute: typeof MobileAppsRoute
   PricingRoute: typeof PricingRoute
   ResourcesRoute: typeof ResourcesRoute
   ServicesRoute: typeof ServicesRoute
   SolutionsRoute: typeof SolutionsRoute
+  UiUxDesignRoute: typeof UiUxDesignRoute
   WorksRoute: typeof WorksRoute
 }
 
@@ -141,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/works'
       fullPath: '/works'
       preLoaderRoute: typeof WorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ui-ux-design': {
+      id: '/ui-ux-design'
+      path: '/ui-ux-design'
+      fullPath: '/ui-ux-design'
+      preLoaderRoute: typeof UiUxDesignRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/solutions': {
@@ -171,6 +217,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mobile-apps': {
+      id: '/mobile-apps'
+      path: '/mobile-apps'
+      fullPath: '/mobile-apps'
+      preLoaderRoute: typeof MobileAppsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/custom-software': {
+      id: '/custom-software'
+      path: '/custom-software'
+      fullPath: '/custom-software'
+      preLoaderRoute: typeof CustomSoftwareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -199,10 +259,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
+  CustomSoftwareRoute: CustomSoftwareRoute,
+  MobileAppsRoute: MobileAppsRoute,
   PricingRoute: PricingRoute,
   ResourcesRoute: ResourcesRoute,
   ServicesRoute: ServicesRoute,
   SolutionsRoute: SolutionsRoute,
+  UiUxDesignRoute: UiUxDesignRoute,
   WorksRoute: WorksRoute,
 }
 export const routeTree = rootRouteImport
