@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Menu } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ArrowUpRight, Sparkles } from "lucide-react";
 
 const BG_IMAGE_1 =
-  "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_195923_b0ba8ace-1d1d-4f2c-9a28-1ab84b330680.png&w=1280&q=85";
+  "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80";
 const BG_IMAGE_2 =
-  "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_201152_bba90a12-bf12-459f-91f0-51f237dbaf3b.png&w=1280&q=85";
+  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1600&q=80";
 
 const SPOTLIGHT_R = 260;
 
@@ -110,98 +111,90 @@ export function LithosHero() {
   }, []);
 
   return (
-    <div
-      className="min-h-screen bg-white tracking-[-0.02em]"
-      style={{ fontFamily: "'Inter', sans-serif" }}
+    <section
+      className="relative w-full overflow-hidden bg-background"
+      style={{ height: "100dvh" }}
     >
-      <section
-        className="relative w-full overflow-hidden h-screen bg-black"
-        style={{ height: "100dvh" }}
+      {/* Base image */}
+      <div
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat z-10 hero-zoom"
+        style={{ backgroundImage: `url(${BG_IMAGE_1})` }}
+      />
+      {/* Navy wash so imagery stays on-brand */}
+      <div className="absolute inset-0 z-20 bg-background/70 pointer-events-none" />
+
+      {/* Cursor-spotlight reveal layer */}
+      <RevealLayer image={BG_IMAGE_2} cursorX={cursorPos.x} cursorY={cursorPos.y} />
+
+      {/* Navy gradient vignette */}
+      <div
+        className="absolute inset-0 z-40 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 90% 70% at 50% 20%, transparent 30%, oklch(0.12 0.025 265 / 0.75) 100%)",
+        }}
+      />
+
+      {/* Heading */}
+      <div className="absolute inset-0 z-50 flex flex-col items-center justify-center text-center px-5 pointer-events-none">
+        <span
+          className="hero-anim hero-fade inline-flex items-center gap-2 rounded-full glass-strong px-4 py-2 text-xs uppercase tracking-[0.24em] text-lime pointer-events-auto"
+          style={{ animationDelay: "0.1s" }}
+        >
+          <Sparkles className="h-3.5 w-3.5" /> Premium Software Studio
+        </span>
+
+        <h1 className="mt-7 text-foreground leading-[0.95] max-w-5xl">
+          <span
+            className="block font-display font-semibold text-5xl sm:text-7xl md:text-8xl hero-anim hero-reveal"
+            style={{ letterSpacing: "-0.05em", animationDelay: "0.25s" }}
+          >
+            We engineer software
+          </span>
+          <span
+            className="block font-playfair italic font-normal text-5xl sm:text-7xl md:text-8xl -mt-1 hero-anim hero-reveal"
+            style={{ letterSpacing: "-0.04em", animationDelay: "0.42s" }}
+          >
+            that scales with you
+          </span>
+        </h1>
+
+        <p
+          className="mt-7 max-w-xl text-base sm:text-lg text-foreground/75 hero-anim hero-fade"
+          style={{ animationDelay: "0.62s" }}
+        >
+          Northline designs, builds, and grows enterprise-grade web platforms,
+          apps, and AI products — one senior team, from strategy to scale.
+        </p>
+
+        <div
+          className="mt-10 flex flex-wrap items-center justify-center gap-3 pointer-events-auto hero-anim hero-fade"
+          style={{ animationDelay: "0.8s" }}
+        >
+          <Link
+            to="/contact"
+            className="group inline-flex items-center gap-2 rounded-full btn-navy shine px-7 py-3.5 text-sm font-semibold hover:-translate-y-0.5 hover:border-lime/40"
+          >
+            Book a Call
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
+          <Link
+            to="/works"
+            className="inline-flex items-center gap-2 rounded-full glass px-7 py-3.5 text-sm font-medium text-foreground hover:bg-white/5 transition-colors"
+          >
+            View Our Work
+          </Link>
+        </div>
+      </div>
+
+      {/* Bottom hint */}
+      <div
+        className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 z-50 items-center gap-2 text-xs uppercase tracking-[0.24em] text-foreground/50 hero-anim hero-fade"
+        style={{ animationDelay: "1s" }}
       >
-        {/* Base image */}
-        <div
-          className="absolute inset-0 bg-center bg-cover bg-no-repeat z-10 hero-zoom"
-          style={{ backgroundImage: `url(${BG_IMAGE_1})` }}
-        />
-
-        {/* Reveal layer */}
-        <RevealLayer image={BG_IMAGE_2} cursorX={cursorPos.x} cursorY={cursorPos.y} />
-
-        {/* Navigation */}
-        <nav className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-6 md:px-10 py-5">
-          <div className="flex items-center gap-2">
-            <svg width="26" height="26" viewBox="0 0 256 256" fill="#ffffff">
-              <path d="M 256 256 L 128 256 L 0 128 L 128 128 Z M 256 128 L 128 128 L 0 0 L 128 0 Z" />
-            </svg>
-            <span className="text-white text-xl font-semibold">Lithos</span>
-          </div>
-
-          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-2 py-2 items-center gap-1">
-            <button className="text-white bg-white/20 px-4 py-1.5 rounded-full text-sm font-medium">
-              Course
-            </button>
-            {["Field Guides", "Geology", "Plans", "Live Tour"].map((item) => (
-              <button
-                key={item}
-                className="text-white/80 hover:bg-white/20 hover:text-white transition-colors px-4 py-1.5 rounded-full text-sm font-medium"
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-
-          <button className="hidden md:block bg-white text-gray-900 text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-gray-100">
-            Sign Up
-          </button>
-
-          <button className="md:hidden text-white" aria-label="Menu">
-            <Menu className="h-6 w-6" />
-          </button>
-        </nav>
-
-        {/* Heading */}
-        <div className="absolute top-[14%] left-0 right-0 z-50 flex flex-col items-center text-center px-5 pointer-events-none">
-          <h1 className="text-white leading-[0.95]">
-            <span
-              className="block font-playfair italic font-normal text-5xl sm:text-7xl md:text-8xl hero-anim hero-reveal"
-              style={{ letterSpacing: "-0.05em", animationDelay: "0.25s" }}
-            >
-              Layers hold
-            </span>
-            <span
-              className="block font-normal text-5xl sm:text-7xl md:text-8xl -mt-1 hero-anim hero-reveal"
-              style={{ letterSpacing: "-0.08em", animationDelay: "0.42s" }}
-            >
-              tales of time
-            </span>
-          </h1>
-        </div>
-
-        {/* Bottom-left paragraph */}
-        <div
-          className="hidden sm:block absolute bottom-14 left-10 md:left-14 max-w-[260px] z-50 hero-anim hero-fade"
-          style={{ animationDelay: "0.7s" }}
-        >
-          <p className="text-white/80 text-sm leading-relaxed">
-            Every layer of sediment records a chapter of our planet, from ancient
-            seabeds to drifting ash, layered across millions of years beneath us.
-          </p>
-        </div>
-
-        {/* Bottom-right block */}
-        <div
-          className="absolute bottom-10 sm:bottom-24 left-5 right-5 sm:left-auto sm:right-10 md:right-14 max-w-full sm:max-w-[260px] z-50 flex flex-col items-start gap-4 sm:gap-5 hero-anim hero-fade"
-          style={{ animationDelay: "0.85s" }}
-        >
-          <p className="text-white/80 text-sm leading-relaxed">
-            Our interactive maps let you peel back the crust to trace how stones,
-            fossils, and deep time combine to shape the ground beneath your feet.
-          </p>
-          <button className="bg-[#e8702a] hover:bg-[#d2611f] text-white text-sm font-medium px-7 py-3 rounded-full transition-all hover:scale-[1.03] active:scale-95 hover:shadow-lg hover:shadow-[#e8702a]/30">
-            Start Digging
-          </button>
-        </div>
-      </section>
-    </div>
+        <span className="h-2 w-2 rounded-full bg-lime animate-float" />
+        Move your cursor to explore
+      </div>
+    </section>
   );
 }
