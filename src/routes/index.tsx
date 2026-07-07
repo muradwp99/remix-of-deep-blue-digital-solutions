@@ -111,72 +111,9 @@ const faqs = [
 function HomePage() {
   return (
     <SiteShell>
-      {/* Hero with 3D */}
-      <section className="relative overflow-hidden min-h-[100vh]">
-        <div className="absolute inset-0 grain-bg pointer-events-none" />
-        <div
-          className="absolute inset-x-0 top-0 h-[800px] pointer-events-none"
-          style={{ background: "var(--gradient-hero)" }}
-        />
-        <Hero3D />
+      {/* Lithos cursor-spotlight hero */}
+      <LithosHero />
 
-        <div className="container-page relative pt-24 pb-24 md:pt-32 md:pb-32">
-          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-lime" data-reveal>
-            <Sparkles className="h-3.5 w-3.5" />
-            Software studio · Est. 2018
-          </div>
-          <h1
-            className="mt-8 font-display text-5xl md:text-8xl leading-[0.92] max-w-5xl font-semibold"
-            data-reveal
-          >
-            We build <span className="text-gradient-lime italic">premium</span> software
-            <br /> for teams shaping what's next.
-          </h1>
-          <p className="mt-8 max-w-2xl text-lg text-muted-foreground" data-reveal>
-            Northline is a boutique studio of designers and engineers. We partner
-            with founders and product teams to ship websites, apps, and digital
-            products with a craft-first standard.
-          </p>
-          <div className="mt-10 flex flex-wrap gap-3" data-reveal>
-            <Link
-              to="/contact"
-              className="group inline-flex items-center gap-2 rounded-full bg-lime px-6 py-3.5 text-sm font-semibold text-lime-foreground hover:brightness-110 transition"
-            >
-              Book a Call
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
-            <Link
-              to="/works"
-              className="inline-flex items-center gap-2 rounded-full glass px-6 py-3.5 text-sm font-medium text-foreground hover:bg-white/5"
-            >
-              View our work
-            </Link>
-          </div>
-
-          <div
-            className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-6"
-            data-reveal-group
-          >
-            {[
-              { k: "150+", v: "Products shipped" },
-              { k: "50+", v: "Enterprise clients" },
-              { k: "98%", v: "Client retention" },
-              { k: "15+", v: "Industry verticals" },
-            ].map((s) => (
-              <div
-                key={s.v}
-                className="glass rounded-2xl p-6"
-                data-reveal-child
-              >
-                <div className="font-display text-4xl md:text-5xl font-semibold text-gradient-lime">
-                  {s.k}
-                </div>
-                <div className="mt-2 text-sm text-muted-foreground">{s.v}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Clients marquee */}
       <section className="border-y border-border/60 bg-surface/40">
