@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { LithosHero } from "@/components/lithos-hero";
-import { Hero3D } from "@/components/hero-3d";
 import {
   ArrowUpRight,
   Sparkles,
