@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, ComponentType } from "react";
+import type { ComponentType } from "react";
 import { useConfig } from "@payloadcms/ui";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,9 +12,12 @@ import {
   CreditCard,
   FileText,
   FolderTree,
+  Gauge,
+  GraduationCap,
   HelpCircle,
   Image as ImageIcon,
   Inbox,
+  Landmark,
   LayoutDashboard,
   LayoutTemplate,
   LogOut,
@@ -32,7 +35,7 @@ import {
 } from "lucide-react";
 
 /** slug → Lucide icon */
-const ICONS: Record<string, ComponentType<{ size?: number; style?: CSSProperties }>> = {
+const ICONS: Record<string, ComponentType<{ size?: number; className?: string }>> = {
   posts: FileText,
   categories: FolderTree,
   tags: Tag,
@@ -41,6 +44,9 @@ const ICONS: Record<string, ComponentType<{ size?: number; style?: CSSProperties
   resources: BookOpen,
   services: Wrench,
   solutions: Boxes,
+  industries: Landmark,
+  tools: Gauge,
+  learning: GraduationCap,
   projects: Briefcase,
   plans: CreditCard,
   team: Users,
@@ -84,30 +90,6 @@ const asLabel = (v: unknown, fallback: string): string => {
 const titleCase = (slug: string) =>
   slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
-const rowStyle = (active: boolean): CSSProperties => ({
-  display: "flex",
-  alignItems: "center",
-  gap: 10,
-  padding: "8px 12px",
-  borderRadius: 6,
-  textDecoration: "none",
-  fontSize: 14,
-  lineHeight: 1.2,
-  color: active ? "var(--theme-elevation-1000)" : "var(--theme-elevation-800)",
-  background: active ? "var(--theme-elevation-100)" : "transparent",
-  transition: "background 120ms ease, color 120ms ease",
-});
-
-const groupLabelStyle: CSSProperties = {
-  padding: "4px 12px",
-  marginBottom: 2,
-  fontSize: 10,
-  textTransform: "uppercase",
-  letterSpacing: "0.12em",
-  fontWeight: 600,
-  color: "var(--theme-elevation-500)",
-};
-
 export default function Nav() {
   const { config } = useConfig();
   const pathname = usePathname();
@@ -145,40 +127,30 @@ export default function Nav() {
   const isActive = (href: string) => pathname === href || pathname?.startsWith(href + "/");
 
   return (
-    <nav
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        padding: "20px 14px",
-        gap: 6,
-      }}
-    >
-      <Link href={adminRoute} style={{ ...rowStyle(pathname === adminRoute), marginBottom: 6 }}>
-        <LayoutDashboard size={17} style={{ flexShrink: 0 }} />
+    <nav className="nl-nav">
+      <Link
+        href={adminRoute}
+        className={`nl-nav__link${pathname === adminRoute ? " is-active" : ""}`}
+      >
+        <LayoutDashboard size={17} className="nl-nav__icon" />
         <span>Dashboard</span>
       </Link>
 
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
-          gap: 16,
-          paddingTop: 4,
-        }}
-      >
+      <div className="nl-nav__scroll">
         {groupNames.map((gn) => (
-          <div key={gn}>
-            <div style={groupLabelStyle}>{gn}</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <div key={gn} className="nl-nav__group">
+            <div className="nl-nav__group-label">{gn}</div>
+            <div className="nl-nav__links">
               {groups[gn].map((e) => {
                 const IconEl = ICONS[e.slug] ?? FileText;
                 const active = isActive(e.href);
                 return (
-                  <Link key={e.slug} href={e.href} style={rowStyle(active)}>
-                    <IconEl size={17} style={{ flexShrink: 0, opacity: active ? 1 : 0.75 }} />
+                  <Link
+                    key={e.slug}
+                    href={e.href}
+                    className={`nl-nav__link${active ? " is-active" : ""}`}
+                  >
+                    <IconEl size={17} className="nl-nav__icon" />
                     <span>{e.label}</span>
                   </Link>
                 );
@@ -188,17 +160,8 @@ export default function Nav() {
         ))}
       </div>
 
-      <Link
-        href={`${adminRoute}/logout`}
-        style={{
-          ...rowStyle(false),
-          marginTop: 8,
-          borderTop: "1px solid var(--theme-elevation-100)",
-          borderRadius: 0,
-          paddingTop: 14,
-        }}
-      >
-        <LogOut size={17} style={{ flexShrink: 0 }} />
+      <Link href={`${adminRoute}/logout`} className="nl-nav__link nl-nav__logout">
+        <LogOut size={17} className="nl-nav__icon" />
         <span>Log out</span>
       </Link>
     </nav>

@@ -31,6 +31,7 @@ import { ReindexButton as ReindexButton_aead06e4cbf6b2620c5c51c9ab283634 } from 
 import { default as default_a9d4b87e0306b3ddfe97926a52a69591 } from '@/components/admin/Nav'
 import { default as default_34253356f327048e5e1d0c8dd6259985 } from '@/components/admin/graphics/Icon'
 import { default as default_7290b7198794a8ea161f702320c1cd8a } from '@/components/admin/graphics/Logo'
+import { default as default_3a9cca97fda07c2c15aaac4087f744f7 } from '@/components/admin/Welcome'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -68,5 +69,6 @@ export const importMap = {
   "@/components/admin/Nav#default": default_a9d4b87e0306b3ddfe97926a52a69591,
   "@/components/admin/graphics/Icon#default": default_34253356f327048e5e1d0c8dd6259985,
   "@/components/admin/graphics/Logo#default": default_7290b7198794a8ea161f702320c1cd8a,
+  "@/components/admin/Welcome#default": default_3a9cca97fda07c2c15aaac4087f744f7,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

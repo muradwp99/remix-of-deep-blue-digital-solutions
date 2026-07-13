@@ -1,0 +1,338 @@
+/* ------------------------------------------------------------------ *
+ * Northline — branded dark-navy admin theme.
+ * Overrides Payload's dark palette to the brand navy + gold accent.
+ * ------------------------------------------------------------------ */
+
+html[data-theme="dark"] {
+  /* surfaces: deep navy → light ink */
+  --theme-bg: #0a1020;
+  --theme-text: #e7ecf7;
+
+  --theme-elevation-0: #0a1020;
+  --theme-elevation-50: #0e1526;
+  --theme-elevation-100: #121b30;
+  --theme-elevation-150: #16213a;
+  --theme-elevation-200: #1b2844;
+  --theme-elevation-250: #20304f;
+  --theme-elevation-300: #26385c;
+  --theme-elevation-350: #2c4067;
+  --theme-elevation-400: #364d78;
+  --theme-elevation-500: #4a638f;
+  --theme-elevation-600: #6a83ac;
+  --theme-elevation-700: #93a6c8;
+  --theme-elevation-800: #bccbe1;
+  --theme-elevation-900: #dde5f1;
+  --theme-elevation-1000: #f4f7fc;
+
+  --theme-border-color: #223154;
+  --theme-input-bg: #0e1526;
+
+  /* brand gold as the success/accent hue */
+  --color-success-500: #d9b44a;
+  --color-success-550: #cba63f;
+  --theme-success-500: #d9b44a;
+
+  --color-blue-500: #d9b44a;
+  --color-blue-550: #cba63f;
+}
+
+/* Force the sidebar + top bar onto the darkest navy for a cohesive shell */
+.nav,
+.nav__wrap,
+.template-default__nav,
+.step-nav,
+.app-header {
+  background: #0a1020;
+}
+
+/* Nav group headings in muted gold */
+.nav-group__toggle,
+.nav-group__label {
+  color: #9fb0cf;
+  letter-spacing: 0.02em;
+}
+
+/* Active + hovered nav links glow gold */
+.nav__link:hover,
+.nav-group__toggle:hover {
+  color: #e8c15a;
+}
+.nav__link.active,
+.nav__link[aria-current="page"] {
+  color: #e8c15a;
+  background: rgba(217, 180, 74, 0.1);
+  border-radius: 6px;
+}
+
+/* Primary buttons in brand gold */
+.btn--style-primary {
+  background: #d9b44a;
+  border-color: #d9b44a;
+  color: #0a1020;
+  &:hover {
+    background: #e8c15a;
+    border-color: #e8c15a;
+  }
+}
+
+/* Cards on the dashboard */
+.dashboard__card,
+.card {
+  border-color: #223154;
+  background: #0f1728;
+  &:hover {
+    border-color: #d9b44a55;
+  }
+}
+
+/* Gold focus + links */
+a:not(.btn):hover {
+  color: #e8c15a;
+}
+
+/* ================================================================== *
+ * Premium layer — depth, motion, and a branded dashboard.
+ * ================================================================== */
+
+/* ---- Branded dashboard welcome hero ---- */
+.nl-welcome {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 28px;
+  padding: 40px 40px 36px;
+  border: 1px solid #26385c;
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 140% at 12% 0%, rgba(232, 193, 90, 0.14), transparent 46%),
+    linear-gradient(135deg, #101a30, #0a1020 70%);
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.7);
+}
+.nl-welcome__glow {
+  position: absolute;
+  top: -120px;
+  right: -80px;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 180, 74, 0.28), transparent 65%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+.nl-welcome__inner {
+  position: relative;
+  z-index: 1;
+}
+.nl-welcome__eyebrow {
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #e8c15a;
+}
+.nl-welcome__title {
+  margin: 0;
+  font-size: 40px;
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #f4f7fc;
+}
+.nl-welcome__sub {
+  margin: 14px 0 0;
+  max-width: 60ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #9fb0cf;
+}
+.nl-welcome__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+.nl-welcome__chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid #2c4067;
+  background: rgba(255, 255, 255, 0.02);
+  color: #dde5f1 !important;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease;
+  &:hover {
+    transform: translateY(-2px);
+    border-color: #e8c15a;
+    background: rgba(232, 193, 90, 0.12);
+    color: #f4f7fc !important;
+  }
+}
+
+/* ---- Premium cards: depth + gold hover lift ---- */
+.dashboard__card,
+.dashboard__group .card,
+.card {
+  border: 1px solid #223154;
+  border-radius: 14px;
+  background: linear-gradient(160deg, #111c31, #0d1526);
+  box-shadow: 0 14px 40px -28px rgba(0, 0, 0, 0.8);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  &:hover {
+    transform: translateY(-3px);
+    border-color: rgba(232, 193, 90, 0.45);
+    box-shadow: 0 26px 60px -30px rgba(0, 0, 0, 0.9);
+  }
+}
+
+/* ---- Dashboard group headings ---- */
+.dashboard__label,
+.dashboard__group-name {
+  font-size: 11px !important;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7f93b6 !important;
+}
+
+/* ---- Inputs: rounded + gold focus glow ---- */
+.field-type input:not([type="checkbox"]):not([type="radio"]),
+.field-type textarea,
+.field-type .rs__control,
+input.search-filter__input {
+  border-radius: 10px !important;
+  border-color: #26385c !important;
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
+  &:focus,
+  &:focus-within {
+    border-color: #d9b44a !important;
+    box-shadow: 0 0 0 3px rgba(217, 180, 74, 0.18) !important;
+  }
+}
+
+/* ---- Buttons: rounder, tactile ---- */
+.btn {
+  border-radius: 999px;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+  &:active {
+    transform: translateY(1px);
+  }
+}
+.btn--style-primary:hover {
+  box-shadow: 0 12px 28px -12px rgba(217, 180, 74, 0.6);
+}
+
+/* ---- Doc tabs (Overview / Media / Case Study …) ---- */
+.tabs-field__tab-button--active {
+  color: #e8c15a !important;
+  box-shadow: inset 0 -2px 0 #d9b44a;
+}
+
+/* ---- Pill / status cells in list views ---- */
+.pill {
+  border-radius: 999px;
+}
+
+/* ---- Custom Nav (Northline icon nav) ---- */
+.nl-nav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px 14px;
+  gap: 6px;
+}
+.nl-nav__scroll {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 6px;
+  /* thin branded scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #26385c transparent;
+}
+.nl-nav__group-label {
+  padding: 4px 12px;
+  margin-bottom: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6f84a8;
+}
+.nl-nav__links {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.nl-nav__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #bccbe1 !important;
+  text-decoration: none;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+
+  .nl-nav__icon {
+    flex-shrink: 0;
+    opacity: 0.72;
+    transition: opacity 0.15s ease;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #f4f7fc !important;
+    .nl-nav__icon {
+      opacity: 1;
+    }
+  }
+
+  &.is-active {
+    color: #e8c15a !important;
+    background: rgba(232, 193, 90, 0.12);
+    font-weight: 500;
+    .nl-nav__icon {
+      opacity: 1;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: #d9b44a;
+    }
+  }
+}
+.nl-nav__logout {
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px solid #1b2844;
+  border-radius: 0;
+  color: #93a6c8 !important;
+}
+

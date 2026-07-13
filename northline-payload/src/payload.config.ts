@@ -21,6 +21,9 @@ import { Tags } from "./collections/Tags";
 import { Projects } from "./collections/Projects";
 import { Services } from "./collections/Services";
 import { Solutions } from "./collections/Solutions";
+import { Industries } from "./collections/Industries";
+import { Tools } from "./collections/Tools";
+import { Learning } from "./collections/Learning";
 import { Plans } from "./collections/Plans";
 import { Resources } from "./collections/Resources";
 import { Team } from "./collections/Team";
@@ -55,6 +58,8 @@ export default buildConfig({
       },
       // Custom grouped nav with an icon beside every item
       Nav: "@/components/admin/Nav",
+      // Branded dashboard hero
+      beforeDashboard: ["@/components/admin/Welcome"],
     },
   },
   collections: [
@@ -66,10 +71,13 @@ export default buildConfig({
     Pages,
     Faqs,
     Resources,
+    Learning,
     // Catalog
     Projects,
     Services,
     Solutions,
+    Industries,
+    Tools,
     Plans,
     // People
     Team,
@@ -95,7 +103,17 @@ export default buildConfig({
   plugins: [
     // SEO tab (meta title / description / og image + previews) on public content
     seoPlugin({
-      collections: ["pages", "posts", "projects", "services", "solutions", "resources"],
+      collections: [
+        "pages",
+        "posts",
+        "projects",
+        "services",
+        "solutions",
+        "industries",
+        "tools",
+        "learning",
+        "resources",
+      ],
       uploadsCollection: "media",
       generateTitle: ({ doc }: { doc?: { title?: string; name?: string } }) =>
         `${doc?.title || doc?.name || "Northline"} · Northline`,
