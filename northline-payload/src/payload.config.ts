@@ -62,6 +62,8 @@ export default buildConfig({
       beforeDashboard: ["@/components/admin/Welcome"],
     },
   },
+  // Allow the live site's origin(s) to call the CMS API from the browser.
+  cors: ["http://localhost:8080", process.env.SITE_URL].filter(Boolean) as string[],
   collections: [
     // Blog
     Posts,
