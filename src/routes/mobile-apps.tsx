@@ -83,6 +83,7 @@ function Page() {
       {/* ---- Light zone: the platform choices ---- */}
       <div className="block-light">
         <FeatureGrid
+          variant="rows"
           eyebrow="Capabilities"
           title="The right stack, argued honestly."
           subtitle="We'll tell you when Flutter saves you six figures — and when only native will hit your performance bar."
@@ -124,6 +125,7 @@ function Page() {
       {/* ---- Light zone: process + why our apps win ---- */}
       <div className="block-light">
         <ProcessSteps
+          variant="ladder"
           eyebrow="How it works"
           title="Strategy to store in five moves."
           steps={[

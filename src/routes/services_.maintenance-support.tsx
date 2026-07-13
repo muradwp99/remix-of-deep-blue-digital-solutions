@@ -92,6 +92,7 @@ function Page() {
       <div className="block-light">
         <BackToParent kind="services" />
         <FeatureGrid
+          variant="spotlight"
           eyebrow="What's included"
           title="The work, concretely."
           cols={3}
@@ -175,6 +176,7 @@ function Page() {
       {/* ── LIGHT · how it runs ── */}
       <div className="block-light">
         <ProcessSteps
+          variant="ladder"
           eyebrow="How it runs"
           title="Adopt, stabilize, maintain."
           steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}

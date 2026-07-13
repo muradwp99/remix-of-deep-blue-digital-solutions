@@ -88,6 +88,7 @@ export function SubpageTemplate({ page }: { page: Subpage }) {
           title="The work, concretely."
           cols={3}
           items={page.features}
+          variant="rows"
         />
       </div>
 
@@ -96,6 +97,7 @@ export function SubpageTemplate({ page }: { page: Subpage }) {
           eyebrow="How it runs"
           title="A process with no black box."
           steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}
+          variant="ladder"
         />
       </div>
 

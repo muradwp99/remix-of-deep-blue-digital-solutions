@@ -58,6 +58,7 @@ function Page() {
       {/* ── LIGHT · what's included + how it runs ── */}
       <div className="block-light">
         <FeatureGrid
+          variant="spotlight"
           eyebrow="What's included"
           title="The work, concretely."
           cols={3}
@@ -65,6 +66,7 @@ function Page() {
         />
 
         <ProcessSteps
+          variant="ladder"
           eyebrow="How it runs"
           title="Research to every touchpoint."
           steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}

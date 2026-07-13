@@ -175,6 +175,7 @@ function Page() {
       {/* ── TINT · how it runs ── */}
       <div className="block-tint">
         <ProcessSteps
+          variant="rail"
           eyebrow="How it runs"
           title="Audit, fix, structure, hold."
           steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}

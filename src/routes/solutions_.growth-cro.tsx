@@ -138,6 +138,7 @@ function Page() {
       {/* ── DEEP · the cadence, dramatised ── */}
       <div className="block-deep">
         <ProcessSteps
+          variant="rail"
           eyebrow="How it runs"
           title="Audit, fix, test, scale."
           steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}

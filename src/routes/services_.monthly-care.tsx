@@ -72,6 +72,7 @@ function Page() {
       <div className="block-light">
         <BackToParent kind="services" />
         <FeatureGrid
+          variant="spotlight"
           eyebrow="What's included"
           title="The work, concretely."
           cols={3}

@@ -150,6 +150,7 @@ function Page() {
       {/* ── TINT · what's included ── */}
       <div className="block-tint">
         <FeatureGrid
+          variant="spotlight"
           eyebrow="What's included"
           title="The work, concretely."
           cols={3}

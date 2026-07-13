@@ -73,6 +73,7 @@ function Page() {
       {/* ---- Light zone: the four pillars + the payback ---- */}
       <div className="block-light">
         <FeatureGrid
+          variant="rows"
           eyebrow="Transformation pillars"
           title="Four pillars, one operating system for change."
           subtitle="Each pillar ships value on its own. Together they compound into an organization that releases weekly instead of quarterly."
@@ -166,6 +167,7 @@ function Page() {
       {/* ---- Light zone: the phased approach ---- */}
       <div className="block-light">
         <ProcessSteps
+          variant="rail"
           eyebrow="Our approach"
           title="Risk-mitigated, phase by phase."
           steps={[

@@ -59,6 +59,7 @@ function Page() {
       {/* ---- Light zone: what we build + the numbers ---- */}
       <div className="block-light">
         <FeatureGrid
+          variant="spotlight"
           eyebrow="What we build"
           title="Four kinds of systems. All of them boring to operate."
           subtitle="Boring is the compliment: predictable deploys, readable code, dashboards nobody has to babysit."
@@ -107,6 +108,7 @@ function Page() {
       {/* ---- Tint band: delivery process ---- */}
       <div className="block-tint">
         <ProcessSteps
+          variant="ladder"
           eyebrow="How we deliver"
           title="Five steps. No black box."
           steps={[

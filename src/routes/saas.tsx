@@ -65,6 +65,7 @@ function Page() {
       {/* ---- Light zone: the platform layer + growth features ---- */}
       <div className="block-light">
         <FeatureGrid
+          variant="spotlight"
           eyebrow="Core capabilities"
           title="The platform layer, done once, done right."
           cols={3}
@@ -136,6 +137,7 @@ function Page() {
       {/* ---- Light zone: lifecycle + the numbers ---- */}
       <div className="block-light">
         <ProcessSteps
+          variant="rail"
           eyebrow="Lifecycle"
           title="From roadmap to recurring revenue."
           steps={[

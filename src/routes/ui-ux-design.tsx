@@ -59,6 +59,7 @@ function Page() {
       {/* ---- Light zone: services + the redesign ledger ---- */}
       <div className="block-light">
         <FeatureGrid
+          variant="spotlight"
           eyebrow="Core services"
           title="Design, end to end."
           cols={3}
@@ -114,6 +115,7 @@ function Page() {
       {/* ---- Tint band: how we work ---- */}
       <div className="block-tint">
         <ProcessSteps
+          variant="rail"
           eyebrow="How we work"
           title="Five steps, evidence at every gate."
           steps={[

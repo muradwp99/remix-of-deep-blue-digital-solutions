@@ -116,6 +116,7 @@ function Page() {
       {/* ── LIGHT · what's included, then the dated 0→1 timeline ── */}
       <div className="block-light">
         <FeatureGrid
+          variant="rows"
           eyebrow="What's included"
           title="The work, concretely."
           cols={3}

@@ -93,6 +93,7 @@ function Page() {
         <BackToParent kind="solutions" />
 
         <FeatureGrid
+          variant="rows"
           eyebrow="What's included"
           title="The work, concretely."
           cols={3}

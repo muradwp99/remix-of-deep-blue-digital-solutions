@@ -45,6 +45,7 @@ export function FeatureGrid({
   items,
   cols = 4,
   gold,
+  variant = "cards",
 }: {
   eyebrow: string;
   title: ReactNode;
@@ -52,29 +53,83 @@ export function FeatureGrid({
   items: { icon: IconType; title: string; desc: string }[];
   cols?: 2 | 3 | 4;
   gold?: boolean;
+  /**
+   * Layout shape. Use different variants on sibling pages so the "features"
+   * section doesn't read as the same icon-card grid everywhere.
+   * - cards    : icon cards grid (default)
+   * - rows     : editorial numbered rows, hairline dividers, no cards
+   * - spotlight: oversized lead feature + smaller supporting cards
+   */
+  variant?: "cards" | "rows" | "spotlight";
 }) {
   const colClass =
     cols === 2 ? "md:grid-cols-2" : cols === 3 ? "md:grid-cols-3" : "md:grid-cols-2 lg:grid-cols-4";
+
   return (
     <section className="container-page py-24 border-t border-border/60" data-reveal-group>
       <SectionHead eyebrow={eyebrow} title={title} subtitle={subtitle} />
-      <div className={`grid gap-4 ${colClass}`}>
-        {items.map((it) => (
-          <div
-            key={it.title}
-            className={`group lift shine rounded-2xl p-7 ${
-              gold ? "gradient-card-gold" : "gradient-card"
-            } hover:border-lime/30`}
-            data-reveal-child
-          >
-            <div className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-lime/25 to-transparent border border-lime/20 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110">
-              <it.icon className="h-5 w-5 text-lime" />
+
+      {variant === "rows" ? (
+        <div className="border-t border-border">
+          {items.map((it, i) => (
+            <div
+              key={it.title}
+              className="grid gap-3 border-b border-border py-7 md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,1.5fr)] md:items-baseline md:gap-8"
+              data-reveal-child
+            >
+              <span className="font-display text-2xl font-semibold tabular-nums text-lime">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h3 className="font-display text-xl font-semibold">{it.title}</h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">{it.desc}</p>
             </div>
-            <h3 className="mt-7 font-display text-xl font-semibold">{it.title}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{it.desc}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : variant === "spotlight" ? (
+        <div className="grid gap-4 md:grid-cols-3" data-cards>
+          {items.map((it, i) => (
+            <div
+              key={it.title}
+              className={`group glare-card lift shine flex flex-col rounded-2xl p-7 ${
+                gold ? "gradient-card-gold" : "gradient-card"
+              } hover:border-lime/30 ${i === 0 ? "md:col-span-3 lg:col-span-2 lg:row-span-2" : ""}`}
+              data-card
+            >
+              <div
+                className={`grid place-items-center rounded-xl border border-lime/20 bg-gradient-to-br from-lime/25 to-transparent transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110 ${
+                  i === 0 ? "h-14 w-14" : "h-12 w-12"
+                }`}
+              >
+                <it.icon className={i === 0 ? "h-6 w-6 text-lime" : "h-5 w-5 text-lime"} />
+              </div>
+              <h3 className={`mt-7 font-display font-semibold ${i === 0 ? "text-3xl" : "text-xl"}`}>
+                {it.title}
+              </h3>
+              <p className={`mt-2 text-muted-foreground ${i === 0 ? "text-base" : "text-sm"}`}>
+                {it.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={`grid gap-4 ${colClass}`} data-cards>
+          {items.map((it) => (
+            <div
+              key={it.title}
+              className={`group glare-card lift shine rounded-2xl p-7 ${
+                gold ? "gradient-card-gold" : "gradient-card"
+              } hover:border-lime/30`}
+              data-card
+            >
+              <div className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-lime/25 to-transparent border border-lime/20 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110">
+                <it.icon className="h-5 w-5 text-lime" />
+              </div>
+              <h3 className="mt-7 font-display text-xl font-semibold">{it.title}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{it.desc}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -83,11 +138,75 @@ export function ProcessSteps({
   eyebrow,
   title,
   steps,
+  variant = "cards",
 }: {
   eyebrow: string;
   title: ReactNode;
   steps: { n: string; t: string; d: string }[];
+  /**
+   * - cards : two-column, numbered glass cards on the right (default)
+   * - rail  : horizontal numbered timeline across a row
+   * - ladder: full-width vertical list with oversized step numbers
+   */
+  variant?: "cards" | "rail" | "ladder";
 }) {
+  if (variant === "rail") {
+    const railCols = steps.length >= 4 ? "md:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-3";
+    return (
+      <section className="container-page py-24 border-t border-border/60" data-reveal-group>
+        <div className="mb-14 max-w-2xl">
+          <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+            {eyebrow}
+          </p>
+          <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight font-semibold" data-reveal-child>
+            {title}
+          </h2>
+        </div>
+        <div className={`grid gap-10 ${railCols}`}>
+          {steps.map((p) => (
+            <div key={p.n} className="border-t border-border pt-6" data-reveal-child>
+              <span className="font-display text-4xl font-semibold tabular-nums text-lime">{p.n}</span>
+              <h3 className="mt-4 font-display text-xl font-semibold">{p.t}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (variant === "ladder") {
+    return (
+      <section className="container-page py-24 border-t border-border/60" data-reveal-group>
+        <div className="mb-14 max-w-2xl">
+          <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+            {eyebrow}
+          </p>
+          <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight font-semibold" data-reveal-child>
+            {title}
+          </h2>
+        </div>
+        <div className="border-t border-border">
+          {steps.map((p) => (
+            <div
+              key={p.n}
+              className="grid gap-3 border-b border-border py-8 md:grid-cols-[6rem_minmax(0,1fr)] md:gap-10"
+              data-reveal-child
+            >
+              <span className="font-display text-5xl font-semibold leading-none tabular-nums text-lime/80">
+                {p.n}
+              </span>
+              <div>
+                <h3 className="font-display text-2xl font-semibold">{p.t}</h3>
+                <p className="mt-2 max-w-2xl text-muted-foreground">{p.d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="container-page py-24 border-t border-border/60" data-reveal-group>
       <div className="grid md:grid-cols-2 gap-16 items-start">
@@ -124,14 +243,17 @@ export function ProcessSteps({
 export function StatsRow({ stats }: { stats: { value: string; label: string }[] }) {
   return (
     <section className="container-page py-20 border-t border-border/60" data-reveal-group>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4" data-cards>
         {stats.map((s) => (
           <div
             key={s.label}
-            className="gradient-card lift rounded-2xl p-8 text-center"
-            data-reveal-child
+            className="glare-card gradient-card lift rounded-2xl p-8 text-center"
+            data-card
           >
-            <div className="font-display text-4xl md:text-5xl font-semibold text-gradient-lime">
+            <div
+              className="font-display text-4xl md:text-5xl font-semibold text-gradient-lime"
+              data-counter
+            >
               {s.value}
             </div>
             <div className="mt-2 text-sm text-muted-foreground">{s.label}</div>
@@ -150,9 +272,9 @@ export function Testimonials({
   return (
     <section className="container-page py-24 border-t border-border/60" data-reveal-group>
       <SectionHead eyebrow="What partners say" title="Trusted by founders and product leaders." />
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-3 gap-6" data-cards data-cards-stagger="0.12">
         {items.map((t) => (
-          <blockquote key={t.a} className="gradient-card lift rounded-2xl p-7" data-reveal-child>
+          <blockquote key={t.a} className="glare-card gradient-card lift rounded-2xl p-7" data-card>
             <Quote className="h-6 w-6 text-lime/70" />
             <p className="mt-4 font-display text-lg leading-relaxed">"{t.q}"</p>
             <footer className="mt-6 pt-6 border-t border-white/10">
@@ -226,13 +348,15 @@ export function CTABand({
           <div className="mt-10 flex flex-wrap gap-3">
             <Link
               to={primary.to}
-              className="group inline-flex items-center gap-2 rounded-full btn-navy shine px-6 py-3.5 text-sm font-semibold hover:-translate-y-0.5 hover:border-lime/40"
+              data-magnetic
+              className="group inline-flex items-center gap-2 rounded-full btn-navy shine px-6 py-3.5 text-sm font-semibold hover:border-lime/40"
             >
               {primary.label}
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
             <Link
               to={secondary.to}
+              data-magnetic="0.25"
               className="inline-flex items-center gap-2 rounded-full glass px-6 py-3.5 text-sm font-medium hover:bg-white/5"
             >
               {secondary.label}

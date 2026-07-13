@@ -120,6 +120,7 @@ function Page() {
         />
 
         <ProcessSteps
+          variant="rail"
           eyebrow="How it runs"
           title="Shadow, cut, build, automate."
           steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}

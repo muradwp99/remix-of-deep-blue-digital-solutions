@@ -179,6 +179,7 @@ function Page() {
         </section>
 
         <FeatureGrid
+          variant="spotlight"
           eyebrow="What's included"
           title="The work, concretely."
           cols={3}
@@ -189,6 +190,7 @@ function Page() {
       {/* ── TINT · soft violet band for the process ── */}
       <div className="block-tint">
         <ProcessSteps
+          variant="ladder"
           eyebrow="How it runs"
           title="Constrain, seed, match, scale."
           steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}
