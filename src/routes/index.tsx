@@ -209,21 +209,21 @@ function HomePage() {
         </div>
 
         {/* Hero Copy */}
-        <h1 className="text-center text-4xl md:text-5xl lg:text-[4.5rem] font-display font-semibold leading-[1.1] tracking-tight max-w-[1100px] mb-6 relative z-10">
-          <span className="block text-foreground">BOOST YOUR STARTUP'S</span>
-          <span className="block text-foreground">CONVERSION RATE – OR IT'S FREE</span>
+        <h1 className="relative z-10 mb-6 max-w-[15ch] text-center font-display text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
+          Software worth being proud of.
         </h1>
-        
-        <p className="text-center text-lg text-muted-foreground max-w-3xl mb-10 leading-relaxed font-normal relative z-10">
-          Join dozens of founders who've doubled their conversion rates with our<br className="hidden md:block" /> 2-week redesign process — risk-free, with guaranteed results.
+
+        <p className="relative z-10 mb-10 max-w-2xl text-center text-lg font-normal leading-relaxed text-muted-foreground">
+          A senior-only studio designing and engineering websites, apps, ecommerce and SaaS
+          for ambitious teams. One team, from strategy to ship.
         </p>
 
         {/* CTA */}
         <div className="flex flex-col items-center gap-3 relative z-10 mb-16">
           <Link to="/contact" className="bg-lime hover:bg-lime/90 text-black px-10 py-4 rounded-full font-display font-bold uppercase tracking-wider text-sm flex items-center gap-2 transition-colors">
-            FREE WEBSITE AUDIT <ArrowUpRight className="w-4 h-4" />
+            Get a free audit <ArrowUpRight className="w-4 h-4" />
           </Link>
-          <span className="text-[11px] text-muted-foreground uppercase tracking-wider">Summer Ending Special — Only 2 Slots Left!</span>
+          <span className="text-[11px] text-muted-foreground uppercase tracking-wider">Reviewed by a senior engineer, not a bot</span>
         </div>
 
         {/* Feature Cards Section */}

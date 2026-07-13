@@ -35,11 +35,38 @@
   --color-gold-foreground: var(--gold-foreground);
   --color-lime: var(--lime);
   --color-lime-foreground: var(--lime-foreground);
-  --font-display: "Fustat", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Fustat", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+}
+
+/* Base custom themes for the specific landing pages */
+.theme-neonlabs {
+  --background: oklch(0.06 0.02 270);
+  --foreground: oklch(0.98 0.01 260);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --primary: oklch(0.5 0.25 260);
+}
+
+.theme-homoludens {
+  --background: oklch(0.1 0.01 100);
+  --foreground: oklch(0.9 0.05 130);
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Orbitron", ui-sans-serif, system-ui, sans-serif;
+  --lime: oklch(0.7 0.2 130);
+}
+
+.theme-studio909 {
+  --background: oklch(0.08 0.0 0);
+  --foreground: oklch(0.95 0.0 0);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --primary: oklch(0.6 0.2 40); /* Orange */
 }
 
 :root {
+  --font-display: "Fustat", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Fustat", ui-sans-serif, system-ui, sans-serif;
   --radius: 0.75rem;
 
   /* Darkest navy, close to black */
@@ -88,6 +115,149 @@
   --gradient-card-gold: linear-gradient(135deg, oklch(0.34 0.08 88 / 0.32), oklch(0.16 0.03 265 / 0.35));
   --shadow-elegant: 0 30px 80px -30px oklch(0.35 0.06 265 / 0.55);
   --shadow-panel: 0 40px 120px -40px oklch(0 0 0 / 0.7);
+
+  /* Accent-derived tokens for per-page themes (src/lib/themes.ts overrides
+     these). Defaults match the historical hard-coded gold values, so pages
+     without a theme render pixel-identical to before. */
+  --wash-accent: oklch(0.35 0.1 85 / 0.15);
+  --sheen-soft: oklch(0.85 0.12 90 / 0.09);
+  --sheen-ring: oklch(0.85 0.13 90 / 0.6);
+  --sheen-ring-dim: oklch(0.65 0.09 90 / 0.14);
+  --btn-accent-1: oklch(0.85 0.14 90);
+  --btn-accent-2: oklch(0.73 0.13 84);
+  --btn-accent-border: oklch(0.9 0.12 90 / 0.45);
+  --btn-accent-shadow: 0 16px 44px -16px oklch(0.8 0.13 88 / 0.55);
+  --card-gold-border: oklch(0.82 0.13 85 / 0.2);
+  --glow-warm-1: oklch(0.72 0.14 70);
+  --glow-warm-2: oklch(0.82 0.14 90);
+  --glow-cool-1: oklch(0.55 0.11 255);
+  --glow-cool-2: oklch(0.68 0.09 230);
+
+  /* Section-block tokens (themes.ts overrides per page; gold defaults) */
+  --accent-strong: oklch(0.5 0.1 88);
+  --accent-soft-bg: oklch(0.96 0.03 88);
+  --block-bold-bg: oklch(0.82 0.14 90);
+  --block-bold-deep: oklch(0.3 0.09 88);
+}
+
+/* ---- Section blocks ----------------------------------------------------
+   doemedia-style color blocking: wrap any group of sections in .block-light,
+   .block-tint or .block-bold and every token-driven class inside (text-lime,
+   bg-surface, glass, gradient-card, btn-gold…) flips to a palette that reads
+   on that background. Dark is the default (no class). */
+.block-light,
+.block-tint,
+.block-bold {
+  --foreground: oklch(0.17 0.03 265);
+  --card-foreground: oklch(0.17 0.03 265);
+  --popover-foreground: oklch(0.17 0.03 265);
+  --muted-foreground: oklch(0.42 0.02 260);
+  --border: oklch(0.2 0.03 265 / 14%);
+  --input: oklch(0.2 0.03 265 / 18%);
+  --lime: var(--accent-strong);
+  --lime-foreground: oklch(0.98 0.005 250);
+  --gold: var(--accent-strong);
+  --gold-foreground: oklch(0.98 0.005 250);
+  --primary: oklch(0.17 0.03 265);
+  --primary-foreground: oklch(0.98 0.005 250);
+  --ring: var(--accent-strong);
+  --shadow-panel: 0 30px 70px -30px oklch(0.3 0.05 265 / 0.3);
+  --shadow-elegant: 0 24px 60px -28px oklch(0.3 0.05 265 / 0.25);
+  --gradient-hero: none;
+  color: var(--foreground);
+  background: var(--background);
+}
+.block-light {
+  --background: oklch(0.985 0.004 250);
+  --surface: oklch(0.96 0.007 250);
+  --surface-2: oklch(0.93 0.009 252);
+  --card: oklch(1 0 0);
+  --popover: oklch(1 0 0);
+  --gradient-card: linear-gradient(135deg, oklch(1 0 0), oklch(0.972 0.007 250));
+  --gradient-card-gold: linear-gradient(135deg, var(--accent-soft-bg), oklch(1 0 0));
+  --card-gold-border: oklch(0.2 0.03 265 / 12%);
+}
+.block-tint {
+  --background: var(--accent-soft-bg);
+  --surface: oklch(1 0 0 / 0.65);
+  --surface-2: oklch(1 0 0 / 0.85);
+  --card: oklch(1 0 0);
+  --popover: oklch(1 0 0);
+  --gradient-card: linear-gradient(135deg, oklch(1 0 0 / 0.95), oklch(1 0 0 / 0.75));
+  --gradient-card-gold: linear-gradient(135deg, oklch(1 0 0), var(--accent-soft-bg));
+  --card-gold-border: oklch(0.2 0.03 265 / 12%);
+}
+.block-bold {
+  --background: var(--block-bold-bg);
+  --foreground: oklch(0.15 0.035 265);
+  --muted-foreground: oklch(0.27 0.04 265);
+  --surface: oklch(1 0 0 / 0.4);
+  --surface-2: oklch(1 0 0 / 0.6);
+  --card: oklch(0.99 0.004 250);
+  --popover: oklch(0.99 0.004 250);
+  --lime: oklch(0.18 0.035 265);
+  --lime-foreground: oklch(0.98 0.005 250);
+  --gold: oklch(0.18 0.035 265);
+  --border: oklch(0.15 0.03 265 / 22%);
+  --gradient-card: linear-gradient(135deg, oklch(1 0 0 / 0.92), oklch(1 0 0 / 0.7));
+  --gradient-card-gold: linear-gradient(135deg, oklch(1 0 0), oklch(1 0 0 / 0.8));
+  --card-gold-border: oklch(0.15 0.03 265 / 20%);
+  --btn-accent-1: oklch(0.22 0.04 265);
+  --btn-accent-2: oklch(0.16 0.03 265);
+  --btn-accent-border: oklch(0.15 0.03 265 / 40%);
+  --btn-accent-shadow: 0 16px 40px -16px oklch(0.15 0.03 265 / 0.5);
+}
+/* deep saturated dark block (page-hue midnight, e.g. doemedia's purple/black) */
+.block-deep {
+  --background: var(--block-bold-deep);
+  background: var(--background);
+  --surface: oklch(1 0 0 / 0.06);
+  --surface-2: oklch(1 0 0 / 0.1);
+  --card: oklch(1 0 0 / 0.07);
+  --border: oklch(1 0 0 / 0.14);
+}
+/* utility fixes on light-ish blocks */
+.block-light .glass,
+.block-tint .glass,
+.block-bold .glass {
+  background: oklch(0 0 0 / 0.04);
+  border: 1px solid oklch(0.2 0.03 265 / 0.13);
+  backdrop-filter: none;
+}
+.block-light .glass-strong,
+.block-tint .glass-strong,
+.block-bold .glass-strong {
+  background: oklch(1 0 0 / 0.85);
+  border: 1px solid oklch(0.2 0.03 265 / 0.15);
+  backdrop-filter: none;
+}
+.block-light .gradient-card,
+.block-tint .gradient-card,
+.block-bold .gradient-card {
+  border: 1px solid oklch(0.2 0.03 265 / 0.12);
+  box-shadow: 0 14px 40px -18px oklch(0.3 0.05 265 / 0.18);
+}
+.block-light .grain-bg,
+.block-tint .grain-bg,
+.block-bold .grain-bg {
+  background-image: none;
+}
+.block-light .type-outline,
+.block-tint .type-outline,
+.block-bold .type-outline {
+  -webkit-text-stroke-color: oklch(0.2 0.03 265 / 0.35);
+}
+.block-light .btn-gold,
+.block-tint .btn-gold {
+  --btn-accent-1: var(--accent-strong);
+  --btn-accent-2: color-mix(in oklab, var(--accent-strong) 80%, black);
+  --btn-accent-border: color-mix(in oklab, var(--accent-strong) 55%, transparent);
+  --btn-accent-shadow: 0 16px 40px -16px color-mix(in oklab, var(--accent-strong) 55%, transparent);
+  color: oklch(0.98 0.005 250);
+}
+.block-light .marquee,
+.block-tint .marquee {
+  --border: oklch(0.2 0.03 265 / 14%);
 }
 
 @layer base {
@@ -100,6 +270,17 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* Fixed header overlays the page — offset anchor jumps so targets
+     (#roles, #calculator, #request…) don't land underneath it. */
+  html {
+    scroll-padding-top: 5.5rem;
+  }
+
+  /* Guard against horizontal overflow on every viewport (4K → 320px). */
+  html, body {
+    overflow-x: clip;
   }
 
   h1, h2, h3, h4 {
@@ -126,24 +307,19 @@
   padding-inline: 1.5rem;
 }
 
+/* Solid gold emphasis (names kept for existing call sites) */
 @utility text-gradient {
-  background: var(--gradient-glow);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--gold);
 }
 
 @utility text-gradient-lime {
-  background: var(--gradient-lime);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--lime);
 }
 
 @utility grain-bg {
   background-image:
     radial-gradient(ellipse 60% 40% at 20% 10%, oklch(0.35 0.09 265 / 0.35), transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 30%, oklch(0.35 0.1 85 / 0.15), transparent 60%);
+    radial-gradient(ellipse 50% 40% at 90% 30%, var(--wash-accent), transparent 60%);
 }
 
 @utility glass {
@@ -165,7 +341,7 @@
 
 @utility gradient-card-gold {
   background: var(--gradient-card-gold);
-  border: 1px solid oklch(0.82 0.13 85 / 0.2);
+  border: 1px solid var(--card-gold-border);
 }
 
 @utility reveal {
@@ -174,6 +350,31 @@
 }
 
 .font-playfair { font-family: 'Playfair Display', serif; }
+
+/* ---- Signature-section helpers ---- */
+
+/* Giant outlined display type (big-type.tsx) */
+.type-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px oklch(1 0 0 / 0.32);
+}
+.type-outline-accent {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--lime);
+}
+
+/* Active step in a data-pin-steps narrative */
+[data-pin-step] {
+  opacity: 0.45;
+  transition: opacity 0.4s ease;
+}
+[data-pin-step].pin-step-active {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pin-step] { opacity: 1; }
+}
 
 @keyframes heroReveal { 0%{opacity:0;transform:translateY(28px);filter:blur(12px)} 100%{opacity:1;transform:translateY(0);filter:blur(0)} }
 @keyframes heroFadeUp { 0%{opacity:0;transform:translateY(20px)} 100%{opacity:1;transform:translateY(0)} }
@@ -240,4 +441,632 @@
 
 @media (prefers-reduced-motion: reduce){
   .animate-float, .spin-slow { animation: none; }
+}
+
+/* ---- Cursor glare: a soft gold sheen + border glow anchored to the real
+   cursor position. Coordinates are set globally (see lib/animations.ts), so
+   the glare travels continuously from one card onto the next. ---- */
+@media (hover: hover) {
+  .glare-card {
+    position: relative;
+    --gx: -600px;
+    --gy: -600px;
+    --glare-o: 0;
+  }
+  /* interior sheen */
+  .glare-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+    opacity: var(--glare-o);
+    transition: opacity 0.5s ease;
+    background: radial-gradient(
+      240px circle at var(--gx) var(--gy),
+      var(--sheen-soft),
+      oklch(1 0 0 / 0.04) 45%,
+      transparent 72%
+    );
+  }
+  /* border glow ring */
+  .glare-card::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    z-index: 2;
+    opacity: var(--glare-o);
+    transition: opacity 0.5s ease;
+    background: radial-gradient(
+      280px circle at var(--gx) var(--gy),
+      var(--sheen-ring),
+      var(--sheen-ring-dim) 45%,
+      transparent 72%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}
+
+/* ---- Clients marquee ---- */
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+.marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.marquee-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: marquee 36s linear infinite;
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+/* ---- Recent-projects marquee (slow, continuous) ---- */
+.proj-marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.proj-marquee-track {
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  padding-inline: 22px;
+  animation: marquee 80s linear infinite;
+}
+.proj-marquee:hover .proj-marquee-track { animation-play-state: paused; }
+
+/* ---- Masked word reveal for big headings ---- */
+.split-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* keep descenders visible inside the mask */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+.split-i {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ---- Hero deck (arc carousel) ---- */
+.deck-tile {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform, opacity;
+  transform-origin: 50% 100%;
+  cursor: pointer;
+}
+.deck-fade {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 40px;
+  pointer-events: none;
+  background: linear-gradient(to top, oklch(0.12 0.025 265 / 0.9), transparent);
+}
+
+/* ---- Kickoff timeline ---- */
+.timeline-line {
+  position: absolute;
+  top: 7px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, oklch(0.82 0.14 90 / 0.9), oklch(0.82 0.14 90 / 0.25));
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.timeline-dot {
+  position: relative;
+  z-index: 1;
+  height: 16px;
+  width: 16px;
+  border-radius: 999px;
+  background: oklch(0.16 0.028 265);
+  border: 2px solid oklch(0.82 0.14 90 / 0.8);
+  box-shadow: 0 0 0 4px oklch(0.82 0.14 90 / 0.12);
+}
+
+/* ---- Hero orb: gradient sphere + orbit ring ---- */
+@keyframes orbBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.045); }
+}
+@keyframes orbSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes ringSpin {
+  from { transform: rotateX(74deg) rotateZ(0deg); }
+  to { transform: rotateX(74deg) rotateZ(360deg); }
+}
+.hero-orb-scene { perspective: 1100px; }
+.hero-orb {
+  position: relative;
+  width: min(44vw, 500px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 33% 28%,
+    oklch(0.58 0.09 255 / 0.95),
+    oklch(0.32 0.07 262 / 0.95) 38%,
+    oklch(0.17 0.04 265 / 0.98) 68%,
+    oklch(0.13 0.03 265) 100%
+  );
+  box-shadow:
+    inset -30px -40px 90px oklch(0 0 0 / 0.55),
+    inset 18px 20px 60px oklch(0.7 0.1 255 / 0.22),
+    0 0 130px oklch(0.45 0.09 260 / 0.4);
+  animation: orbBreathe 9s ease-in-out infinite;
+}
+/* rotating gold shimmer hugging the rim */
+.hero-orb::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    oklch(0.8 0.13 88 / 0.25) 42deg,
+    transparent 95deg,
+    transparent 360deg
+  );
+  animation: orbSpin 16s linear infinite;
+  -webkit-mask: radial-gradient(circle, transparent 57%, #000 62%, #000 100%);
+  mask: radial-gradient(circle, transparent 57%, #000 62%, #000 100%);
+}
+/* warm reflected light, bottom-right */
+.hero-orb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 68% 74%, oklch(0.8 0.13 88 / 0.15), transparent 44%);
+}
+.hero-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 136%;
+  aspect-ratio: 1;
+  margin-left: -68%;
+  margin-top: -68%;
+  border-radius: 50%;
+  border: 1px solid oklch(0.8 0.13 88 / 0.25);
+  border-top-color: oklch(0.85 0.14 90 / 0.65);
+  transform-style: preserve-3d;
+  animation: ringSpin 13s linear infinite;
+}
+.hero-ring::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: oklch(0.85 0.14 90);
+  box-shadow: 0 0 14px oklch(0.85 0.14 90 / 0.9);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb, .hero-orb::before, .hero-ring { animation: none; }
+}
+
+/* ---- Ripple rings: watery border-circles expanding around the sphere.
+   The border-radius wobbles a few percent as each ring travels, so the
+   wave front undulates like water instead of staying a perfect circle. ---- */
+@keyframes rippleWave {
+  0% {
+    transform: translate(-50%, -50%) scale(0.55) rotate(0deg);
+    opacity: 0;
+    border-radius: 50%;
+  }
+  16% { opacity: 0.5; }
+  35% {
+    border-radius: 47.5% 52.5% 51% 49% / 51.5% 48.5% 52% 48%;
+  }
+  65% {
+    border-radius: 52% 48% 48.5% 51.5% / 48% 52% 49% 51%;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.65) rotate(10deg);
+    opacity: 0;
+    border-radius: 50%;
+  }
+}
+.hero-ripple {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(52vw, 600px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1.5px solid oklch(0.85 0.03 260 / 0.45);
+  /* faint volumetric depth on the wave front */
+  box-shadow:
+    0 0 22px oklch(0.8 0.05 260 / 0.1),
+    inset 0 0 30px oklch(0.8 0.05 260 / 0.07);
+  transform: translate(-50%, -50%) scale(0.55);
+  opacity: 0;
+  pointer-events: none;
+  animation: rippleWave 8s cubic-bezier(0.2, 0.55, 0.45, 1) infinite;
+}
+.hero-ripple:nth-child(2) {
+  animation-delay: 2s;
+  animation-duration: 8.7s;
+  border-color: oklch(0.82 0.14 90 / 0.32);
+}
+.hero-ripple:nth-child(3) {
+  animation-delay: 4s;
+  animation-duration: 7.6s;
+}
+.hero-ripple:nth-child(4) {
+  animation-delay: 6s;
+  animation-duration: 9.2s;
+  border-color: oklch(0.82 0.14 90 / 0.22);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-ripple {
+    animation: none;
+    opacity: 0.18;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .hero-ripple:nth-child(n + 3) { display: none; }
+}
+
+/* ---- Scatter hero ---- */
+@keyframes caretBlink {
+  0%, 45% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.term-caret {
+  display: inline-block;
+  margin-left: 2px;
+  color: oklch(0.82 0.14 90);
+  animation: caretBlink 1.1s steps(1) infinite;
+}
+@keyframes scrollCue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  45% { transform: scaleY(1); transform-origin: top; }
+  55% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.scroll-cue-line {
+  display: block;
+  height: 34px;
+  width: 1.5px;
+  border-radius: 2px;
+  background: oklch(0.82 0.14 90 / 0.7);
+  animation: scrollCue 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ---- FAQ open animation ---- */
+details.faq-item > *:not(summary) {
+  animation: faqIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes faqIn {
+  from { opacity: 0; transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track, .proj-marquee-track { animation: none; }
+  details.faq-item > *:not(summary) { animation: none; }
+  .glare-card::before, .glare-card::after { display: none; }
+  .term-caret, .scroll-cue-line { animation: none; }
+}
+
+/* ---- Header & mega menu ---- */
+@keyframes headerIn {
+  0% { opacity: 0; transform: translateY(-16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+/* backwards fill (not both/forwards): once the intro ends the animation fully
+   releases, so the sticky header keeps painting normally and the glass
+   backdrop-filter samples the real page behind it */
+.header-in { animation: headerIn 0.9s cubic-bezier(0.16,1,0.3,1) backwards; }
+
+/* Pill subtly brightens and lifts while the mega panel is open */
+.header-pill {
+  transition: border-color 0.45s ease, box-shadow 0.45s ease;
+}
+.header-pill[data-mega-open="true"] {
+  border-color: oklch(1 0 0 / 0.2);
+  box-shadow: 0 30px 90px -30px oklch(0 0 0 / 0.8);
+}
+
+.mega-panel {
+  position: relative;
+  transform-origin: top center;
+  overflow: hidden;
+  /* Header glass material over a navy scrim so content stays legible
+     above bright imagery; blur still shows the page through it */
+  background:
+    linear-gradient(135deg, oklch(1 0 0 / 0.08), oklch(1 0 0 / 0.02)),
+    oklch(0.14 0.027 265 / 0.55);
+  backdrop-filter: blur(32px) saturate(170%);
+  transition:
+    opacity 0.4s cubic-bezier(0.16,1,0.3,1),
+    transform 0.5s cubic-bezier(0.16,1,0.3,1),
+    height 0.45s cubic-bezier(0.16,1,0.3,1),
+    visibility 0s linear;
+}
+/* Top edge light + faint brand tint inside the glass */
+.mega-panel::before {
+  content: "";
+  position: absolute; inset: 0 0 auto 0; height: 1px;
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.25), transparent);
+  pointer-events: none;
+}
+.mega-panel::after {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(ellipse 50% 70% at 10% 0%, oklch(0.82 0.14 90 / 0.06), transparent 60%),
+    radial-gradient(ellipse 45% 60% at 92% 100%, oklch(0.35 0.09 265 / 0.3), transparent 60%);
+  pointer-events: none;
+}
+.mega-panel[data-open="false"] {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.985);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.3s cubic-bezier(0.16,1,0.3,1),
+    transform 0.35s cubic-bezier(0.16,1,0.3,1),
+    height 0.45s cubic-bezier(0.16,1,0.3,1),
+    visibility 0s linear 0.35s;
+}
+
+/* Transform-only stagger: content is never gated on opacity, so it
+   stays visible even when a throttled renderer skips the animation */
+@keyframes megaItemIn {
+  0% { transform: translateY(12px); }
+  100% { transform: translateY(0); }
+}
+.mega-item { animation: megaItemIn 0.45s cubic-bezier(0.16,1,0.3,1) backwards; }
+
+@media (prefers-reduced-motion: reduce){
+  .header-in, .mega-item { animation: none; }
+  .mega-panel, .mega-panel[data-open="false"] {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ---- Services page ---- */
+
+/* Gold pill CTA (counterpart to btn-navy) */
+@utility btn-gold {
+  background: linear-gradient(135deg, var(--btn-accent-1), var(--btn-accent-2));
+  color: var(--gold-foreground);
+  border: 1px solid var(--btn-accent-border);
+  box-shadow: var(--btn-accent-shadow);
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease, filter 0.3s ease;
+}
+
+/* Second toolbox marquee row drifts the opposite way */
+.marquee-track-rev { animation-direction: reverse; }
+
+/* Dim veil scrubbed over receding deck panels — animating this overlay's
+   opacity is compositor-cheap, unlike scrubbing filter/opacity on a huge
+   glass panel full of backdrop-filter children */
+.svc-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  background: oklch(0.1 0.02 265 / 0.72);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---- Services hero: eclipse sunrise ----
+   A huge dark planet arc crests behind the hero CTAs; a gold-amber rim
+   gradient sways, an atmosphere haze breathes, and a sun-point pulses at
+   the crest. Everything animates transform/opacity only. */
+.eclipse-stage {
+  position: relative;
+  pointer-events: none;
+  --ecl-size: min(190vw, 1900px);
+  --ecl-top: 26px;
+}
+@media (min-width: 768px) {
+  .eclipse-stage { --ecl-size: min(150vw, 1900px); }
+}
+.eclipse-sphere,
+.eclipse-glow {
+  position: absolute;
+  left: 50%;
+  top: var(--ecl-top);
+  width: var(--ecl-size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+.eclipse-sphere {
+  background: radial-gradient(
+    circle at 50% 12%,
+    oklch(0.17 0.03 265),
+    oklch(0.10 0.02 265) 32%,
+    oklch(0.07 0.015 265) 55%,
+    oklch(0.05 0.012 265) 100%
+  );
+  box-shadow:
+    0 -14px 70px -8px oklch(0.66 0.16 65 / 0.38),
+    inset 0 26px 60px -18px oklch(0.72 0.15 75 / 0.3);
+}
+/* crisp sunrise hairline hugging the crest */
+.eclipse-sphere::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    transparent 98.1%,
+    oklch(0.9 0.13 87 / 0.95) 99.3%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 34%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 34%);
+}
+/* soft gradient rim band around the crest, swaying slowly */
+.eclipse-glow {
+  background: conic-gradient(
+    from 318deg,
+    transparent 0deg,
+    oklch(0.45 0.13 40 / 0.3) 14deg,
+    oklch(0.64 0.16 60 / 0.65) 30deg,
+    oklch(0.92 0.14 88) 42deg,
+    oklch(0.64 0.16 60 / 0.65) 54deg,
+    oklch(0.45 0.13 40 / 0.3) 70deg,
+    transparent 84deg
+  );
+  -webkit-mask: radial-gradient(circle closest-side, transparent 92%, #000 96.5%, #000 99%, transparent 100%);
+  mask: radial-gradient(circle closest-side, transparent 92%, #000 96.5%, #000 99%, transparent 100%);
+  filter: blur(14px);
+  animation: eclipseSway 9s ease-in-out infinite alternate;
+}
+@keyframes eclipseSway {
+  from { transform: translateX(-50%) rotate(-7deg); }
+  to   { transform: translateX(-50%) rotate(7deg); }
+}
+/* warm atmosphere above the crest, breathing */
+.eclipse-haze {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--ecl-top) - 120px);
+  width: min(80vw, 900px);
+  height: 260px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 78%,
+    oklch(0.7 0.16 70 / 0.34),
+    oklch(0.6 0.15 55 / 0.12) 55%,
+    transparent 75%
+  );
+  filter: blur(26px);
+  animation: eclipseBreathe 8s ease-in-out infinite;
+}
+@keyframes eclipseBreathe {
+  0%, 100% { opacity: 0.75; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.07); }
+}
+/* the sun cresting the rim */
+.eclipse-flare {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--ecl-top) - 60px);
+  width: 120px;
+  height: 120px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    circle,
+    oklch(0.99 0.02 95) 0 7%,
+    oklch(0.92 0.12 90 / 0.9) 18%,
+    oklch(0.75 0.16 75 / 0.5) 38%,
+    transparent 68%
+  );
+  animation: eclipsePulse 5.5s ease-in-out infinite;
+}
+/* horizontal lens streak through the sun-point */
+.eclipse-flare::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 340px;
+  height: 3px;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    oklch(0.9 0.13 88 / 0.7) 30%,
+    oklch(0.98 0.05 95) 50%,
+    oklch(0.9 0.13 88 / 0.7) 70%,
+    transparent
+  );
+  filter: blur(1.5px);
+}
+@keyframes eclipsePulse {
+  0%, 100% { opacity: 0.85; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.12); }
+}
+/* faint twinkling stars in the upper sky */
+.eclipse-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.eclipse-stars::before,
+.eclipse-stars::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  box-shadow:
+    8vw 90px oklch(0.9 0.04 250 / 0.5),
+    21vw 210px oklch(0.9 0.04 250 / 0.35),
+    36vw 60px oklch(0.9 0.04 250 / 0.45),
+    54vw 150px oklch(0.9 0.04 250 / 0.3),
+    71vw 50px oklch(0.9 0.04 250 / 0.5),
+    88vw 180px oklch(0.9 0.04 250 / 0.4);
+  animation: starTwinkle 4.5s ease-in-out infinite;
+}
+.eclipse-stars::after {
+  box-shadow:
+    14vw 300px oklch(0.9 0.04 250 / 0.35),
+    30vw 130px oklch(0.9 0.04 250 / 0.45),
+    47vw 250px oklch(0.9 0.04 250 / 0.3),
+    64vw 90px oklch(0.9 0.04 250 / 0.4),
+    80vw 280px oklch(0.9 0.04 250 / 0.35),
+    93vw 70px oklch(0.9 0.04 250 / 0.45);
+  animation-duration: 6s;
+  animation-delay: 1.6s;
+}
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.9; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .eclipse-glow,
+  .eclipse-haze,
+  .eclipse-flare,
+  .eclipse-stars::before,
+  .eclipse-stars::after {
+    animation: none;
+  }
+}
+
+/* Scroll-scrubbed vertical progress line (process section) */
+.process-line {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 7px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, oklch(0.82 0.14 90 / 0.9), oklch(0.82 0.14 90 / 0.15));
+  transform: scaleY(0);
+  transform-origin: top center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process-line { transform: scaleY(1); }
 }

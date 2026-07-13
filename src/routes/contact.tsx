@@ -288,7 +288,7 @@ const inputCls =
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{label}</span>
+      <span className="text-xs font-medium uppercase tracking-[0.2em] text-foreground/75">{label}</span>
       <div className="mt-2">{children}</div>
     </label>
   );

@@ -47,7 +47,7 @@ export function CostCalculator() {
       {open && (
         <div
           ref={panelRef}
-          className="mb-3 w-[360px] max-h-[70vh] overflow-auto rounded-2xl border border-white/10 bg-background/95 p-5 shadow-panel backdrop-blur-xl"
+          className="mb-3 w-[calc(100vw-3rem)] max-w-[360px] max-h-[70vh] overflow-auto rounded-2xl border border-white/10 bg-background/95 p-5 shadow-panel backdrop-blur-xl"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
@@ -146,10 +146,11 @@ export function CostCalculator() {
 
       <button
         onClick={() => setOpen((v) => !v)}
-        className="group flex items-center gap-2 rounded-full bg-lime pl-4 pr-5 py-3 text-sm font-semibold text-lime-foreground shadow-panel hover:brightness-110 transition"
+        className="group flex items-center gap-2 rounded-full bg-lime px-4 py-3.5 text-sm font-semibold text-lime-foreground shadow-panel transition hover:brightness-110 sm:pr-5"
+        aria-label="Cost Calculator"
       >
         <Calculator className="h-4 w-4" />
-        Cost Calculator
+        <span className="hidden sm:inline">Cost Calculator</span>
       </button>
     </div>
   );
@@ -230,7 +231,7 @@ export function Chatbot() {
       {open && (
         <div
           ref={panelRef}
-          className="mb-3 w-[360px] h-[520px] flex flex-col rounded-2xl border border-white/10 bg-background/95 shadow-panel backdrop-blur-xl overflow-hidden"
+          className="mb-3 flex h-[min(520px,75vh)] w-[calc(100vw-3rem)] max-w-[360px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-background/95 shadow-panel backdrop-blur-xl"
         >
           <div className="flex items-center justify-between p-4 border-b border-white/10">
             <div className="flex items-center gap-2">
