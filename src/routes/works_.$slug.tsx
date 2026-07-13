@@ -29,16 +29,27 @@ type NextCard = { slug: string; name: string; summary: string; hero: string; her
 const cmsToStudy = (p: CmsProject): DetailStudy => ({
   slug: p.slug,
   name: p.title,
-  tag: p.client || p.industry || "Case study",
+  tag: p.tag || p.client || p.industry || "Case study",
   industry: p.industry || "",
   year: p.year || "",
   hero: cmsMedia(p.coverImage) || projectPlaceholder(p.slug),
   heroAlt: p.title,
   summary: p.summary || "",
+  services: p.services?.length ? p.services : undefined,
+  stack: p.stack?.length ? p.stack : undefined,
+  challenge: p.challenge || undefined,
+  approach: p.approach?.length ? p.approach : undefined,
   outcomes: (p.results || []).map((r) => ({ value: r.value, label: r.label })),
   images: (p.gallery || [])
     .map((g) => ({ src: cmsMedia(g.image) || "", alt: p.title }))
     .filter((i) => i.src),
+  testimonial: p.testimonial?.quote
+    ? {
+        quote: p.testimonial.quote,
+        author: p.testimonial.author || "",
+        role: p.testimonial.role || "",
+      }
+    : undefined,
 });
 
 const cmsToCard = (p: CmsProject): NextCard => ({

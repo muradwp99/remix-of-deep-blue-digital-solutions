@@ -45,6 +45,11 @@ export const Projects: CollectionConfig = {
               type: "textarea",
               admin: { description: "Short teaser shown on the Works grid." },
             },
+            {
+              name: "tag",
+              type: "text",
+              admin: { description: 'Short project tag, e.g. "Headless replatform".' },
+            },
           ],
         },
         {
@@ -67,7 +72,21 @@ export const Projects: CollectionConfig = {
         {
           label: "Case Study",
           fields: [
-            { name: "body", type: "richText" },
+            {
+              name: "challenge",
+              type: "textarea",
+              admin: { description: "Where the numbers stood before the project (the case-study 'challenge')." },
+            },
+            {
+              name: "approach",
+              type: "array",
+              admin: { description: "The steps taken, in order (the case-study 'approach')." },
+              fields: [
+                { name: "phase", type: "text", required: true },
+                { name: "detail", type: "textarea", required: true },
+              ],
+            },
+            { name: "body", type: "richText", admin: { description: "Optional long-form narrative." } },
             {
               name: "results",
               type: "array",
@@ -82,6 +101,33 @@ export const Projects: CollectionConfig = {
                   admin: { description: "Arrow direction for the metric." },
                   options: ["up", "down"],
                 },
+              ],
+            },
+            {
+              type: "row",
+              fields: [
+                {
+                  name: "services",
+                  type: "text",
+                  hasMany: true,
+                  admin: { width: "50%", description: "Services delivered, e.g. Design, Engineering." },
+                },
+                {
+                  name: "stack",
+                  type: "text",
+                  hasMany: true,
+                  admin: { width: "50%", description: "Tech stack, e.g. React, Node, Postgres." },
+                },
+              ],
+            },
+            {
+              name: "testimonial",
+              type: "group",
+              admin: { description: "Optional client quote shown on the case study." },
+              fields: [
+                { name: "quote", type: "textarea" },
+                { name: "author", type: "text" },
+                { name: "role", type: "text" },
               ],
             },
           ],

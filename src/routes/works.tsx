@@ -36,7 +36,7 @@ export const Route = createFileRoute("/works")({
         items: docs.map((p) => ({
           slug: p.slug,
           name: p.title,
-          tag: p.client || p.industry || "Case study",
+          tag: p.tag || p.client || p.industry || "Case study",
           industry: p.industry || "",
           year: p.year || "",
           summary: p.summary || "",

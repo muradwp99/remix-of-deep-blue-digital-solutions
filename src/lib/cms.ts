@@ -84,9 +84,15 @@ export type CmsProject = {
   client?: string;
   industry?: string;
   year?: string;
+  tag?: string;
   summary?: string;
   coverImage?: unknown;
   featured?: boolean;
+  challenge?: string;
+  approach?: { phase: string; detail: string }[];
   results?: { value: string; label: string; direction?: string }[];
+  services?: string[];
+  stack?: string[];
   gallery?: { image?: unknown }[];
+  testimonial?: { quote?: string; author?: string; role?: string };
 };
