@@ -234,8 +234,48 @@
 .block-light .gradient-card,
 .block-tint .gradient-card,
 .block-bold .gradient-card {
-  border: 1px solid oklch(0.2 0.03 265 / 0.12);
-  box-shadow: 0 14px 40px -18px oklch(0.3 0.05 265 / 0.18);
+  /* Premium light card: page-accent corner glow + inset top highlight for
+     depth (was a flat white card with a hairline). */
+  background:
+    radial-gradient(130% 120% at 100% 0%, color-mix(in oklab, var(--accent-strong) 13%, transparent), transparent 58%),
+    var(--gradient-card);
+  border: 1px solid oklch(0.2 0.03 265 / 0.1);
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.85),
+    0 16px 44px -22px oklch(0.3 0.05 265 / 0.2);
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+}
+.block-light .gradient-card:hover,
+.block-tint .gradient-card:hover,
+.block-bold .gradient-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in oklab, var(--accent-strong) 42%, transparent);
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.9),
+    0 30px 68px -26px color-mix(in oklab, var(--accent-strong) 34%, oklch(0.3 0.05 265 / 0.3));
+}
+@media (prefers-reduced-motion: reduce) {
+  .block-light .gradient-card:hover,
+  .block-tint .gradient-card:hover,
+  .block-bold .gradient-card:hover {
+    transform: none;
+  }
+}
+
+/* Give the flat saturated colour blocks some dimension (top-centre sheen)
+   so bold/deep heroes don't read as a single flat fill. */
+.block-bold {
+  background:
+    radial-gradient(120% 85% at 50% -15%, oklch(1 0 0 / 0.22), transparent 62%),
+    var(--block-bold-bg);
+}
+.block-deep {
+  background:
+    radial-gradient(120% 90% at 50% -10%, color-mix(in oklab, var(--accent-strong) 38%, transparent), transparent 60%),
+    var(--block-bold-deep);
 }
 .block-light .grain-bg,
 .block-tint .grain-bg,

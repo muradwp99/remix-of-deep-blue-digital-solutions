@@ -90,22 +90,28 @@ export function FeatureGrid({
           {items.map((it, i) => (
             <div
               key={it.title}
-              className={`group glare-card lift shine flex flex-col rounded-2xl p-7 ${
+              className={`group glare-card lift shine relative flex flex-col overflow-hidden rounded-2xl p-7 ${
                 gold ? "gradient-card-gold" : "gradient-card"
               } hover:border-lime/30 ${i === 0 ? "md:col-span-3 lg:col-span-2 lg:row-span-2" : ""}`}
               data-card
             >
+              {i === 0 && (
+                <it.icon
+                  className="pointer-events-none absolute -bottom-8 -right-6 h-48 w-48 text-lime opacity-[0.07] transition-transform duration-700 group-hover:scale-105"
+                  aria-hidden
+                />
+              )}
               <div
-                className={`grid place-items-center rounded-xl border border-lime/20 bg-gradient-to-br from-lime/25 to-transparent transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110 ${
+                className={`relative grid place-items-center rounded-xl border border-lime/20 bg-gradient-to-br from-lime/25 to-transparent transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110 ${
                   i === 0 ? "h-14 w-14" : "h-12 w-12"
                 }`}
               >
                 <it.icon className={i === 0 ? "h-6 w-6 text-lime" : "h-5 w-5 text-lime"} />
               </div>
-              <h3 className={`mt-7 font-display font-semibold ${i === 0 ? "text-3xl" : "text-xl"}`}>
+              <h3 className={`relative mt-7 font-display font-semibold ${i === 0 ? "text-3xl" : "text-xl"}`}>
                 {it.title}
               </h3>
-              <p className={`mt-2 text-muted-foreground ${i === 0 ? "text-base" : "text-sm"}`}>
+              <p className={`relative mt-2 text-muted-foreground ${i === 0 ? "text-base" : "text-sm"}`}>
                 {it.desc}
               </p>
             </div>
