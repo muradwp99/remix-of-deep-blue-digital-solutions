@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { CTABand } from "@/components/sections";
+import { cmsFind, cmsMedia, type CmsTeam } from "@/lib/cms";
+
+type Leader = { name: string; role: string; bio: string; img: string };
 
 export const Route = createFileRoute("/leadership")({
   head: () => ({
@@ -12,10 +15,30 @@ export const Route = createFileRoute("/leadership")({
       { property: "og:description", content: "Deep expertise in software engineering, product design, and business strategy." },
     ],
   }),
+  // Content-managed from the CMS `team` collection; falls back to the
+  // built-in list if the CMS is unreachable. Photos fall back to the
+  // matching built-in portrait (by name) when a team member has none.
+  loader: async (): Promise<{ leaders: Leader[] }> => {
+    const team = await cmsFind<CmsTeam>("team", { sort: "order", depth: 1, limit: 12 });
+    if (team.length) {
+      return {
+        leaders: team.map((t) => ({
+          name: t.name,
+          role: t.role || "",
+          bio: t.bio || "",
+          img:
+            cmsMedia(t.photo) ||
+            IMG_BY_NAME[t.name] ||
+            `https://picsum.photos/seed/nl-${encodeURIComponent(t.name)}/600/750`,
+        })),
+      };
+    }
+    return { leaders: fallbackLeaders };
+  },
   component: Page,
 });
 
-const leaders = [
+const fallbackLeaders: Leader[] = [
   {
     name: "Elena Marsh",
     role: "CEO & Co-founder",
@@ -41,6 +64,10 @@ const leaders = [
     img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=70",
   },
 ];
+
+const IMG_BY_NAME: Record<string, string> = Object.fromEntries(
+  fallbackLeaders.map((l) => [l.name, l.img]),
+);
 
 const operating = [
   {
@@ -73,6 +100,7 @@ const values = [
 ];
 
 function Page() {
+  const { leaders } = Route.useLoaderData();
   return (
     <SiteShell theme={pageThemes["leadership"]}>
       {/* ---- Hero (light editorial, asymmetric split) ---- */}

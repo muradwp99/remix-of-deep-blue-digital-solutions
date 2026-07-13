@@ -77,6 +77,15 @@ export function cmsMedia(m: unknown): string | undefined {
 export const projectPlaceholder = (slug: string) =>
   `https://picsum.photos/seed/nl-${slug}/1200/900`;
 
+/** Shape of a Payload `team` doc (fields used by the site). */
+export type CmsTeam = {
+  name: string;
+  role?: string;
+  bio?: string;
+  photo?: unknown;
+  order?: number;
+};
+
 /** Shape of a Payload `projects` doc (fields used by the site). */
 export type CmsProject = {
   slug: string;
