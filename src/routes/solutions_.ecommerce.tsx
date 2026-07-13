@@ -234,6 +234,7 @@ function Page() {
         />
 
         <BenefitList
+          variant="grid"
           eyebrow="Why Northline"
           title="What you get that others skip."
           items={page.benefits}
@@ -241,7 +242,7 @@ function Page() {
       </div>
 
       {/* Dark bookend into the footer */}
-      <FAQAccordion faqs={page.faqs} />
+      <FAQAccordion variant="wide" faqs={page.faqs} />
       <SubpageBanner page={page} />
       <RelatedPages kind="solutions" slug={page.slug} />
     </SiteShell>

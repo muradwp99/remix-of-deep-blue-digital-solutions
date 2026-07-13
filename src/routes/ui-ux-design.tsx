@@ -58,22 +58,7 @@ function Page() {
 
       {/* ---- Light zone: services + the redesign ledger ---- */}
       <div className="block-light">
-        <FeatureGrid
-          variant="spotlight"
-          eyebrow="Core services"
-          title="Design, end to end."
-          cols={3}
-          items={[
-            { icon: Search, title: "UX Research & Strategy", desc: "User interviews, session analysis, and journey maps that kill bad assumptions early — before they cost a sprint." },
-            { icon: PenTool, title: "Interface Design", desc: "On-brand, accessible UI with the typographic discipline this page is demonstrating right now." },
-            { icon: Layout, title: "Wireframing & Prototyping", desc: "Interactive prototypes in days, tested with real users before engineering commits." },
-            { icon: Boxes, title: "Design Systems", desc: "Tokens, components, and usage docs — built with your engineers so they get adopted, not archived." },
-            { icon: MousePointerClick, title: "Interaction Design", desc: "Choreographed motion with intent: guiding attention, confirming actions, never decorating for its own sake." },
-            { icon: Accessibility, title: "Usability & A11y", desc: "WCAG AA as the floor. Tested with keyboards, screen readers, and actual users." },
-          ]}
-        />
-
-        {/* The redesign ledger — before/after counters, doubles as case proof */}
+        {/* The redesign ledger — before/after counters, doubles as case proof; opens the light zone so the page doesn't lead with the feature grid */}
         <section className="container-page py-24 border-t border-border/60" data-reveal-group>
           <div className="mb-14 max-w-3xl">
             <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
@@ -110,6 +95,21 @@ function Page() {
             Full case study, with the failed iterations too <ArrowUpRight className="h-4 w-4" />
           </Link>
         </section>
+
+        <FeatureGrid
+          variant="spotlight"
+          eyebrow="Core services"
+          title="Design, end to end."
+          cols={3}
+          items={[
+            { icon: Search, title: "UX Research & Strategy", desc: "User interviews, session analysis, and journey maps that kill bad assumptions early — before they cost a sprint." },
+            { icon: PenTool, title: "Interface Design", desc: "On-brand, accessible UI with the typographic discipline this page is demonstrating right now." },
+            { icon: Layout, title: "Wireframing & Prototyping", desc: "Interactive prototypes in days, tested with real users before engineering commits." },
+            { icon: Boxes, title: "Design Systems", desc: "Tokens, components, and usage docs — built with your engineers so they get adopted, not archived." },
+            { icon: MousePointerClick, title: "Interaction Design", desc: "Choreographed motion with intent: guiding attention, confirming actions, never decorating for its own sake." },
+            { icon: Accessibility, title: "Usability & A11y", desc: "WCAG AA as the floor. Tested with keyboards, screen readers, and actual users." },
+          ]}
+        />
       </div>
 
       {/* ---- Tint band: how we work ---- */}
@@ -218,6 +218,7 @@ function Page() {
         </section>
 
         <BenefitList
+          variant="grid"
           eyebrow="What handoff includes"
           title="Files your engineers won't curse at."
           items={[

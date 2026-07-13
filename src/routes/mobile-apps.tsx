@@ -80,8 +80,19 @@ function Page() {
         </div>
       </section>
 
-      {/* ---- Light zone: the platform choices ---- */}
+      {/* ---- Light zone: why our apps win, then the platform choices ---- */}
       <div className="block-light">
+        <BenefitList
+          eyebrow="Why our apps win"
+          title="Retention is the only vanity-free metric."
+          items={[
+            { title: "Performance-budgeted", desc: "A 60fps budget enforced in CI — animations that stutter don't merge." },
+            { title: "Pixel-accurate UI", desc: "Design QA against the Figma file, screen by screen, before every release." },
+            { title: "Offline-first", desc: "Queued writes and conflict resolution, so the app works on the subway and syncs later." },
+            { title: "Store-savvy", desc: "We've shipped 60+ store submissions; rejections are edge cases we've already met." },
+          ]}
+        />
+
         <FeatureGrid
           variant="rows"
           eyebrow="Capabilities"
@@ -122,7 +133,7 @@ function Page() {
         </section>
       </div>
 
-      {/* ---- Light zone: process + why our apps win ---- */}
+      {/* ---- Light zone: process ---- */}
       <div className="block-light">
         <ProcessSteps
           variant="ladder"
@@ -134,17 +145,6 @@ function Page() {
             { n: "03", t: "Agile Development", d: "Weekly builds to your phone via TestFlight and Play internal track." },
             { n: "04", t: "QA & Testing", d: "A 40-device lab, performance profiling, and the edge cases reviewers punish." },
             { n: "05", t: "Launch & Scale", d: "Store submission handled end to end, ASO, and post-launch iteration." },
-          ]}
-        />
-
-        <BenefitList
-          eyebrow="Why our apps win"
-          title="Retention is the only vanity-free metric."
-          items={[
-            { title: "Performance-budgeted", desc: "A 60fps budget enforced in CI — animations that stutter don't merge." },
-            { title: "Pixel-accurate UI", desc: "Design QA against the Figma file, screen by screen, before every release." },
-            { title: "Offline-first", desc: "Queued writes and conflict resolution, so the app works on the subway and syncs later." },
-            { title: "Store-savvy", desc: "We've shipped 60+ store submissions; rejections are edge cases we've already met." },
           ]}
         />
       </div>
@@ -323,6 +323,7 @@ function Page() {
       />
 
       <FAQAccordion
+        variant="wide"
         faqs={[
           { q: "Native or cross-platform?", a: "We model it against your roadmap: cross-platform when speed and parity win, native when performance, hardware access, or platform feel is the product. You get the reasoning in writing." },
           { q: "How long to launch?", a: "First live demo on day 7, a prototype on your phone by day 14, and a store-ready MVP typically in 8–14 weeks." },

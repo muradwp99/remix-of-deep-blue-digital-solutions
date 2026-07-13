@@ -294,7 +294,51 @@ export function Testimonials({
   );
 }
 
-export function FAQAccordion({ faqs }: { faqs: { q: string; a: string }[] }) {
+export function FAQAccordion({
+  faqs,
+  variant = "split",
+}: {
+  faqs: { q: string; a: string }[];
+  /**
+   * - split: two-column, heading left / accordion right (default)
+   * - wide: centered heading over a single full-width accordion column
+   */
+  variant?: "split" | "wide";
+}) {
+  const list = (
+    <div className="space-y-3">
+      {faqs.map((f) => (
+        <details key={f.q} className="glass rounded-2xl p-6 group" data-reveal-child>
+          <summary className="font-display text-lg font-semibold cursor-pointer flex items-center justify-between list-none">
+            {f.q}
+            <span className="text-lime transition-transform duration-300 group-open:rotate-45">
+              +
+            </span>
+          </summary>
+          <p className="mt-3 text-sm text-muted-foreground">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  );
+
+  if (variant === "wide") {
+    return (
+      <section className="container-page py-24 border-t border-border/60" data-reveal-group>
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-10 text-center">
+            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+              FAQ
+            </p>
+            <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight font-semibold" data-reveal-child>
+              Answers to common questions.
+            </h2>
+          </div>
+          {list}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="container-page py-24 border-t border-border/60" data-reveal-group>
       <div className="grid md:grid-cols-2 gap-16 items-start">
@@ -306,19 +350,7 @@ export function FAQAccordion({ faqs }: { faqs: { q: string; a: string }[] }) {
             Answers to common questions.
           </h2>
         </div>
-        <div className="space-y-3">
-          {faqs.map((f) => (
-            <details key={f.q} className="glass rounded-2xl p-6 group" data-reveal-child>
-              <summary className="font-display text-lg font-semibold cursor-pointer flex items-center justify-between list-none">
-                {f.q}
-                <span className="text-lime transition-transform duration-300 group-open:rotate-45">
-                  +
-                </span>
-              </summary>
-              <p className="mt-3 text-sm text-muted-foreground">{f.a}</p>
-            </details>
-          ))}
-        </div>
+        {list}
       </div>
     </section>
   );
@@ -378,11 +410,36 @@ export function BenefitList({
   eyebrow,
   title,
   items,
+  variant = "list",
 }: {
   eyebrow: string;
   title: ReactNode;
   items: { title: string; desc: string }[];
+  /**
+   * - list: two-column, checklist of glass rows on the right (default)
+   * - grid: full-width heading over a card grid of benefits
+   */
+  variant?: "list" | "grid";
 }) {
+  if (variant === "grid") {
+    return (
+      <section className="container-page py-24 border-t border-border/60" data-reveal-group>
+        <SectionHead eyebrow={eyebrow} title={title} />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-cards>
+          {items.map((f) => (
+            <div key={f.title} className="glare-card gradient-card lift rounded-2xl p-7" data-card>
+              <div className="grid h-10 w-10 place-items-center rounded-lg border border-lime/25 bg-lime/15">
+                <Check className="h-4 w-4 text-lime" />
+              </div>
+              <h3 className="mt-6 font-display text-lg font-semibold">{f.title}</h3>
+              <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="container-page py-24 border-t border-border/60" data-reveal-group>
       <div className="grid md:grid-cols-2 gap-16 items-start">

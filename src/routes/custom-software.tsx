@@ -56,21 +56,8 @@ function Page() {
         </div>
       </section>
 
-      {/* ---- Light zone: what we build + the numbers ---- */}
+      {/* ---- Light zone: the numbers, then what we build ---- */}
       <div className="block-light">
-        <FeatureGrid
-          variant="spotlight"
-          eyebrow="What we build"
-          title="Four kinds of systems. All of them boring to operate."
-          subtitle="Boring is the compliment: predictable deploys, readable code, dashboards nobody has to babysit."
-          items={[
-            { icon: Layers, title: "Web Applications", desc: "Dashboards, portals, and internal tools that replace the spreadsheet nobody admits runs the company." },
-            { icon: Cloud, title: "SaaS Platforms", desc: "Multi-tenant from the first commit — billing, roles, and audit trails included, not bolted on." },
-            { icon: Building2, title: "Enterprise Portals", desc: "Role-based systems that pass your security team's review the first time." },
-            { icon: RefreshCw, title: "Legacy Modernization", desc: "Strangler-pattern re-platforms. The old system keeps running until the new one has earned trust." },
-          ]}
-        />
-
         {/* Proof band — custom counters, heading-led (no eyebrow) */}
         <section className="container-page py-24 border-t border-border/60" data-reveal-group>
           <div className="grid gap-14 lg:grid-cols-[1fr_1.2fr] items-center">
@@ -103,6 +90,19 @@ function Page() {
             </div>
           </div>
         </section>
+
+        <FeatureGrid
+          variant="spotlight"
+          eyebrow="What we build"
+          title="Four kinds of systems. All of them boring to operate."
+          subtitle="Boring is the compliment: predictable deploys, readable code, dashboards nobody has to babysit."
+          items={[
+            { icon: Layers, title: "Web Applications", desc: "Dashboards, portals, and internal tools that replace the spreadsheet nobody admits runs the company." },
+            { icon: Cloud, title: "SaaS Platforms", desc: "Multi-tenant from the first commit — billing, roles, and audit trails included, not bolted on." },
+            { icon: Building2, title: "Enterprise Portals", desc: "Role-based systems that pass your security team's review the first time." },
+            { icon: RefreshCw, title: "Legacy Modernization", desc: "Strangler-pattern re-platforms. The old system keeps running until the new one has earned trust." },
+          ]}
+        />
       </div>
 
       {/* ---- Tint band: delivery process ---- */}
@@ -219,6 +219,7 @@ function Page() {
         </section>
 
         <BenefitList
+          variant="grid"
           eyebrow="Why our engineers"
           title="Senior only. Your repo, your rules."
           items={[

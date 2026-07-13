@@ -72,20 +72,7 @@ function Page() {
 
       {/* ---- Light zone: the four pillars + the payback ---- */}
       <div className="block-light">
-        <FeatureGrid
-          variant="rows"
-          eyebrow="Transformation pillars"
-          title="Four pillars, one operating system for change."
-          subtitle="Each pillar ships value on its own. Together they compound into an organization that releases weekly instead of quarterly."
-          items={[
-            { icon: RefreshCw, title: "Legacy Modernization", desc: "Strangler-pattern re-platforms — the old system keeps earning while the new one earns trust." },
-            { icon: Cloud, title: "Cloud Migration", desc: "Infrastructure as code, autoscaling, and a monthly bill your CFO can actually read." },
-            { icon: Workflow, title: "Process Automation", desc: "The 40 hours a week your team spends re-keying data, given back." },
-            { icon: BrainCircuit, title: "Data Intelligence", desc: "One source of truth, live dashboards, and LLM copilots where they genuinely help." },
-          ]}
-        />
-
-        {/* Proof band — counters, heading-led */}
+        {/* Proof band — counters, heading-led; opens the light zone so the page doesn't lead with the feature grid */}
         <section className="container-page py-24 border-t border-border/60" data-reveal-group>
           <div className="grid gap-14 lg:grid-cols-[1.1fr_1fr] items-center">
             <div>
@@ -122,6 +109,19 @@ function Page() {
             </div>
           </div>
         </section>
+
+        <FeatureGrid
+          variant="rows"
+          eyebrow="Transformation pillars"
+          title="Four pillars, one operating system for change."
+          subtitle="Each pillar ships value on its own. Together they compound into an organization that releases weekly instead of quarterly."
+          items={[
+            { icon: RefreshCw, title: "Legacy Modernization", desc: "Strangler-pattern re-platforms — the old system keeps earning while the new one earns trust." },
+            { icon: Cloud, title: "Cloud Migration", desc: "Infrastructure as code, autoscaling, and a monthly bill your CFO can actually read." },
+            { icon: Workflow, title: "Process Automation", desc: "The 40 hours a week your team spends re-keying data, given back." },
+            { icon: BrainCircuit, title: "Data Intelligence", desc: "One source of truth, live dashboards, and LLM copilots where they genuinely help." },
+          ]}
+        />
       </div>
 
       {/* ---- Tint band: what we modernize (scattered chips assemble) ---- */}
@@ -279,6 +279,7 @@ function Page() {
         </section>
 
         <BenefitList
+          variant="grid"
           eyebrow="Outcomes that compound"
           title="What your team keeps."
           items={[
@@ -292,6 +293,7 @@ function Page() {
 
       {/* ---- Dark bookend: FAQ + CTA into footer ---- */}
       <FAQAccordion
+        variant="wide"
         faqs={[
           { q: "Will there be downtime during migration?", a: "Our cutovers are zero- or low-downtime by design: traffic shifts incrementally behind flags, with automated rollback if error budgets are exceeded. Most users never notice the switch." },
           { q: "How do you reduce risk?", a: "Phases, not big bangs. Each phase is independently valuable, independently reversible, and verified against the legacy system before it takes real traffic." },

@@ -62,8 +62,17 @@ function Page() {
         </div>
       </section>
 
-      {/* ---- Light zone: the platform layer + growth features ---- */}
+      {/* ---- Light zone: the numbers, then the platform layer + growth features ---- */}
       <div className="block-light">
+        <StatsRow
+          stats={[
+            { value: "12wk", label: "Median MVP timeline" },
+            { value: "98", label: "Median Lighthouse at launch" },
+            { value: "99.95%", label: "Uptime across client platforms" },
+            { value: "84%", label: "Of clients stay on a Care plan" },
+          ]}
+        />
+
         <FeatureGrid
           variant="spotlight"
           eyebrow="Core capabilities"
@@ -134,7 +143,7 @@ function Page() {
         </section>
       </div>
 
-      {/* ---- Light zone: lifecycle + the numbers ---- */}
+      {/* ---- Light zone: lifecycle ---- */}
       <div className="block-light">
         <ProcessSteps
           variant="rail"
@@ -145,15 +154,6 @@ function Page() {
             { n: "02", t: "UX/UI Prototyping", d: "Clickable flows tested with design partners before production code." },
             { n: "03", t: "Agile Sprints", d: "Demo every Friday, deployed to staging on every merge." },
             { n: "04", t: "Deploy & Iterate", d: "Zero-downtime releases, feature flags, and activation data driving the backlog." },
-          ]}
-        />
-
-        <StatsRow
-          stats={[
-            { value: "12wk", label: "Median MVP timeline" },
-            { value: "98", label: "Median Lighthouse at launch" },
-            { value: "99.95%", label: "Uptime across client platforms" },
-            { value: "84%", label: "Of clients stay on a Care plan" },
           ]}
         />
       </div>
@@ -222,6 +222,7 @@ function Page() {
       {/* ---- Light zone: why our SaaS engineering ---- */}
       <div className="block-light">
         <BenefitList
+          variant="grid"
           eyebrow="Why our SaaS engineering"
           title="Fast to first invoice, cheap to change."
           items={[
@@ -311,6 +312,7 @@ function Page() {
       </section>
 
       <FAQAccordion
+        variant="wide"
         faqs={[
           { q: "What tech stack do you use for SaaS?", a: "TypeScript end to end, React, Node or Go services, Postgres with row-level tenant isolation, on AWS or GCP. Chosen so your first engineering hires can be productive in week one." },
           { q: "Can you integrate billing?", a: "Yes — Stripe and Chargebee, including seats, trials, usage metering, and dunning. Billing ships in v1, not 'after traction.'" },
