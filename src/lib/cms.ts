@@ -72,3 +72,21 @@ export function cmsMedia(m: unknown): string | undefined {
   if (!url) return undefined;
   return url.startsWith("http") ? url : `${CMS_URL}${url}`;
 }
+
+/** Deterministic placeholder image for a project without a cover image. */
+export const projectPlaceholder = (slug: string) =>
+  `https://picsum.photos/seed/nl-${slug}/1200/900`;
+
+/** Shape of a Payload `projects` doc (fields used by the site). */
+export type CmsProject = {
+  slug: string;
+  title: string;
+  client?: string;
+  industry?: string;
+  year?: string;
+  summary?: string;
+  coverImage?: unknown;
+  featured?: boolean;
+  results?: { value: string; label: string; direction?: string }[];
+  gallery?: { image?: unknown }[];
+};

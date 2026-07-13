@@ -4,17 +4,60 @@ import { pageThemes } from "@/lib/themes";
 import { CTABand } from "@/components/sections";
 import { BannerCTA } from "@/components/banner-cta";
 import { caseStudies } from "@/lib/case-studies";
+import { cmsFind, cmsMedia, type CmsProject, projectPlaceholder } from "@/lib/cms";
 import { ArrowUpRight } from "lucide-react";
+
+type WorkCard = {
+  slug: string;
+  name: string;
+  tag: string;
+  industry: string;
+  year: string;
+  summary: string;
+  hero: string;
+  heroAlt: string;
+};
 
 export const Route = createFileRoute("/works")({
   head: () => ({
     meta: [
       { title: "Works — Northline Studio" },
-      { name: "description", content: "Six case studies with the numbers attached: +48% revenue, 3.1× signups, Lighthouse 98." },
+      { name: "description", content: "Case studies with the numbers attached — the metrics clients report to their boards." },
       { property: "og:title", content: "Works — Northline Studio" },
-      { property: "og:description", content: "Six case studies with the numbers attached: +48% revenue, 3.1× signups, Lighthouse 98." },
+      { property: "og:description", content: "Case studies with the numbers attached — the metrics clients report to their boards." },
     ],
   }),
+  // Content-managed: pull projects from the CMS, fall back to the built-in
+  // studies if the CMS is unreachable so the page never hard-fails.
+  loader: async (): Promise<{ items: WorkCard[] }> => {
+    const docs = await cmsFind<CmsProject>("projects", { sort: "-featured", depth: 1, limit: 12 });
+    if (docs.length) {
+      return {
+        items: docs.map((p) => ({
+          slug: p.slug,
+          name: p.title,
+          tag: p.client || p.industry || "Case study",
+          industry: p.industry || "",
+          year: p.year || "",
+          summary: p.summary || "",
+          hero: cmsMedia(p.coverImage) || projectPlaceholder(p.slug),
+          heroAlt: p.title,
+        })),
+      };
+    }
+    return {
+      items: caseStudies.map((c) => ({
+        slug: c.slug,
+        name: c.name,
+        tag: c.tag,
+        industry: c.industry,
+        year: c.year,
+        summary: c.summary,
+        hero: c.hero,
+        heroAlt: c.heroAlt,
+      })),
+    };
+  },
   component: WorksPage,
 });
 
@@ -36,6 +79,7 @@ const aggregate = [
 ];
 
 function WorksPage() {
+  const { items } = Route.useLoaderData();
   return (
     <SiteShell theme={pageThemes["works"]}>
       {/* ---- Hero (light editorial) ---- */}
@@ -79,7 +123,7 @@ function WorksPage() {
 
           {/* Case gallery — images carry the color on white */}
           <div className="mt-12 grid gap-8 md:grid-cols-2" data-cards data-cards-stagger="0.12">
-            {caseStudies.map((c) => (
+            {items.map((c) => (
               <Link
                 key={c.slug}
                 to="/works/$slug"
