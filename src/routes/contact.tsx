@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell, PageHeader } from "@/components/site-shell";
-import { Mail, MapPin, Phone, ArrowUpRight } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { SiteShell } from "@/components/site-shell";
+import { Mail, MapPin, Phone, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/contact")({
@@ -29,57 +29,176 @@ const services = [
 
 const budgets = ["< $10k", "$10k – $25k", "$25k – $60k", "$60k – $150k", "$150k+"];
 
+const nextSteps = [
+  {
+    n: "01",
+    t: "A senior replies — within one business day",
+    d: "Not a sales rep or an SDR sequence. Whoever answers is someone who could build your project.",
+  },
+  {
+    n: "02",
+    t: "A 30-minute scoping call",
+    d: "We pressure-test the brief, flag risks, and tell you honestly if we're not the right fit.",
+  },
+  {
+    n: "03",
+    t: "A fixed number in writing",
+    d: "Plan, timeline, and budget on paper. Say yes and your first demo is on screen by day 7.",
+  },
+];
+
 function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
 
   return (
     <SiteShell>
-      <PageHeader
-        eyebrow="Contact"
-        title={<>Tell us about your <em className="italic text-gradient">project</em>.</>}
-        subtitle="Answer a few questions and we'll reply within one business day with a plan, a timeline, and a fair budget."
-      />
-
-      <section className="container-page py-24 grid md:grid-cols-12 gap-16">
-        <div className="md:col-span-4 space-y-10">
+      {/* ---- Hero (light editorial) ---- */}
+      <section className="block-light">
+        <div className="container-page grid items-end gap-12 py-24 md:grid-cols-[1.1fr_0.9fr] md:py-32">
           <div>
-            <p className="text-xs uppercase tracking-[0.24em] text-gold">Get in touch</p>
-            <h2 className="mt-3 font-display text-3xl">Direct lines.</h2>
+            <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
+              Contact
+            </p>
+            <h1
+              className="mt-6 max-w-[15ch] font-display text-5xl font-semibold leading-[0.98] md:text-7xl"
+              data-reveal
+            >
+              Tell us about your <span className="text-gold">project</span>.
+            </h1>
+            <p className="mt-7 max-w-md text-lg leading-relaxed text-muted-foreground" data-reveal>
+              Answer a few questions and we'll reply within one business day with a plan, a
+              timeline, and a fair budget.
+            </p>
           </div>
-          <div className="space-y-6">
-            {[
-              { icon: Mail, label: "Email", value: "hello@northline.studio" },
-              { icon: Phone, label: "Phone", value: "+1 (415) 555-0134" },
-              { icon: MapPin, label: "Studio", value: "San Francisco · London · Lisbon" },
-            ].map((c) => (
-              <div key={c.label} className="flex gap-4">
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-surface">
-                  <c.icon className="h-5 w-5 text-gold" />
+          <figure className="relative" data-reveal>
+            <img
+              src="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?auto=format&fit=crop&w=1200&q=75"
+              alt="A quiet place to start the conversation"
+              className="aspect-[4/5] w-full rounded-3xl border border-black/10 object-cover shadow-elegant"
+              data-parallax-img
+            />
+          </figure>
+        </div>
+      </section>
+
+      <section className="block-light">
+      <div className="container-page relative grid gap-16 py-24 md:grid-cols-12">
+        {/* decorative parallax glow */}
+        <div
+          className="pointer-events-none absolute -left-40 top-1/3 -z-10 h-96 w-96 rounded-full opacity-25"
+          style={{ background: "var(--gradient-lime)", filter: "blur(100px)" }}
+          data-parallax="0.3"
+        />
+
+        <div className="space-y-12 md:col-span-4">
+          <div data-reveal-group>
+            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+              What happens next
+            </p>
+            <h2 className="mt-4 font-display text-3xl font-semibold" data-reveal-child>
+              Three steps, no run-around.
+            </h2>
+            <div className="mt-8 space-y-3">
+              {nextSteps.map((s) => (
+                <div key={s.n} className="glass lift flex gap-5 rounded-2xl p-6" data-reveal-child>
+                  <span className="shrink-0 font-display text-2xl font-semibold text-gradient-lime">{s.n}</span>
+                  <div>
+                    <h3 className="font-display text-base font-semibold">{s.t}</h3>
+                    <p className="mt-1.5 text-sm text-muted-foreground">{s.d}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{c.label}</p>
-                  <p className="mt-1 text-foreground">{c.value}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          <div className="rounded-2xl border border-border bg-surface/40 p-6">
+          <div className="space-y-6" data-reveal>
+            <p className="text-xs uppercase tracking-[0.28em] text-lime">Direct lines</p>
+            <div className="flex gap-4">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-surface">
+                <Mail className="h-5 w-5 text-lime" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Email</p>
+                <a href="mailto:hello@northline.studio" className="link-underline mt-1 inline-block text-foreground">
+                  hello@northline.studio
+                </a>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-surface">
+                <Phone className="h-5 w-5 text-lime" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Phone</p>
+                <a href="tel:+14155550134" className="link-underline mt-1 inline-block text-foreground">
+                  +1 (415) 555-0134
+                </a>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-surface">
+                <MapPin className="h-5 w-5 text-lime" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Studio</p>
+                <p className="mt-1 text-foreground">San Francisco · London · Lisbon</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Remote-first since 2014 — 50+ senior designers and engineers across nine time zones. Someone is awake when you are.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="gradient-card-gold rounded-2xl border border-gold/25 p-6" data-reveal>
             <p className="text-xs uppercase tracking-[0.2em] text-gold">Response time</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              We reply to every serious inquiry within one business day, usually the same day.
+              Reply within one business day — from a senior, not a sales rep. Usually the same afternoon.
             </p>
           </div>
         </div>
 
-        <div className="md:col-span-8">
+        <div className="md:col-span-8" data-reveal>
           {submitted ? (
-            <div className="rounded-3xl border border-gold/40 bg-surface/50 p-12 text-center">
-              <p className="text-xs uppercase tracking-[0.24em] text-gold">Received</p>
-              <h3 className="mt-4 font-display text-4xl">Thanks — talk soon.</h3>
-              <p className="mt-4 text-muted-foreground max-w-md mx-auto">
-                We've got your message and will be in touch within one business day.
-              </p>
+            <div className="glass-strong relative overflow-hidden rounded-3xl border border-lime/30 p-10 md:p-14">
+              <div className="pointer-events-none absolute inset-0 grain-bg" />
+              <div className="relative">
+                <div className="grid h-14 w-14 place-items-center rounded-2xl border border-lime/30 bg-lime/10">
+                  <CheckCircle2 className="h-7 w-7 text-lime" />
+                </div>
+                <p className="mt-8 text-xs uppercase tracking-[0.28em] text-lime">Received</p>
+                <h3 className="mt-4 font-display text-4xl font-semibold md:text-5xl">
+                  Thanks. Talk <span className="text-gold">soon</span>.
+                </h3>
+                <p className="mt-4 max-w-md text-lg text-muted-foreground">
+                  Your brief is in front of a senior right now. Expect a reply within one business day.
+                </p>
+                <div className="mt-10 space-y-3 border-t border-black/10 pt-8">
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">While you wait</p>
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      to="/works"
+                      className="inline-flex items-center gap-2 rounded-full glass px-5 py-2.5 text-sm font-medium hover:bg-white/5"
+                    >
+                      Browse recent work
+                      <ArrowUpRight className="h-4 w-4" />
+                    </Link>
+                    <Link
+                      to="/pricing"
+                      className="inline-flex items-center gap-2 rounded-full glass px-5 py-2.5 text-sm font-medium hover:bg-white/5"
+                    >
+                      Check the pricing floors
+                      <ArrowUpRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                  <p className="pt-2 text-sm text-muted-foreground">
+                    In a hurry? Email{" "}
+                    <a href="mailto:hello@northline.studio" className="link-underline text-foreground">
+                      hello@northline.studio
+                    </a>{" "}
+                    with "urgent" in the subject and we'll bump you up the queue.
+                  </p>
+                </div>
+              </div>
             </div>
           ) : (
             <form
@@ -87,9 +206,9 @@ function ContactPage() {
                 e.preventDefault();
                 setSubmitted(true);
               }}
-              className="rounded-3xl border border-border bg-surface/40 p-8 md:p-10 space-y-6"
+              className="glass-strong space-y-6 rounded-3xl p-8 md:p-10"
             >
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid gap-6 md:grid-cols-2">
                 <Field label="Your name">
                   <input required className={inputCls} placeholder="Jane Doe" />
                 </Field>
@@ -109,9 +228,9 @@ function ContactPage() {
                   {services.map((s) => (
                     <label
                       key={s}
-                      className="inline-flex items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm cursor-pointer hover:bg-surface"
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
                     >
-                      <input type="checkbox" className="accent-gold" />
+                      <input type="checkbox" className="accent-lime" />
                       {s}
                     </label>
                   ))}
@@ -123,9 +242,9 @@ function ContactPage() {
                   {budgets.map((b) => (
                     <label
                       key={b}
-                      className="inline-flex items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm cursor-pointer hover:bg-surface"
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
                     >
-                      <input type="radio" name="budget" className="accent-gold" />
+                      <input type="radio" name="budget" className="accent-lime" />
                       {b}
                     </label>
                   ))}
@@ -133,26 +252,38 @@ function ContactPage() {
               </Field>
 
               <Field label="Tell us about your project">
-                <textarea rows={5} required className={inputCls} placeholder="Goals, timeline, links to anything relevant..." />
+                <textarea
+                  rows={5}
+                  required
+                  className={inputCls}
+                  placeholder="Goals, timeline, links to anything relevant..."
+                />
               </Field>
 
-              <button
-                type="submit"
-                className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background hover:bg-foreground/90"
-              >
-                Send message
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </button>
+              <div className="flex flex-wrap items-center gap-5 pt-2">
+                <button
+                  type="submit"
+                  data-magnetic
+                  className="group inline-flex items-center gap-2 rounded-full btn-navy shine px-6 py-3.5 text-sm font-semibold hover:border-lime/40"
+                >
+                  Send message
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </button>
+                <p className="text-sm text-muted-foreground">
+                  Reply within one business day — <span className="text-foreground">a senior, not a sales rep</span>.
+                </p>
+              </div>
             </form>
           )}
         </div>
+      </div>
       </section>
     </SiteShell>
   );
 }
 
 const inputCls =
-  "w-full rounded-lg border border-border bg-background/60 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-gold/60";
+  "w-full rounded-lg border border-border bg-background/60 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:outline-none focus:border-lime/50 focus:ring-1 focus:ring-lime/30";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

@@ -43,11 +43,11 @@ export function CostCalculator() {
     setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
 
   return (
-    <div className="fixed bottom-6 left-6 z-40">
+    <div className="fixed bottom-6 left-6 z-9999">
       {open && (
         <div
           ref={panelRef}
-          className="mb-3 w-[360px] max-h-[70vh] overflow-auto glass-strong rounded-2xl p-5 shadow-panel"
+          className="mb-3 w-[360px] max-h-[70vh] overflow-auto rounded-2xl border border-white/10 bg-background/95 p-5 shadow-panel backdrop-blur-xl"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
@@ -226,11 +226,11 @@ export function Chatbot() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40">
+    <div className="fixed bottom-6 right-6 z-9999">
       {open && (
         <div
           ref={panelRef}
-          className="mb-3 w-[360px] h-[520px] flex flex-col glass-strong rounded-2xl shadow-panel overflow-hidden"
+          className="mb-3 w-[360px] h-[520px] flex flex-col rounded-2xl border border-white/10 bg-background/95 shadow-panel backdrop-blur-xl overflow-hidden"
         >
           <div className="flex items-center justify-between p-4 border-b border-white/10">
             <div className="flex items-center gap-2">
@@ -294,10 +294,10 @@ export function Chatbot() {
 
       <button
         onClick={() => setOpen((v) => !v)}
-        className="grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-accent to-lime shadow-panel hover:scale-105 transition"
+        className="grid h-14 w-14 place-items-center rounded-full border border-white/10 bg-background/90 text-lime shadow-panel backdrop-blur-xl transition hover:scale-105"
         aria-label="Chat"
       >
-        <MessageCircle className="h-6 w-6 text-primary-foreground" />
+        <MessageCircle className="h-6 w-6" />
       </button>
     </div>
   );
