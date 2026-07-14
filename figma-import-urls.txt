@@ -1,0 +1,97 @@
+# Northline — page URLs for code → Figma import
+#
+# Use the "html.to.design" Figma plugin (Figma desktop app, same machine as the
+# dev server) to import each URL as editable layers. Base URL is the local dev
+# server; swap for your deployed URL once the site is hosted.
+#
+# Caveat: animated/3D/scroll sections (hero eclipse, ribbon-sphere, the seq/
+# video, GSAP reveals) import as flattened snapshots — rebuild motion in Figma.
+#
+# Dynamic <slug> routes share one template per kind — import a few real slugs
+# (examples listed under each).
+
+http://localhost:8080/
+http://localhost:8080/about
+http://localhost:8080/our-story
+http://localhost:8080/leadership
+http://localhost:8080/careers
+http://localhost:8080/contact
+http://localhost:8080/works
+http://localhost:8080/pricing
+http://localhost:8080/faq
+http://localhost:8080/resources
+http://localhost:8080/blog
+http://localhost:8080/services
+http://localhost:8080/solutions
+http://localhost:8080/custom-software
+http://localhost:8080/mobile-apps
+http://localhost:8080/ui-ux-design
+http://localhost:8080/saas
+http://localhost:8080/digital-transformation
+http://localhost:8080/privacy
+http://localhost:8080/terms
+http://localhost:8080/cookies
+
+# alternate home concepts
+http://localhost:8080/home-2
+http://localhost:8080/home-3
+http://localhost:8080/home-4
+http://localhost:8080/home-5
+
+# services (13)
+http://localhost:8080/services/website-development
+http://localhost:8080/services/cms-websites
+http://localhost:8080/services/landing-pages
+http://localhost:8080/services/design-systems
+http://localhost:8080/services/brand-identity
+http://localhost:8080/services/prototyping
+http://localhost:8080/services/cross-platform-apps
+http://localhost:8080/services/mvp-development
+http://localhost:8080/services/app-store-setup
+http://localhost:8080/services/monthly-care
+http://localhost:8080/services/seo-performance
+http://localhost:8080/services/maintenance-support
+http://localhost:8080/services/analytics-cro
+
+# solutions (10)
+http://localhost:8080/solutions/ecommerce
+http://localhost:8080/solutions/marketplaces
+http://localhost:8080/solutions/internal-tools
+http://localhost:8080/solutions/digital-marketing
+http://localhost:8080/solutions/brand-consultancy
+http://localhost:8080/solutions/growth-cro
+http://localhost:8080/solutions/startup-mvp
+http://localhost:8080/solutions/enterprise
+http://localhost:8080/solutions/rescue-projects
+http://localhost:8080/solutions/scale-up
+
+# industries (4)
+http://localhost:8080/industries/fintech
+http://localhost:8080/industries/healthcare
+http://localhost:8080/industries/retail-dtc
+http://localhost:8080/industries/b2b-enterprise
+
+# tools (4)
+http://localhost:8080/tools/website-audit
+http://localhost:8080/tools/roi-calculator
+http://localhost:8080/tools/speed-test
+http://localhost:8080/tools/brand-grader
+
+# learning (4)
+http://localhost:8080/learning/guides
+http://localhost:8080/learning/tutorials
+http://localhost:8080/learning/webinars
+http://localhost:8080/learning/templates
+
+# case study (works/<slug>) — import a few real ones
+http://localhost:8080/works/northwind-commerce
+http://localhost:8080/works/ledgerly
+http://localhost:8080/works/verda-health
+
+# blog post (blog/<slug>) — import a few real ones
+http://localhost:8080/blog/why-we-rebuilt-northline-on-payload
+http://localhost:8080/blog/the-first-14-days-of-a-northline-engagement
+http://localhost:8080/blog/designing-dark-navy-interfaces-that-convert
+
+# CMS page (pages/<slug>) — block-composed marketing pages
+http://localhost:8080/pages/about
