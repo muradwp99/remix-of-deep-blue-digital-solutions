@@ -30,6 +30,11 @@ export const Learning: CollectionConfig = {
       admin: { position: "sidebar", description: "Which Learning section this belongs to." },
     },
     { name: "summary", type: "textarea", admin: { description: "One or two sentences shown on the card." } },
+    {
+      name: "format",
+      type: "text",
+      admin: { description: 'Short format label shown on the card, e.g. "38 pages", "45 min", "Doc".' },
+    },
     { name: "body", type: "richText" },
     { name: "image", type: "upload", relationTo: "media", admin: { description: "Cover image for the learning item." } },
     { name: "order", type: "number", defaultValue: 0, admin: { position: "sidebar", description: "Lower shows first." } },

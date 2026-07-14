@@ -1,29 +1,69 @@
 import { Link } from "@tanstack/react-router";
+import { ArrowUpRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { cmsGlobal, type CmsFooter } from "@/lib/cms";
 
-const cols = [
+type FooterLink = { label: string; href: string };
+
+const cols: { title: string; links: FooterLink[] }[] = [
   {
     title: "Services",
-    links: ["Website Development", "UI/UX Design", "CMS Websites", "Mobile Apps", "Monthly Care"],
-    href: "/services",
+    links: [
+      { label: "Website Development", href: "/services/website-development" },
+      { label: "UI/UX Design", href: "/ui-ux-design" },
+      { label: "Custom Software", href: "/custom-software" },
+      { label: "Mobile Apps", href: "/mobile-apps" },
+      { label: "Monthly Care", href: "/services/monthly-care" },
+    ],
   },
   {
     title: "Solutions",
-    links: ["Ecommerce", "SaaS", "Digital Marketing", "Brand Consultancy"],
-    href: "/solutions",
+    links: [
+      { label: "Ecommerce", href: "/solutions/ecommerce" },
+      { label: "SaaS", href: "/saas" },
+      { label: "Digital Transformation", href: "/digital-transformation" },
+      { label: "Brand Consultancy", href: "/solutions/brand-consultancy" },
+    ],
   },
   {
     title: "Company",
-    links: ["About", "Works", "Pricing", "Contact"],
-    href: "/about",
+    links: [
+      { label: "About", href: "/about" },
+      { label: "Our Story", href: "/our-story" },
+      { label: "Works", href: "/works" },
+      { label: "Careers", href: "/careers" },
+      { label: "Contact", href: "/contact" },
+    ],
   },
   {
     title: "Resources",
-    links: ["Free Tools", "Learning", "Blog & News"],
-    href: "/resources",
+    links: [
+      { label: "Free Tools", href: "/resources" },
+      { label: "Learning", href: "/learning/guides" },
+      { label: "Blog", href: "/blog" },
+      { label: "FAQ", href: "/faq" },
+      { label: "Pricing", href: "/pricing" },
+    ],
   },
 ];
 
 export function SiteFooter() {
+  // Footer content is CMS-editable via the `footer` global; fails soft to the
+  // built-in columns/blurb/copyright when the CMS is unreachable.
+  const { data } = useQuery({
+    queryKey: ["footer-global"],
+    queryFn: () => cmsGlobal<CmsFooter>("footer"),
+    staleTime: 5 * 60 * 1000,
+  });
+  const blurb =
+    data?.blurb ||
+    "A software studio designing and engineering premium digital products for ambitious teams.";
+  const columns = data?.columns?.length
+    ? data.columns.map((c) => ({ title: c.title, links: c.links ?? [] }))
+    : cols;
+  const copyright =
+    data?.copyright || `© ${new Date().getFullYear()} Northline Studio. All rights reserved.`;
+
   return (
     <footer className="border-t border-border/60 bg-background">
       <div className="container-page py-16">
@@ -35,21 +75,25 @@ export function SiteFooter() {
               </span>
               <span className="font-display text-xl">Northline</span>
             </div>
-            <p className="mt-4 text-sm text-muted-foreground max-w-xs">
-              A software studio designing and engineering premium digital products for ambitious teams.
-            </p>
+            <p className="mt-4 text-sm text-muted-foreground max-w-xs">{blurb}</p>
+            <Link
+              to="/contact"
+              className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-lime link-underline"
+            >
+              Start a project <ArrowUpRight className="h-4 w-4" />
+            </Link>
           </div>
-          {cols.map((c) => (
+          {columns.map((c) => (
             <div key={c.title}>
               <h4 className="font-display text-base mb-4">{c.title}</h4>
               <ul className="space-y-2.5">
                 {c.links.map((l) => (
-                  <li key={l}>
+                  <li key={l.label}>
                     <Link
-                      to={c.href}
+                      to={l.href}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {l}
+                      {l.label}
                     </Link>
                   </li>
                 ))}
@@ -59,13 +103,17 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-border/60 pt-6">
-          <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Northline Studio. All rights reserved.
-          </p>
+          <p className="text-xs text-muted-foreground">{copyright}</p>
           <div className="flex gap-6 text-xs text-muted-foreground">
-            <span>Privacy</span>
-            <span>Terms</span>
-            <span>Cookies</span>
+            <Link to="/privacy" className="transition-colors hover:text-foreground">
+              Privacy
+            </Link>
+            <Link to="/terms" className="transition-colors hover:text-foreground">
+              Terms
+            </Link>
+            <Link to="/cookies" className="transition-colors hover:text-foreground">
+              Cookies
+            </Link>
           </div>
         </div>
       </div>

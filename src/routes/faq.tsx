@@ -1,6 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { CTABand } from "@/components/sections";
+import { cmsFind, lexicalToPlainText, type CmsFaq } from "@/lib/cms";
+
+type FaqGroup = {
+  kicker: string;
+  title: string;
+  note: string;
+  faqs: { q: string; a: string }[];
+};
+
+// The CMS `faqs` collection is a flat list tagged with a category enum; the page
+// renders three editorial groups. Map each CMS category into one of those groups.
+const CATEGORY_TO_GROUP: Record<NonNullable<CmsFaq["category"]>, number> = {
+  process: 0,
+  general: 0,
+  pricing: 1,
+  support: 2,
+  legal: 2,
+};
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
@@ -11,6 +29,22 @@ export const Route = createFileRoute("/faq")({
       { property: "og:description", content: "Common questions about working with Northline." },
     ],
   }),
+  // Content-managed: pull FAQs from the CMS, distribute them into the existing
+  // editorial groups by category, and keep the group scaffold (kicker/title/note)
+  // from the built-in data. Falls back to the built-in groups when empty.
+  loader: async (): Promise<{ groups: FaqGroup[] }> => {
+    const docs = await cmsFind<CmsFaq>("faqs", { sort: "order", limit: 100 });
+    if (docs.length) {
+      const scaffold: FaqGroup[] = groups.map((g) => ({ ...g, faqs: [] }));
+      for (const d of docs) {
+        const gi = CATEGORY_TO_GROUP[d.category ?? "general"] ?? 0;
+        scaffold[gi].faqs.push({ q: d.question, a: lexicalToPlainText(d.answer) });
+      }
+      const filled = scaffold.filter((g) => g.faqs.length > 0);
+      if (filled.length) return { groups: filled };
+    }
+    return { groups };
+  },
   component: Page,
 });
 
@@ -95,6 +129,7 @@ const groups = [
 ];
 
 function Page() {
+  const { groups } = Route.useLoaderData();
   return (
     <SiteShell>
       {/* ---- Hero (light editorial, asymmetric) ---- */}

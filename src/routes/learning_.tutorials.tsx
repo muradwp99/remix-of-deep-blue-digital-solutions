@@ -2,12 +2,22 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
-import { getLearningCategory } from "@/lib/learning";
+import { getLearningCategory, type LearningItem } from "@/lib/learning";
 import { pageThemes } from "@/lib/themes";
+import { cmsFind } from "@/lib/cms";
+import { cmsToLearningItems, type CmsLearning } from "@/lib/cms-catalog";
 
 const cat = getLearningCategory("tutorials")!;
 
 export const Route = createFileRoute("/learning_/tutorials")({
+  loader: async (): Promise<{ items: LearningItem[] }> => {
+    const docs = await cmsFind<CmsLearning>("learning", {
+      where: { type: { equals: "tutorial" } },
+      sort: "order",
+      depth: 0,
+    });
+    return { items: docs.length ? cmsToLearningItems(docs) : cat.items };
+  },
   head: () => ({
     meta: [
       { title: cat.metaTitle },
@@ -20,6 +30,7 @@ export const Route = createFileRoute("/learning_/tutorials")({
 });
 
 function Page() {
+  const { items } = Route.useLoaderData();
   return (
     <SiteShell theme={pageThemes["learning/tutorials"]}>
       {/* Hero — light, wide single column */}
@@ -44,7 +55,7 @@ function Page() {
       <section className="block-tint">
         <div className="container-page py-20">
           <div className="grid gap-5 md:grid-cols-2" data-cards data-cards-stagger="0.08">
-            {cat.items.map((item, i) => (
+            {items.map((item, i) => (
               <div
                 key={item.title}
                 className="glare-card gradient-card lift flex gap-6 rounded-3xl p-7"

@@ -2,12 +2,22 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, MonitorPlay, Radio } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
-import { getLearningCategory } from "@/lib/learning";
+import { getLearningCategory, type LearningItem } from "@/lib/learning";
 import { pageThemes } from "@/lib/themes";
+import { cmsFind } from "@/lib/cms";
+import { cmsToLearningItems, type CmsLearning } from "@/lib/cms-catalog";
 
 const cat = getLearningCategory("webinars")!;
 
 export const Route = createFileRoute("/learning_/webinars")({
+  loader: async (): Promise<{ items: LearningItem[] }> => {
+    const docs = await cmsFind<CmsLearning>("learning", {
+      where: { type: { equals: "webinar" } },
+      sort: "order",
+      depth: 0,
+    });
+    return { items: docs.length ? cmsToLearningItems(docs) : cat.items };
+  },
   head: () => ({
     meta: [
       { title: cat.metaTitle },
@@ -20,6 +30,7 @@ export const Route = createFileRoute("/learning_/webinars")({
 });
 
 function Page() {
+  const { items } = Route.useLoaderData();
   return (
     <SiteShell theme={pageThemes["learning/webinars"]}>
       {/* Hero — light, centered */}
@@ -47,7 +58,7 @@ function Page() {
       <section className="block-light">
         <div className="container-page border-t border-border py-20" data-reveal-group>
           <div className="space-y-4">
-            {cat.items.map((item) => {
+            {items.map((item) => {
               const live = item.meta.includes("monthly");
               return (
                 <div

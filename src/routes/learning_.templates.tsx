@@ -2,12 +2,22 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
-import { getLearningCategory } from "@/lib/learning";
+import { getLearningCategory, type LearningItem } from "@/lib/learning";
 import { pageThemes } from "@/lib/themes";
+import { cmsFind } from "@/lib/cms";
+import { cmsToLearningItems, type CmsLearning } from "@/lib/cms-catalog";
 
 const cat = getLearningCategory("templates")!;
 
 export const Route = createFileRoute("/learning_/templates")({
+  loader: async (): Promise<{ items: LearningItem[] }> => {
+    const docs = await cmsFind<CmsLearning>("learning", {
+      where: { type: { equals: "template" } },
+      sort: "order",
+      depth: 0,
+    });
+    return { items: docs.length ? cmsToLearningItems(docs) : cat.items };
+  },
   head: () => ({
     meta: [
       { title: cat.metaTitle },
@@ -45,6 +55,7 @@ function PaperSheet({ kind }: { kind: string }) {
 }
 
 function Page() {
+  const { items } = Route.useLoaderData();
   return (
     <SiteShell theme={pageThemes["learning/templates"]}>
       {/* Hero — light, left-aligned with a rule */}
@@ -73,7 +84,7 @@ function Page() {
             data-cards
             data-cards-stagger="0.08"
           >
-            {cat.items.map((item) => (
+            {items.map((item) => (
               <div key={item.title} className="group flex flex-col lift" data-card>
                 <PaperSheet kind={item.meta} />
                 <h3 className="mt-5 font-display text-xl font-semibold leading-snug">

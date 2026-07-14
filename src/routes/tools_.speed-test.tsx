@@ -4,24 +4,35 @@ import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
 import { ScoreBars } from "@/components/signature/meters";
 import { AuditRequest } from "@/components/tool-widgets";
-import { getTool } from "@/lib/tools";
+import { getTool, type Tool } from "@/lib/tools";
 import { pageThemes } from "@/lib/themes";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsToTool, type CmsTool } from "@/lib/cms-catalog";
 
-const tool = getTool("speed-test")!;
+const SLUG = "speed-test";
 
 export const Route = createFileRoute("/tools_/speed-test")({
-  head: () => ({
-    meta: [
-      { title: tool.metaTitle },
-      { name: "description", content: tool.metaDesc },
-      { property: "og:title", content: tool.metaTitle },
-      { property: "og:description", content: tool.metaDesc },
-    ],
-  }),
+  loader: async (): Promise<{ tool: Tool }> => {
+    const fallback = getTool(SLUG)!;
+    const doc = await cmsFindOne<CmsTool>("tools", SLUG, { depth: 1 });
+    return { tool: doc ? cmsToTool(doc, fallback) : fallback };
+  },
+  head: ({ loaderData }) => {
+    const tool = loaderData?.tool;
+    return {
+      meta: [
+        { title: tool?.metaTitle ?? "Website Speed Review — Northline Studio" },
+        { name: "description", content: tool?.metaDesc ?? "" },
+        { property: "og:title", content: tool?.metaTitle ?? "Website Speed Review — Northline Studio" },
+        { property: "og:description", content: tool?.metaDesc ?? "" },
+      ],
+    };
+  },
   component: Page,
 });
 
 function Page() {
+  const { tool } = Route.useLoaderData();
   return (
     <SiteShell theme={pageThemes["tools/speed-test"]}>
       {/* BOLD · vivid color hero, poster-scale headline */}

@@ -7,18 +7,27 @@ import { LogoMarquee } from "@/components/signature/logo-wall";
 import { BackToParent, SubpageBanner, RelatedPages, HeroCtas } from "@/components/subpage-bits";
 import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
 
-const page = getSubpage("services", "cross-platform-apps")!;
+const SLUG = "cross-platform-apps";
 
 export const Route = createFileRoute("/services_/cross-platform-apps")({
-  head: () => ({
-    meta: [
-      { title: page.metaTitle },
-      { name: "description", content: page.metaDesc },
-      { property: "og:title", content: page.metaTitle },
-      { property: "og:description", content: page.metaDesc },
-    ],
-  }),
+  loader: async (): Promise<{ dto: SubpageDTO | null }> => {
+    const doc = await cmsFindOne<CmsSubpage>("services", SLUG, { depth: 1 });
+    return { dto: doc ? cmsToSubpageDTO(doc, "services") : null };
+  },
+  head: ({ loaderData }) => {
+    const dto = loaderData?.dto;
+    return {
+      meta: [
+        { title: dto?.metaTitle ?? "Cross-Platform App Development — Northline Studio" },
+        { name: "description", content: dto?.metaDesc ?? "" },
+        { property: "og:title", content: dto?.metaTitle ?? "Cross-Platform App Development — Northline Studio" },
+        { property: "og:description", content: dto?.metaDesc ?? "" },
+      ],
+    };
+  },
   component: Page,
 });
 
@@ -26,6 +35,8 @@ const u = (id: string, w = 1200) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=70`;
 
 function Page() {
+  const { dto } = Route.useLoaderData();
+  const page = dto ? hydrateSubpage(dto, getSubpage("services", SLUG)!) : getSubpage("services", SLUG)!;
   return (
     <SiteShell theme={pageThemes["services/cross-platform-apps"]}>
       {/* ── DARK · device-cluster hero: real product photography in every frame ── */}

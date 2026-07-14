@@ -4,10 +4,45 @@ import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { BannerCTA } from "@/components/banner-cta";
 import { posts, postCategories, formatPostDate, type PostCategory } from "@/lib/posts";
+import { cmsFind, cmsMedia, lexicalToPlainText, type CmsPost } from "@/lib/cms";
 
 type BlogSearch = { cat?: PostCategory };
 
+// The fields the blog list actually renders. `category` is optional because a
+// CMS post may be filed under a category that doesn't map to a page filter key.
+type BlogListItem = {
+  slug: string;
+  title: string;
+  category?: PostCategory;
+  date: string;
+  readTime: string;
+  excerpt: string;
+  image: string;
+};
+
 const CATEGORY_KEYS = postCategories.map((c) => c.key);
+
+const slugify = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+// Resolve a CMS category relationship to one of the page's filter keys, or
+// undefined when it doesn't map (so the post shows only under "All posts").
+const resolveCategory = (cats: CmsPost["categories"]): PostCategory | undefined => {
+  if (!Array.isArray(cats)) return undefined;
+  for (const c of cats) {
+    if (c && typeof c === "object") {
+      const key = (c.slug || c.title || "").toLowerCase();
+      if ((CATEGORY_KEYS as string[]).includes(key)) return key as PostCategory;
+    }
+  }
+  return undefined;
+};
+
+// The CMS has no read-time field; estimate it from the article body (~200 wpm).
+const readTimeFromContent = (content: unknown): string => {
+  const words = lexicalToPlainText(content).split(/\s+/).filter(Boolean).length;
+  return `${Math.max(1, Math.round(words / 200))} min read`;
+};
 
 export const Route = createFileRoute("/blog")({
   validateSearch: (search: Record<string, unknown>): BlogSearch => {
@@ -29,12 +64,45 @@ export const Route = createFileRoute("/blog")({
       },
     ],
   }),
+  // Content-managed: pull posts from the CMS (newest first), map each to the
+  // card shape the list renders, and fall back to the built-in posts when empty.
+  loader: async (): Promise<{ items: BlogListItem[] }> => {
+    const docs = await cmsFind<CmsPost>("posts", { sort: "-publishedAt", depth: 1, limit: 100 });
+    if (docs.length) {
+      return {
+        items: docs.map((p) => {
+          const slug = p.slug || slugify(p.title);
+          return {
+            slug,
+            title: p.title,
+            category: resolveCategory(p.categories),
+            date: (p.publishedAt || p.createdAt || "").slice(0, 10),
+            readTime: readTimeFromContent(p.content),
+            excerpt: p.excerpt || "",
+            image: cmsMedia(p.heroImage) || `https://picsum.photos/seed/nl-post-${slug}/1600/900`,
+          };
+        }),
+      };
+    }
+    return {
+      items: posts.map((p) => ({
+        slug: p.slug,
+        title: p.title,
+        category: p.category,
+        date: p.date,
+        readTime: p.readTime,
+        excerpt: p.excerpt,
+        image: p.image,
+      })),
+    };
+  },
   component: Page,
 });
 
 function Page() {
   const { cat } = Route.useSearch();
-  const visible = cat ? posts.filter((p) => p.category === cat) : posts;
+  const { items } = Route.useLoaderData();
+  const visible = cat ? items.filter((p) => p.category === cat) : items;
   const [featured, ...rest] = visible;
 
   return (

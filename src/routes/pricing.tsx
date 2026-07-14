@@ -3,7 +3,18 @@ import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { CTABand } from "@/components/sections";
 import { BannerCTA } from "@/components/banner-cta";
+import { cmsFind, type CmsPlan } from "@/lib/cms";
 import { ArrowUpRight, Check, ShieldCheck } from "lucide-react";
+
+type PricingTier = {
+  name: string;
+  tagline: string;
+  price: string;
+  unit: string;
+  features: string[];
+  cta: string;
+  highlight: boolean;
+};
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -14,6 +25,25 @@ export const Route = createFileRoute("/pricing")({
       { property: "og:description", content: "Transparent pricing for websites, apps, and monthly care." },
     ],
   }),
+  // Content-managed: pull pricing tiers from the CMS `plans` collection, fall
+  // back to the built-in tiers if the CMS is unreachable or empty.
+  loader: async (): Promise<{ tiers: PricingTier[] }> => {
+    const docs = await cmsFind<CmsPlan>("plans", { sort: "order", limit: 20 });
+    if (docs.length) {
+      return {
+        tiers: docs.map((p) => ({
+          name: p.name,
+          tagline: p.description || "",
+          price: p.price,
+          unit: p.period || "",
+          features: (p.features || []).map((f) => f.label),
+          cta: p.ctaLabel || `Start ${p.name}`,
+          highlight: p.featured ?? false,
+        })),
+      };
+    }
+    return { tiers };
+  },
   component: PricingPage,
 });
 
@@ -124,6 +154,7 @@ const pricingFaqs = [
 ];
 
 function PricingPage() {
+  const { tiers } = Route.useLoaderData();
   return (
     <SiteShell theme={pageThemes["pricing"]}>
       {/* ---- Hero (light editorial, asymmetric split) ---- */}

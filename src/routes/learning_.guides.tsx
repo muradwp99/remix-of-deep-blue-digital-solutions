@@ -2,12 +2,22 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
-import { getLearningCategory } from "@/lib/learning";
+import { getLearningCategory, type LearningItem } from "@/lib/learning";
 import { pageThemes } from "@/lib/themes";
+import { cmsFind } from "@/lib/cms";
+import { cmsToLearningItems, type CmsLearning } from "@/lib/cms-catalog";
 
 const cat = getLearningCategory("guides")!;
 
 export const Route = createFileRoute("/learning_/guides")({
+  loader: async (): Promise<{ items: LearningItem[] }> => {
+    const docs = await cmsFind<CmsLearning>("learning", {
+      where: { type: { equals: "guide" } },
+      sort: "order",
+      depth: 0,
+    });
+    return { items: docs.length ? cmsToLearningItems(docs) : cat.items };
+  },
   head: () => ({
     meta: [
       { title: cat.metaTitle },
@@ -20,6 +30,7 @@ export const Route = createFileRoute("/learning_/guides")({
 });
 
 function Page() {
+  const { items } = Route.useLoaderData();
   return (
     <SiteShell theme={pageThemes["learning/guides"]}>
       {/* Hero — light editorial, asymmetric split with a cover figure */}
@@ -47,7 +58,7 @@ function Page() {
               data-parallax-img
             />
             <figcaption className="absolute bottom-4 left-4 rounded-full bg-background/90 px-4 py-2 text-xs font-medium tracking-wide backdrop-blur">
-              {cat.items.length} guides · free
+              {items.length} guides · free
             </figcaption>
           </figure>
         </div>
@@ -57,7 +68,7 @@ function Page() {
       <section className="block-light">
         <div className="container-page border-t border-border py-20" data-reveal-group>
           <div className="divide-y divide-border">
-            {cat.items.map((item, i) => (
+            {items.map((item, i) => (
               <Link
                 key={item.title}
                 to="/contact"

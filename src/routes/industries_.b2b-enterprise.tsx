@@ -7,18 +7,27 @@ import { LogoMarquee } from "@/components/signature/logo-wall";
 import { getIndustry } from "@/lib/industries";
 import { caseStudies } from "@/lib/case-studies";
 import { pageThemes } from "@/lib/themes";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsToIndustryDTO, hydrateIndustry, type IndustryDTO, type CmsIndustry } from "@/lib/cms-catalog";
 
-const ind = getIndustry("b2b-enterprise")!;
+const SLUG = "b2b-enterprise";
 
 export const Route = createFileRoute("/industries_/b2b-enterprise")({
-  head: () => ({
-    meta: [
-      { title: ind.metaTitle },
-      { name: "description", content: ind.metaDesc },
-      { property: "og:title", content: ind.metaTitle },
-      { property: "og:description", content: ind.metaDesc },
-    ],
-  }),
+  loader: async (): Promise<{ dto: IndustryDTO | null }> => {
+    const doc = await cmsFindOne<CmsIndustry>("industries", SLUG, { depth: 1 });
+    return { dto: doc ? cmsToIndustryDTO(doc) : null };
+  },
+  head: ({ loaderData }) => {
+    const dto = loaderData?.dto;
+    return {
+      meta: [
+        { title: dto?.metaTitle ?? "B2B & Enterprise Software — Northline Studio" },
+        { name: "description", content: dto?.metaDesc ?? "" },
+        { property: "og:title", content: dto?.metaTitle ?? "B2B & Enterprise Software — Northline Studio" },
+        { property: "og:description", content: dto?.metaDesc ?? "" },
+      ],
+    };
+  },
   component: Page,
 });
 
@@ -92,6 +101,8 @@ function Pipeline() {
 }
 
 function Page() {
+  const { dto } = Route.useLoaderData();
+  const ind = dto ? hydrateIndustry(dto, getIndustry(SLUG)!) : getIndustry(SLUG)!;
   const studies = caseStudies.filter((c) => ind.matches.includes(c.industry));
   return (
     <SiteShell theme={pageThemes["industries/b2b-enterprise"]}>

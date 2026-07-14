@@ -6,22 +6,31 @@ import { BeforeAfterSlider } from "@/components/signature/before-after";
 import { BackToParent, SubpageBanner, RelatedPages, HeroCtas } from "@/components/subpage-bits";
 import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
 
-const page = getSubpage("solutions", "internal-tools")!;
+const SLUG = "internal-tools";
 
 export const Route = createFileRoute("/solutions_/internal-tools")({
-  head: () => ({
-    meta: [
-      { title: page.metaTitle },
-      { name: "description", content: page.metaDesc },
-      { property: "og:title", content: page.metaTitle },
-      { property: "og:description", content: page.metaDesc },
-    ],
-  }),
+  loader: async (): Promise<{ dto: SubpageDTO | null }> => {
+    const doc = await cmsFindOne<CmsSubpage>("solutions", SLUG, { depth: 1 });
+    return { dto: doc ? cmsToSubpageDTO(doc, "solutions") : null };
+  },
+  head: ({ loaderData }) => {
+    const dto = loaderData?.dto;
+    return { meta: [
+      { title: dto?.metaTitle ?? "Internal Tools Development — Northline Studio" },
+      { name: "description", content: dto?.metaDesc ?? "" },
+      { property: "og:title", content: dto?.metaTitle ?? "Internal Tools Development — Northline Studio" },
+      { property: "og:description", content: dto?.metaDesc ?? "" },
+    ]};
+  },
   component: Page,
 });
 
 function Page() {
+  const { dto } = Route.useLoaderData();
+  const page = dto ? hydrateSubpage(dto, getSubpage("solutions", SLUG)!) : getSubpage("solutions", SLUG)!;
   return (
     <SiteShell theme={pageThemes["solutions/internal-tools"]}>
       {/* ── DEEP · console hero: dark ops terminal sits on deep mint color ── */}

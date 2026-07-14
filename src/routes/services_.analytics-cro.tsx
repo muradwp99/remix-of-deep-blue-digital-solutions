@@ -5,18 +5,27 @@ import { BrowserFrame } from "@/components/signature/device-frames";
 import { BackToParent, SubpageBanner, RelatedPages, HeroCtas } from "@/components/subpage-bits";
 import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
 
-const page = getSubpage("services", "analytics-cro")!;
+const SLUG = "analytics-cro";
 
 export const Route = createFileRoute("/services_/analytics-cro")({
-  head: () => ({
-    meta: [
-      { title: page.metaTitle },
-      { name: "description", content: page.metaDesc },
-      { property: "og:title", content: page.metaTitle },
-      { property: "og:description", content: page.metaDesc },
-    ],
-  }),
+  loader: async (): Promise<{ dto: SubpageDTO | null }> => {
+    const doc = await cmsFindOne<CmsSubpage>("services", SLUG, { depth: 1 });
+    return { dto: doc ? cmsToSubpageDTO(doc, "services") : null };
+  },
+  head: ({ loaderData }) => {
+    const dto = loaderData?.dto;
+    return {
+      meta: [
+        { title: dto?.metaTitle ?? "Analytics & CRO — Northline Studio" },
+        { name: "description", content: dto?.metaDesc ?? "" },
+        { property: "og:title", content: dto?.metaTitle ?? "Analytics & CRO — Northline Studio" },
+        { property: "og:description", content: dto?.metaDesc ?? "" },
+      ],
+    };
+  },
   component: Page,
 });
 
@@ -64,6 +73,8 @@ function ChartMock() {
 }
 
 function Page() {
+  const { dto } = Route.useLoaderData();
+  const page = dto ? hydrateSubpage(dto, getSubpage("services", SLUG)!) : getSubpage("services", SLUG)!;
   return (
     <SiteShell theme={pageThemes["services/analytics-cro"]}>
       {/* ── DEEP · chartreuse-dark dashboard hero ── */}

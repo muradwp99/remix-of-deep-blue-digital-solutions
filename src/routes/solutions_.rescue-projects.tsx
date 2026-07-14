@@ -5,18 +5,25 @@ import { FeatureGrid, BenefitList, FAQAccordion } from "@/components/sections";
 import { BackToParent, SubpageBanner, RelatedPages, HeroCtas } from "@/components/subpage-bits";
 import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
 
-const page = getSubpage("solutions", "rescue-projects")!;
+const SLUG = "rescue-projects";
 
 export const Route = createFileRoute("/solutions_/rescue-projects")({
-  head: () => ({
-    meta: [
-      { title: page.metaTitle },
-      { name: "description", content: page.metaDesc },
-      { property: "og:title", content: page.metaTitle },
-      { property: "og:description", content: page.metaDesc },
-    ],
-  }),
+  loader: async (): Promise<{ dto: SubpageDTO | null }> => {
+    const doc = await cmsFindOne<CmsSubpage>("solutions", SLUG, { depth: 1 });
+    return { dto: doc ? cmsToSubpageDTO(doc, "solutions") : null };
+  },
+  head: ({ loaderData }) => {
+    const dto = loaderData?.dto;
+    return { meta: [
+      { title: dto?.metaTitle ?? "Project Rescue — Northline Studio" },
+      { name: "description", content: dto?.metaDesc ?? "" },
+      { property: "og:title", content: dto?.metaTitle ?? "Project Rescue — Northline Studio" },
+      { property: "og:description", content: dto?.metaDesc ?? "" },
+    ]};
+  },
   component: Page,
 });
 
@@ -29,6 +36,8 @@ const TRIAGE = [
 ];
 
 function Page() {
+  const { dto } = Route.useLoaderData();
+  const page = dto ? hydrateSubpage(dto, getSubpage("solutions", SLUG)!) : getSubpage("solutions", SLUG)!;
   return (
     <SiteShell theme={pageThemes["solutions/rescue-projects"]}>
       {/* ── BOLD · signal hero: urgency on the left, the triage board resolving on the right ── */}

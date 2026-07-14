@@ -5,18 +5,25 @@ import { PricingMeter } from "@/components/signature/meters";
 import { BackToParent, SubpageBanner, RelatedPages, HeroCtas } from "@/components/subpage-bits";
 import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
 
-const page = getSubpage("solutions", "startup-mvp")!;
+const SLUG = "startup-mvp";
 
 export const Route = createFileRoute("/solutions_/startup-mvp")({
-  head: () => ({
-    meta: [
-      { title: page.metaTitle },
-      { name: "description", content: page.metaDesc },
-      { property: "og:title", content: page.metaTitle },
-      { property: "og:description", content: page.metaDesc },
-    ],
-  }),
+  loader: async (): Promise<{ dto: SubpageDTO | null }> => {
+    const doc = await cmsFindOne<CmsSubpage>("solutions", SLUG, { depth: 1 });
+    return { dto: doc ? cmsToSubpageDTO(doc, "solutions") : null };
+  },
+  head: ({ loaderData }) => {
+    const dto = loaderData?.dto;
+    return { meta: [
+      { title: dto?.metaTitle ?? "Startup MVP — Northline Studio" },
+      { name: "description", content: dto?.metaDesc ?? "" },
+      { property: "og:title", content: dto?.metaTitle ?? "Startup MVP — Northline Studio" },
+      { property: "og:description", content: dto?.metaDesc ?? "" },
+    ]};
+  },
   component: Page,
 });
 
@@ -32,6 +39,8 @@ const PIECES = [
 ];
 
 function Page() {
+  const { dto } = Route.useLoaderData();
+  const page = dto ? hydrateSubpage(dto, getSubpage("solutions", SLUG)!) : getSubpage("solutions", SLUG)!;
   return (
     <SiteShell theme={pageThemes["solutions/startup-mvp"]}>
       {/* ── BOLD · yellow scatter hero: the product pieces fly into place ── */}

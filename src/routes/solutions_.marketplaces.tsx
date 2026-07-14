@@ -5,18 +5,25 @@ import { FeatureGrid, ProcessSteps, BenefitList, FAQAccordion } from "@/componen
 import { BackToParent, SubpageBanner, RelatedPages, HeroCtas } from "@/components/subpage-bits";
 import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
 
-const page = getSubpage("solutions", "marketplaces")!;
+const SLUG = "marketplaces";
 
 export const Route = createFileRoute("/solutions_/marketplaces")({
-  head: () => ({
-    meta: [
-      { title: page.metaTitle },
-      { name: "description", content: page.metaDesc },
-      { property: "og:title", content: page.metaTitle },
-      { property: "og:description", content: page.metaDesc },
-    ],
-  }),
+  loader: async (): Promise<{ dto: SubpageDTO | null }> => {
+    const doc = await cmsFindOne<CmsSubpage>("solutions", SLUG, { depth: 1 });
+    return { dto: doc ? cmsToSubpageDTO(doc, "solutions") : null };
+  },
+  head: ({ loaderData }) => {
+    const dto = loaderData?.dto;
+    return { meta: [
+      { title: dto?.metaTitle ?? "Marketplace Development — Northline Studio" },
+      { name: "description", content: dto?.metaDesc ?? "" },
+      { property: "og:title", content: dto?.metaTitle ?? "Marketplace Development — Northline Studio" },
+      { property: "og:description", content: dto?.metaDesc ?? "" },
+    ]};
+  },
   component: Page,
 });
 
@@ -73,6 +80,8 @@ function SidePanel({ side }: { side: "supply" | "demand" }) {
 }
 
 function Page() {
+  const { dto } = Route.useLoaderData();
+  const page = dto ? hydrateSubpage(dto, getSubpage("solutions", SLUG)!) : getSubpage("solutions", SLUG)!;
   return (
     <SiteShell theme={pageThemes["solutions/marketplaces"]}>
       {/* ── DEEP · dual-tone platform hero: violet/cyan glows on deep color ── */}

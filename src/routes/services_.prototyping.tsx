@@ -7,21 +7,30 @@ import { StickyPinSteps } from "@/components/signature/sticky-narrative";
 import { BackToParent, SubpageBanner, RelatedPages, HeroCtas } from "@/components/subpage-bits";
 import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
 
-const page = getSubpage("services", "prototyping")!;
+const SLUG = "prototyping";
 
 const u = (id: string, w = 1200) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=70`;
 
 export const Route = createFileRoute("/services_/prototyping")({
-  head: () => ({
-    meta: [
-      { title: page.metaTitle },
-      { name: "description", content: page.metaDesc },
-      { property: "og:title", content: page.metaTitle },
-      { property: "og:description", content: page.metaDesc },
-    ],
-  }),
+  loader: async (): Promise<{ dto: SubpageDTO | null }> => {
+    const doc = await cmsFindOne<CmsSubpage>("services", SLUG, { depth: 1 });
+    return { dto: doc ? cmsToSubpageDTO(doc, "services") : null };
+  },
+  head: ({ loaderData }) => {
+    const dto = loaderData?.dto;
+    return {
+      meta: [
+        { title: dto?.metaTitle ?? "Wireframing & Prototyping — Northline Studio" },
+        { name: "description", content: dto?.metaDesc ?? "" },
+        { property: "og:title", content: dto?.metaTitle ?? "Wireframing & Prototyping — Northline Studio" },
+        { property: "og:description", content: dto?.metaDesc ?? "" },
+      ],
+    };
+  },
   component: Page,
 });
 
@@ -109,6 +118,8 @@ const findings = [
 ];
 
 function Page() {
+  const { dto } = Route.useLoaderData();
+  const page = dto ? hydrateSubpage(dto, getSubpage("services", SLUG)!) : getSubpage("services", SLUG)!;
   return (
     <SiteShell theme={pageThemes["services/prototyping"]}>
       {/* ============ WHITE HERO — dark text, fidelity trio of phones ============ */}

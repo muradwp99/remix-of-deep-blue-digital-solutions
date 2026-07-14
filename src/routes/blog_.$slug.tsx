@@ -3,11 +3,106 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { BannerCTA } from "@/components/banner-cta";
-import { posts, getPost, postCategories, formatPostDate } from "@/lib/posts";
+import {
+  posts,
+  getPost,
+  postCategories,
+  formatPostDate,
+  type Post,
+  type PostCategory,
+  type PostBlock,
+} from "@/lib/posts";
+import {
+  cmsFind,
+  cmsFindOne,
+  cmsMedia,
+  projectPlaceholder,
+  lexicalToBlocks,
+  lexicalToPlainText,
+  type CmsPost,
+} from "@/lib/cms";
+
+type MoreCard = { slug: string; title: string; category: PostCategory; readTime: string };
+
+// CMS category titles → the site's fixed post-category keys.
+const CATEGORY_KEY: Record<string, PostCategory> = {
+  engineering: "engineering",
+  design: "design",
+  news: "news",
+  product: "news",
+  growth: "news",
+};
+
+const catKeyFromCms = (doc: CmsPost): PostCategory => {
+  const first = (doc.categories || []).find((c) => c && typeof c === "object") as
+    | { title?: string }
+    | undefined;
+  return CATEGORY_KEY[(first?.title || "").toLowerCase()] ?? "news";
+};
+
+const estimateReadTime = (blocks: PostBlock[]): string => {
+  const words = blocks.reduce(
+    (n, b) =>
+      n +
+      (b.h ? b.h.split(/\s+/).length : 0) +
+      (b.p ? b.p.split(/\s+/).length : 0) +
+      (b.list ? b.list.join(" ").split(/\s+/).length : 0),
+    0,
+  );
+  return `${Math.max(1, Math.round(words / 200))} min read`;
+};
+
+const cmsToPost = (doc: CmsPost, slug: string): Post => {
+  const body = lexicalToBlocks(doc.content);
+  return {
+    slug,
+    title: doc.title,
+    category: catKeyFromCms(doc),
+    date: (doc.publishedAt || doc.createdAt || "").slice(0, 10),
+    readTime: estimateReadTime(body),
+    excerpt: doc.excerpt || lexicalToPlainText(doc.content).slice(0, 160),
+    image: cmsMedia(doc.heroImage) || projectPlaceholder(slug),
+    body,
+  };
+};
+
+const cmsToCard = (doc: CmsPost): MoreCard => ({
+  slug: doc.slug || "",
+  title: doc.title,
+  category: catKeyFromCms(doc),
+  readTime: estimateReadTime(lexicalToBlocks(doc.content)),
+});
 
 export const Route = createFileRoute("/blog_/$slug")({
-  head: ({ params }) => {
-    const post = getPost(params.slug);
+  // CMS-first: pull the post + a couple of "keep reading" cards from the CMS,
+  // fall back to the built-in posts if the CMS is unreachable or the slug is
+  // only in the built-in set.
+  loader: async ({ params }): Promise<{ post: Post | null; more: MoreCard[] }> => {
+    const doc = await cmsFindOne<CmsPost>("posts", params.slug, { depth: 2 });
+    if (doc) {
+      const others = await cmsFind<CmsPost>("posts", { sort: "-publishedAt", limit: 6, depth: 1 });
+      const more = others
+        .filter((o) => (o.slug || "") !== params.slug)
+        .slice(0, 2)
+        .map(cmsToCard);
+      return { post: cmsToPost(doc, params.slug), more };
+    }
+    const p = getPost(params.slug);
+    if (!p) return { post: null, more: [] };
+    const related = posts.filter((x) => x.slug !== p.slug && x.category === p.category).slice(0, 2);
+    const fill = posts
+      .filter((x) => x.slug !== p.slug && !related.includes(x))
+      .slice(0, 2 - related.length);
+    const more = [...related, ...fill].map((x) => ({
+      slug: x.slug,
+      title: x.title,
+      category: x.category,
+      readTime: x.readTime,
+    }));
+    return { post: p, more };
+  },
+  head: ({ loaderData }) => {
+    const post = loaderData?.post;
     const title = post ? `${post.title} — Northline Studio` : "Blog — Northline Studio";
     const description = post?.excerpt ?? "Writing from the Northline team.";
     return {
@@ -23,8 +118,7 @@ export const Route = createFileRoute("/blog_/$slug")({
 });
 
 function Page() {
-  const { slug } = Route.useParams();
-  const post = getPost(slug);
+  const { post, more } = Route.useLoaderData();
 
   if (!post) {
     return (
@@ -53,13 +147,6 @@ function Page() {
   }
 
   const catLabel = postCategories.find((c) => c.key === post.category)?.label;
-  const related = posts
-    .filter((p) => p.slug !== post.slug && p.category === post.category)
-    .slice(0, 2);
-  const fallback = posts
-    .filter((p) => p.slug !== post.slug && !related.includes(p))
-    .slice(0, 2 - related.length);
-  const more = [...related, ...fallback];
 
   return (
     <SiteShell theme={pageThemes["blog"]}>
