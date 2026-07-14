@@ -65,6 +65,7 @@ import { Route as ServicesBrandIdentityRouteImport } from './routes/services_.br
 import { Route as ServicesAppStoreSetupRouteImport } from './routes/services_.app-store-setup'
 import { Route as ServicesAnalyticsCroRouteImport } from './routes/services_.analytics-cro'
 import { Route as ServicesSlugRouteImport } from './routes/services_.$slug'
+import { Route as PagesSlugRouteImport } from './routes/pages_.$slug'
 import { Route as LearningWebinarsRouteImport } from './routes/learning_.webinars'
 import { Route as LearningTutorialsRouteImport } from './routes/learning_.tutorials'
 import { Route as LearningTemplatesRouteImport } from './routes/learning_.templates'
@@ -362,6 +363,11 @@ const ServicesSlugRoute = ServicesSlugRouteImport.update({
   path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PagesSlugRoute = PagesSlugRouteImport.update({
+  id: '/pages_/$slug',
+  path: '/pages/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearningWebinarsRoute = LearningWebinarsRouteImport.update({
   id: '/learning_/webinars',
   path: '/learning/webinars',
@@ -455,6 +461,7 @@ export interface FileRoutesByFullPath {
   '/learning/templates': typeof LearningTemplatesRoute
   '/learning/tutorials': typeof LearningTutorialsRoute
   '/learning/webinars': typeof LearningWebinarsRoute
+  '/pages/$slug': typeof PagesSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/services/analytics-cro': typeof ServicesAnalyticsCroRoute
   '/services/app-store-setup': typeof ServicesAppStoreSetupRoute
@@ -524,6 +531,7 @@ export interface FileRoutesByTo {
   '/learning/templates': typeof LearningTemplatesRoute
   '/learning/tutorials': typeof LearningTutorialsRoute
   '/learning/webinars': typeof LearningWebinarsRoute
+  '/pages/$slug': typeof PagesSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/services/analytics-cro': typeof ServicesAnalyticsCroRoute
   '/services/app-store-setup': typeof ServicesAppStoreSetupRoute
@@ -594,6 +602,7 @@ export interface FileRoutesById {
   '/learning_/templates': typeof LearningTemplatesRoute
   '/learning_/tutorials': typeof LearningTutorialsRoute
   '/learning_/webinars': typeof LearningWebinarsRoute
+  '/pages_/$slug': typeof PagesSlugRoute
   '/services_/$slug': typeof ServicesSlugRoute
   '/services_/analytics-cro': typeof ServicesAnalyticsCroRoute
   '/services_/app-store-setup': typeof ServicesAppStoreSetupRoute
@@ -665,6 +674,7 @@ export interface FileRouteTypes {
     | '/learning/templates'
     | '/learning/tutorials'
     | '/learning/webinars'
+    | '/pages/$slug'
     | '/services/$slug'
     | '/services/analytics-cro'
     | '/services/app-store-setup'
@@ -734,6 +744,7 @@ export interface FileRouteTypes {
     | '/learning/templates'
     | '/learning/tutorials'
     | '/learning/webinars'
+    | '/pages/$slug'
     | '/services/$slug'
     | '/services/analytics-cro'
     | '/services/app-store-setup'
@@ -803,6 +814,7 @@ export interface FileRouteTypes {
     | '/learning_/templates'
     | '/learning_/tutorials'
     | '/learning_/webinars'
+    | '/pages_/$slug'
     | '/services_/$slug'
     | '/services_/analytics-cro'
     | '/services_/app-store-setup'
@@ -873,6 +885,7 @@ export interface RootRouteChildren {
   LearningTemplatesRoute: typeof LearningTemplatesRoute
   LearningTutorialsRoute: typeof LearningTutorialsRoute
   LearningWebinarsRoute: typeof LearningWebinarsRoute
+  PagesSlugRoute: typeof PagesSlugRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
   ServicesAnalyticsCroRoute: typeof ServicesAnalyticsCroRoute
   ServicesAppStoreSetupRoute: typeof ServicesAppStoreSetupRoute
@@ -1300,6 +1313,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pages_/$slug': {
+      id: '/pages_/$slug'
+      path: '/pages/$slug'
+      fullPath: '/pages/$slug'
+      preLoaderRoute: typeof PagesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learning_/webinars': {
       id: '/learning_/webinars'
       path: '/learning/webinars'
@@ -1417,6 +1437,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearningTemplatesRoute: LearningTemplatesRoute,
   LearningTutorialsRoute: LearningTutorialsRoute,
   LearningWebinarsRoute: LearningWebinarsRoute,
+  PagesSlugRoute: PagesSlugRoute,
   ServicesSlugRoute: ServicesSlugRoute,
   ServicesAnalyticsCroRoute: ServicesAnalyticsCroRoute,
   ServicesAppStoreSetupRoute: ServicesAppStoreSetupRoute,
