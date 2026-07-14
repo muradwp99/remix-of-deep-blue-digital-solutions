@@ -2,7 +2,26 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { StatsRow } from "@/components/sections";
+import { cmsFind } from "@/lib/cms";
 import { MapPin, ArrowUpRight, ArrowDown } from "lucide-react";
+
+type JobCard = {
+  role: string;
+  dept: string;
+  loc: string;
+  salary: string;
+  tags: string[];
+};
+
+/** Shape of a Payload `jobs` doc (fields used by the Careers page). */
+type CmsJob = {
+  title: string;
+  department?: string;
+  location?: string;
+  salary?: string;
+  tags?: string[];
+  open?: boolean;
+};
 
 export const Route = createFileRoute("/careers")({
   head: () => ({
@@ -13,6 +32,27 @@ export const Route = createFileRoute("/careers")({
       { property: "og:description", content: "Remote-first culture, real ownership, and zero bureaucracy." },
     ],
   }),
+  // Content-managed: pull open roles from the CMS, fall back to the built-in
+  // list if the CMS is unreachable so the page never hard-fails.
+  loader: async (): Promise<{ jobs: JobCard[] }> => {
+    const docs = await cmsFind<CmsJob>("jobs", {
+      where: { open: { equals: true } },
+      sort: "createdAt",
+      depth: 0,
+    });
+    if (docs.length) {
+      return {
+        jobs: docs.map((j) => ({
+          role: j.title,
+          dept: j.department || "",
+          loc: j.location || "",
+          salary: j.salary || "",
+          tags: j.tags || [],
+        })),
+      };
+    }
+    return { jobs };
+  },
   component: Page,
 });
 
@@ -41,6 +81,7 @@ const weekOne = [
 ];
 
 function Page() {
+  const { jobs } = Route.useLoaderData();
   return (
     <SiteShell theme={pageThemes["careers"]}>
       {/* ---- Hero (bold coral color-block, poster-style) ---- */}

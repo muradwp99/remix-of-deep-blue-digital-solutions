@@ -1,8 +1,9 @@
 /**
- * Read-only client for the Northline Payload CMS REST API.
+ * Client for the Northline Payload CMS REST API.
  *
- * Used inside TanStack Start route loaders (server-side) to hydrate pages
- * with editable content. Every call fails soft — returns [] / null on any
+ * Mostly read helpers used inside TanStack Start route loaders (server-side)
+ * to hydrate pages with editable content, plus `cmsSubmitForm` for writing
+ * form submissions. Every call fails soft — returns [] / null / false on any
  * error — so a page never hard-fails if the CMS is unreachable; callers
  * fall back to their built-in defaults.
  *
@@ -62,6 +63,33 @@ export async function cmsGlobal<T = Record<string, unknown>>(
     return (await res.json()) as T;
   } catch {
     return null;
+  }
+}
+
+/**
+ * Submit a form-builder form to the CMS (`@payloadcms/plugin-form-builder`).
+ *
+ * POSTs to the `form-submissions` collection in the shape the plugin expects:
+ * `{ form, submissionData: [{ field, value }, ...] }`. Fails soft — returns
+ * `false` on any non-ok response or thrown error — so callers can always fall
+ * through to their success UX even if the CMS is unreachable.
+ */
+export async function cmsSubmitForm(
+  formId: string | number,
+  data: Record<string, string>,
+): Promise<boolean> {
+  try {
+    const res = await fetch(`${CMS_URL}/api/form-submissions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        form: formId,
+        submissionData: Object.entries(data).map(([field, value]) => ({ field, value })),
+      }),
+    });
+    return res.ok;
+  } catch {
+    return false;
   }
 }
 

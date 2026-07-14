@@ -22,6 +22,12 @@ export const Jobs: CollectionConfig = {
       admin: { description: "Responsibilities, requirements, and what the role offers." },
     },
     {
+      name: "tags",
+      type: "text",
+      hasMany: true,
+      admin: { description: "Skill tags shown on the job card." },
+    },
+    {
       type: "collapsible",
       label: "How to Apply",
       admin: { description: "Where candidates go to apply." },
@@ -51,6 +57,11 @@ export const Jobs: CollectionConfig = {
       type: "text",
       defaultValue: "Remote",
       admin: { position: "sidebar", description: "e.g. Remote, or a specific city." },
+    },
+    {
+      name: "salary",
+      type: "text",
+      admin: { position: "sidebar", description: 'e.g. "$130k–$175k".' },
     },
     {
       name: "open",

@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { Mail, MapPin, Phone, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
+import { cmsFind, cmsSubmitForm } from "@/lib/cms";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -12,6 +13,17 @@ export const Route = createFileRoute("/contact")({
       { property: "og:description", content: "Start a project with Northline. We reply within one business day." },
     ],
   }),
+  // Resolve the CMS "Contact" form id so submissions can be saved. Fails soft
+  // to null (never throws) if the CMS is unreachable or the form isn't seeded;
+  // the page still works and simply no-ops the save in that case.
+  loader: async (): Promise<{ formId: string | number | null }> => {
+    const docs = await cmsFind<{ id: string | number }>("forms", {
+      where: { title: { equals: "Contact" } },
+      limit: 1,
+      depth: 0,
+    });
+    return { formId: docs[0]?.id ?? null };
+  },
   component: ContactPage,
 });
 
@@ -48,7 +60,44 @@ const nextSteps = [
 ];
 
 function ContactPage() {
+  const { formId } = Route.useLoaderData();
   const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [website, setWebsite] = useState("");
+  // Named `selectedServices` to avoid shadowing the module-level `services`
+  // options array used to render the checkboxes below.
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [budget, setBudget] = useState("");
+  const [message, setMessage] = useState("");
+
+  const toggleService = (s: string) =>
+    setSelectedServices((prev) =>
+      prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s],
+    );
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = {
+      name,
+      email,
+      company,
+      website,
+      services: selectedServices.join(", "),
+      budget,
+      message,
+    };
+    // Save to the CMS when the form exists; never regress the UX — always show
+    // the success state, even if the POST fails or the form id is unavailable.
+    if (formId != null) {
+      const ok = await cmsSubmitForm(formId, data);
+      if (!ok) console.warn("Contact form: submission failed to save to the CMS.");
+    } else {
+      console.warn("Contact form: no CMS form id — submission not saved.");
+    }
+    setSubmitted(true);
+  };
 
   return (
     <SiteShell>
@@ -202,24 +251,44 @@ function ContactPage() {
             </div>
           ) : (
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setSubmitted(true);
-              }}
+              onSubmit={handleSubmit}
               className="glass-strong space-y-6 rounded-3xl p-8 md:p-10"
             >
               <div className="grid gap-6 md:grid-cols-2">
                 <Field label="Your name">
-                  <input required className={inputCls} placeholder="Jane Doe" />
+                  <input
+                    required
+                    className={inputCls}
+                    placeholder="Jane Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
                 </Field>
                 <Field label="Work email">
-                  <input required type="email" className={inputCls} placeholder="jane@company.com" />
+                  <input
+                    required
+                    type="email"
+                    className={inputCls}
+                    placeholder="jane@company.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </Field>
                 <Field label="Company">
-                  <input className={inputCls} placeholder="Acme Inc." />
+                  <input
+                    className={inputCls}
+                    placeholder="Acme Inc."
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                  />
                 </Field>
                 <Field label="Website">
-                  <input className={inputCls} placeholder="acme.com" />
+                  <input
+                    className={inputCls}
+                    placeholder="acme.com"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                  />
                 </Field>
               </div>
 
@@ -230,7 +299,12 @@ function ContactPage() {
                       key={s}
                       className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
                     >
-                      <input type="checkbox" className="accent-lime" />
+                      <input
+                        type="checkbox"
+                        className="accent-lime"
+                        checked={selectedServices.includes(s)}
+                        onChange={() => toggleService(s)}
+                      />
                       {s}
                     </label>
                   ))}
@@ -244,7 +318,13 @@ function ContactPage() {
                       key={b}
                       className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
                     >
-                      <input type="radio" name="budget" className="accent-lime" />
+                      <input
+                        type="radio"
+                        name="budget"
+                        className="accent-lime"
+                        checked={budget === b}
+                        onChange={() => setBudget(b)}
+                      />
                       {b}
                     </label>
                   ))}
@@ -257,6 +337,8 @@ function ContactPage() {
                   required
                   className={inputCls}
                   placeholder="Goals, timeline, links to anything relevant..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                 />
               </Field>
 
