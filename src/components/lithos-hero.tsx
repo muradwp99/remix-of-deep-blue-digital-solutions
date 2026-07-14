@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Sparkles } from "lucide-react";
+import { HeroDeck } from "./hero-deck";
 
 const BG_IMAGE_1 =
   "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80";
@@ -136,7 +137,7 @@ export function LithosHero() {
       />
 
       {/* Heading */}
-      <div className="absolute inset-0 z-50 flex flex-col items-center justify-center text-center px-5 pointer-events-none">
+      <div className="absolute inset-0 z-50 flex flex-col items-center justify-center text-center px-5 pointer-events-none md:pb-44">
         <span
           className="hero-anim hero-fade inline-flex items-center gap-2 rounded-full glass-strong px-4 py-2 text-xs uppercase tracking-[0.24em] text-lime pointer-events-auto"
           style={{ animationDelay: "0.1s" }}
@@ -187,14 +188,17 @@ export function LithosHero() {
         </div>
       </div>
 
-      {/* Bottom hint */}
+      {/* Cursor hint (sits above the deck) */}
       <div
-        className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 z-50 items-center gap-2 text-xs uppercase tracking-[0.24em] text-foreground/50 hero-anim hero-fade"
+        className="hidden md:flex absolute bottom-62 left-1/2 -translate-x-1/2 z-50 items-center gap-2 text-xs uppercase tracking-[0.24em] text-foreground/50 hero-anim hero-fade"
         style={{ animationDelay: "1s" }}
       >
         <span className="h-2 w-2 rounded-full bg-lime animate-float" />
         Move your cursor to explore
       </div>
+
+      {/* Fanned work deck along the fold */}
+      <HeroDeck />
     </section>
   );
 }

@@ -11,21 +11,71 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorksRouteImport } from './routes/works'
 import { Route as UiUxDesignRouteImport } from './routes/ui-ux-design'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SolutionsRouteImport } from './routes/solutions'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SaasRouteImport } from './routes/saas'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OurStoryRouteImport } from './routes/our-story'
 import { Route as MobileAppsRouteImport } from './routes/mobile-apps'
 import { Route as LeadershipRouteImport } from './routes/leadership'
+import { Route as Home5RouteImport } from './routes/home-5'
+import { Route as Home4RouteImport } from './routes/home-4'
+import { Route as Home3RouteImport } from './routes/home-3'
+import { Route as Home2RouteImport } from './routes/home-2'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DigitalTransformationRouteImport } from './routes/digital-transformation'
 import { Route as CustomSoftwareRouteImport } from './routes/custom-software'
+import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CareersRouteImport } from './routes/careers'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorksSlugRouteImport } from './routes/works_.$slug'
+import { Route as ToolsWebsiteAuditRouteImport } from './routes/tools_.website-audit'
+import { Route as ToolsSpeedTestRouteImport } from './routes/tools_.speed-test'
+import { Route as ToolsRoiCalculatorRouteImport } from './routes/tools_.roi-calculator'
+import { Route as ToolsBrandGraderRouteImport } from './routes/tools_.brand-grader'
+import { Route as ToolsSlugRouteImport } from './routes/tools_.$slug'
+import { Route as SolutionsStartupMvpRouteImport } from './routes/solutions_.startup-mvp'
+import { Route as SolutionsScaleUpRouteImport } from './routes/solutions_.scale-up'
+import { Route as SolutionsRescueProjectsRouteImport } from './routes/solutions_.rescue-projects'
+import { Route as SolutionsMarketplacesRouteImport } from './routes/solutions_.marketplaces'
+import { Route as SolutionsInternalToolsRouteImport } from './routes/solutions_.internal-tools'
+import { Route as SolutionsGrowthCroRouteImport } from './routes/solutions_.growth-cro'
+import { Route as SolutionsEnterpriseRouteImport } from './routes/solutions_.enterprise'
+import { Route as SolutionsEcommerceRouteImport } from './routes/solutions_.ecommerce'
+import { Route as SolutionsDigitalMarketingRouteImport } from './routes/solutions_.digital-marketing'
+import { Route as SolutionsBrandConsultancyRouteImport } from './routes/solutions_.brand-consultancy'
+import { Route as SolutionsSlugRouteImport } from './routes/solutions_.$slug'
+import { Route as ServicesWebsiteDevelopmentRouteImport } from './routes/services_.website-development'
+import { Route as ServicesSeoPerformanceRouteImport } from './routes/services_.seo-performance'
+import { Route as ServicesPrototypingRouteImport } from './routes/services_.prototyping'
+import { Route as ServicesMvpDevelopmentRouteImport } from './routes/services_.mvp-development'
+import { Route as ServicesMonthlyCareRouteImport } from './routes/services_.monthly-care'
+import { Route as ServicesMaintenanceSupportRouteImport } from './routes/services_.maintenance-support'
+import { Route as ServicesLandingPagesRouteImport } from './routes/services_.landing-pages'
+import { Route as ServicesDesignSystemsRouteImport } from './routes/services_.design-systems'
+import { Route as ServicesCrossPlatformAppsRouteImport } from './routes/services_.cross-platform-apps'
+import { Route as ServicesCmsWebsitesRouteImport } from './routes/services_.cms-websites'
+import { Route as ServicesBrandIdentityRouteImport } from './routes/services_.brand-identity'
+import { Route as ServicesAppStoreSetupRouteImport } from './routes/services_.app-store-setup'
+import { Route as ServicesAnalyticsCroRouteImport } from './routes/services_.analytics-cro'
+import { Route as ServicesSlugRouteImport } from './routes/services_.$slug'
+import { Route as LearningWebinarsRouteImport } from './routes/learning_.webinars'
+import { Route as LearningTutorialsRouteImport } from './routes/learning_.tutorials'
+import { Route as LearningTemplatesRouteImport } from './routes/learning_.templates'
+import { Route as LearningGuidesRouteImport } from './routes/learning_.guides'
+import { Route as LearningSlugRouteImport } from './routes/learning_.$slug'
+import { Route as IndustriesRetailDtcRouteImport } from './routes/industries_.retail-dtc'
+import { Route as IndustriesHealthcareRouteImport } from './routes/industries_.healthcare'
+import { Route as IndustriesFintechRouteImport } from './routes/industries_.fintech'
+import { Route as IndustriesB2bEnterpriseRouteImport } from './routes/industries_.b2b-enterprise'
+import { Route as IndustriesSlugRouteImport } from './routes/industries_.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 
 const WorksRoute = WorksRouteImport.update({
   id: '/works',
@@ -35,6 +85,11 @@ const WorksRoute = WorksRouteImport.update({
 const UiUxDesignRoute = UiUxDesignRouteImport.update({
   id: '/ui-ux-design',
   path: '/ui-ux-design',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SolutionsRoute = SolutionsRouteImport.update({
@@ -57,6 +112,11 @@ const ResourcesRoute = ResourcesRouteImport.update({
   path: '/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -77,6 +137,26 @@ const LeadershipRoute = LeadershipRouteImport.update({
   path: '/leadership',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Home5Route = Home5RouteImport.update({
+  id: '/home-5',
+  path: '/home-5',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Home4Route = Home4RouteImport.update({
+  id: '/home-4',
+  path: '/home-4',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Home3Route = Home3RouteImport.update({
+  id: '/home-3',
+  path: '/home-3',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Home2Route = Home2RouteImport.update({
+  id: '/home-2',
+  path: '/home-2',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
@@ -92,6 +172,11 @@ const CustomSoftwareRoute = CustomSoftwareRouteImport.update({
   path: '/custom-software',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -100,6 +185,11 @@ const ContactRoute = ContactRouteImport.update({
 const CareersRoute = CareersRouteImport.update({
   id: '/careers',
   path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -112,143 +202,708 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorksSlugRoute = WorksSlugRouteImport.update({
+  id: '/works_/$slug',
+  path: '/works/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsWebsiteAuditRoute = ToolsWebsiteAuditRouteImport.update({
+  id: '/tools_/website-audit',
+  path: '/tools/website-audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsSpeedTestRoute = ToolsSpeedTestRouteImport.update({
+  id: '/tools_/speed-test',
+  path: '/tools/speed-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsRoiCalculatorRoute = ToolsRoiCalculatorRouteImport.update({
+  id: '/tools_/roi-calculator',
+  path: '/tools/roi-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsBrandGraderRoute = ToolsBrandGraderRouteImport.update({
+  id: '/tools_/brand-grader',
+  path: '/tools/brand-grader',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsSlugRoute = ToolsSlugRouteImport.update({
+  id: '/tools_/$slug',
+  path: '/tools/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsStartupMvpRoute = SolutionsStartupMvpRouteImport.update({
+  id: '/solutions_/startup-mvp',
+  path: '/solutions/startup-mvp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsScaleUpRoute = SolutionsScaleUpRouteImport.update({
+  id: '/solutions_/scale-up',
+  path: '/solutions/scale-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsRescueProjectsRoute = SolutionsRescueProjectsRouteImport.update({
+  id: '/solutions_/rescue-projects',
+  path: '/solutions/rescue-projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsMarketplacesRoute = SolutionsMarketplacesRouteImport.update({
+  id: '/solutions_/marketplaces',
+  path: '/solutions/marketplaces',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsInternalToolsRoute = SolutionsInternalToolsRouteImport.update({
+  id: '/solutions_/internal-tools',
+  path: '/solutions/internal-tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsGrowthCroRoute = SolutionsGrowthCroRouteImport.update({
+  id: '/solutions_/growth-cro',
+  path: '/solutions/growth-cro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsEnterpriseRoute = SolutionsEnterpriseRouteImport.update({
+  id: '/solutions_/enterprise',
+  path: '/solutions/enterprise',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsEcommerceRoute = SolutionsEcommerceRouteImport.update({
+  id: '/solutions_/ecommerce',
+  path: '/solutions/ecommerce',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsDigitalMarketingRoute =
+  SolutionsDigitalMarketingRouteImport.update({
+    id: '/solutions_/digital-marketing',
+    path: '/solutions/digital-marketing',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SolutionsBrandConsultancyRoute =
+  SolutionsBrandConsultancyRouteImport.update({
+    id: '/solutions_/brand-consultancy',
+    path: '/solutions/brand-consultancy',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SolutionsSlugRoute = SolutionsSlugRouteImport.update({
+  id: '/solutions_/$slug',
+  path: '/solutions/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesWebsiteDevelopmentRoute =
+  ServicesWebsiteDevelopmentRouteImport.update({
+    id: '/services_/website-development',
+    path: '/services/website-development',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ServicesSeoPerformanceRoute = ServicesSeoPerformanceRouteImport.update({
+  id: '/services_/seo-performance',
+  path: '/services/seo-performance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesPrototypingRoute = ServicesPrototypingRouteImport.update({
+  id: '/services_/prototyping',
+  path: '/services/prototyping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesMvpDevelopmentRoute = ServicesMvpDevelopmentRouteImport.update({
+  id: '/services_/mvp-development',
+  path: '/services/mvp-development',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesMonthlyCareRoute = ServicesMonthlyCareRouteImport.update({
+  id: '/services_/monthly-care',
+  path: '/services/monthly-care',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesMaintenanceSupportRoute =
+  ServicesMaintenanceSupportRouteImport.update({
+    id: '/services_/maintenance-support',
+    path: '/services/maintenance-support',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ServicesLandingPagesRoute = ServicesLandingPagesRouteImport.update({
+  id: '/services_/landing-pages',
+  path: '/services/landing-pages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesDesignSystemsRoute = ServicesDesignSystemsRouteImport.update({
+  id: '/services_/design-systems',
+  path: '/services/design-systems',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesCrossPlatformAppsRoute =
+  ServicesCrossPlatformAppsRouteImport.update({
+    id: '/services_/cross-platform-apps',
+    path: '/services/cross-platform-apps',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ServicesCmsWebsitesRoute = ServicesCmsWebsitesRouteImport.update({
+  id: '/services_/cms-websites',
+  path: '/services/cms-websites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesBrandIdentityRoute = ServicesBrandIdentityRouteImport.update({
+  id: '/services_/brand-identity',
+  path: '/services/brand-identity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesAppStoreSetupRoute = ServicesAppStoreSetupRouteImport.update({
+  id: '/services_/app-store-setup',
+  path: '/services/app-store-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesAnalyticsCroRoute = ServicesAnalyticsCroRouteImport.update({
+  id: '/services_/analytics-cro',
+  path: '/services/analytics-cro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesSlugRoute = ServicesSlugRouteImport.update({
+  id: '/services_/$slug',
+  path: '/services/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearningWebinarsRoute = LearningWebinarsRouteImport.update({
+  id: '/learning_/webinars',
+  path: '/learning/webinars',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearningTutorialsRoute = LearningTutorialsRouteImport.update({
+  id: '/learning_/tutorials',
+  path: '/learning/tutorials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearningTemplatesRoute = LearningTemplatesRouteImport.update({
+  id: '/learning_/templates',
+  path: '/learning/templates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearningGuidesRoute = LearningGuidesRouteImport.update({
+  id: '/learning_/guides',
+  path: '/learning/guides',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearningSlugRoute = LearningSlugRouteImport.update({
+  id: '/learning_/$slug',
+  path: '/learning/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndustriesRetailDtcRoute = IndustriesRetailDtcRouteImport.update({
+  id: '/industries_/retail-dtc',
+  path: '/industries/retail-dtc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndustriesHealthcareRoute = IndustriesHealthcareRouteImport.update({
+  id: '/industries_/healthcare',
+  path: '/industries/healthcare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndustriesFintechRoute = IndustriesFintechRouteImport.update({
+  id: '/industries_/fintech',
+  path: '/industries/fintech',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndustriesB2bEnterpriseRoute = IndustriesB2bEnterpriseRouteImport.update({
+  id: '/industries_/b2b-enterprise',
+  path: '/industries/b2b-enterprise',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndustriesSlugRoute = IndustriesSlugRouteImport.update({
+  id: '/industries_/$slug',
+  path: '/industries/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog_/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/blog': typeof BlogRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/custom-software': typeof CustomSoftwareRoute
   '/digital-transformation': typeof DigitalTransformationRoute
   '/faq': typeof FaqRoute
+  '/home-2': typeof Home2Route
+  '/home-3': typeof Home3Route
+  '/home-4': typeof Home4Route
+  '/home-5': typeof Home5Route
   '/leadership': typeof LeadershipRoute
   '/mobile-apps': typeof MobileAppsRoute
   '/our-story': typeof OurStoryRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/saas': typeof SaasRoute
   '/services': typeof ServicesRoute
   '/solutions': typeof SolutionsRoute
+  '/terms': typeof TermsRoute
   '/ui-ux-design': typeof UiUxDesignRoute
   '/works': typeof WorksRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/industries/$slug': typeof IndustriesSlugRoute
+  '/industries/b2b-enterprise': typeof IndustriesB2bEnterpriseRoute
+  '/industries/fintech': typeof IndustriesFintechRoute
+  '/industries/healthcare': typeof IndustriesHealthcareRoute
+  '/industries/retail-dtc': typeof IndustriesRetailDtcRoute
+  '/learning/$slug': typeof LearningSlugRoute
+  '/learning/guides': typeof LearningGuidesRoute
+  '/learning/templates': typeof LearningTemplatesRoute
+  '/learning/tutorials': typeof LearningTutorialsRoute
+  '/learning/webinars': typeof LearningWebinarsRoute
+  '/services/$slug': typeof ServicesSlugRoute
+  '/services/analytics-cro': typeof ServicesAnalyticsCroRoute
+  '/services/app-store-setup': typeof ServicesAppStoreSetupRoute
+  '/services/brand-identity': typeof ServicesBrandIdentityRoute
+  '/services/cms-websites': typeof ServicesCmsWebsitesRoute
+  '/services/cross-platform-apps': typeof ServicesCrossPlatformAppsRoute
+  '/services/design-systems': typeof ServicesDesignSystemsRoute
+  '/services/landing-pages': typeof ServicesLandingPagesRoute
+  '/services/maintenance-support': typeof ServicesMaintenanceSupportRoute
+  '/services/monthly-care': typeof ServicesMonthlyCareRoute
+  '/services/mvp-development': typeof ServicesMvpDevelopmentRoute
+  '/services/prototyping': typeof ServicesPrototypingRoute
+  '/services/seo-performance': typeof ServicesSeoPerformanceRoute
+  '/services/website-development': typeof ServicesWebsiteDevelopmentRoute
+  '/solutions/$slug': typeof SolutionsSlugRoute
+  '/solutions/brand-consultancy': typeof SolutionsBrandConsultancyRoute
+  '/solutions/digital-marketing': typeof SolutionsDigitalMarketingRoute
+  '/solutions/ecommerce': typeof SolutionsEcommerceRoute
+  '/solutions/enterprise': typeof SolutionsEnterpriseRoute
+  '/solutions/growth-cro': typeof SolutionsGrowthCroRoute
+  '/solutions/internal-tools': typeof SolutionsInternalToolsRoute
+  '/solutions/marketplaces': typeof SolutionsMarketplacesRoute
+  '/solutions/rescue-projects': typeof SolutionsRescueProjectsRoute
+  '/solutions/scale-up': typeof SolutionsScaleUpRoute
+  '/solutions/startup-mvp': typeof SolutionsStartupMvpRoute
+  '/tools/$slug': typeof ToolsSlugRoute
+  '/tools/brand-grader': typeof ToolsBrandGraderRoute
+  '/tools/roi-calculator': typeof ToolsRoiCalculatorRoute
+  '/tools/speed-test': typeof ToolsSpeedTestRoute
+  '/tools/website-audit': typeof ToolsWebsiteAuditRoute
+  '/works/$slug': typeof WorksSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/blog': typeof BlogRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/custom-software': typeof CustomSoftwareRoute
   '/digital-transformation': typeof DigitalTransformationRoute
   '/faq': typeof FaqRoute
+  '/home-2': typeof Home2Route
+  '/home-3': typeof Home3Route
+  '/home-4': typeof Home4Route
+  '/home-5': typeof Home5Route
   '/leadership': typeof LeadershipRoute
   '/mobile-apps': typeof MobileAppsRoute
   '/our-story': typeof OurStoryRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/saas': typeof SaasRoute
   '/services': typeof ServicesRoute
   '/solutions': typeof SolutionsRoute
+  '/terms': typeof TermsRoute
   '/ui-ux-design': typeof UiUxDesignRoute
   '/works': typeof WorksRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/industries/$slug': typeof IndustriesSlugRoute
+  '/industries/b2b-enterprise': typeof IndustriesB2bEnterpriseRoute
+  '/industries/fintech': typeof IndustriesFintechRoute
+  '/industries/healthcare': typeof IndustriesHealthcareRoute
+  '/industries/retail-dtc': typeof IndustriesRetailDtcRoute
+  '/learning/$slug': typeof LearningSlugRoute
+  '/learning/guides': typeof LearningGuidesRoute
+  '/learning/templates': typeof LearningTemplatesRoute
+  '/learning/tutorials': typeof LearningTutorialsRoute
+  '/learning/webinars': typeof LearningWebinarsRoute
+  '/services/$slug': typeof ServicesSlugRoute
+  '/services/analytics-cro': typeof ServicesAnalyticsCroRoute
+  '/services/app-store-setup': typeof ServicesAppStoreSetupRoute
+  '/services/brand-identity': typeof ServicesBrandIdentityRoute
+  '/services/cms-websites': typeof ServicesCmsWebsitesRoute
+  '/services/cross-platform-apps': typeof ServicesCrossPlatformAppsRoute
+  '/services/design-systems': typeof ServicesDesignSystemsRoute
+  '/services/landing-pages': typeof ServicesLandingPagesRoute
+  '/services/maintenance-support': typeof ServicesMaintenanceSupportRoute
+  '/services/monthly-care': typeof ServicesMonthlyCareRoute
+  '/services/mvp-development': typeof ServicesMvpDevelopmentRoute
+  '/services/prototyping': typeof ServicesPrototypingRoute
+  '/services/seo-performance': typeof ServicesSeoPerformanceRoute
+  '/services/website-development': typeof ServicesWebsiteDevelopmentRoute
+  '/solutions/$slug': typeof SolutionsSlugRoute
+  '/solutions/brand-consultancy': typeof SolutionsBrandConsultancyRoute
+  '/solutions/digital-marketing': typeof SolutionsDigitalMarketingRoute
+  '/solutions/ecommerce': typeof SolutionsEcommerceRoute
+  '/solutions/enterprise': typeof SolutionsEnterpriseRoute
+  '/solutions/growth-cro': typeof SolutionsGrowthCroRoute
+  '/solutions/internal-tools': typeof SolutionsInternalToolsRoute
+  '/solutions/marketplaces': typeof SolutionsMarketplacesRoute
+  '/solutions/rescue-projects': typeof SolutionsRescueProjectsRoute
+  '/solutions/scale-up': typeof SolutionsScaleUpRoute
+  '/solutions/startup-mvp': typeof SolutionsStartupMvpRoute
+  '/tools/$slug': typeof ToolsSlugRoute
+  '/tools/brand-grader': typeof ToolsBrandGraderRoute
+  '/tools/roi-calculator': typeof ToolsRoiCalculatorRoute
+  '/tools/speed-test': typeof ToolsSpeedTestRoute
+  '/tools/website-audit': typeof ToolsWebsiteAuditRoute
+  '/works/$slug': typeof WorksSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/blog': typeof BlogRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/custom-software': typeof CustomSoftwareRoute
   '/digital-transformation': typeof DigitalTransformationRoute
   '/faq': typeof FaqRoute
+  '/home-2': typeof Home2Route
+  '/home-3': typeof Home3Route
+  '/home-4': typeof Home4Route
+  '/home-5': typeof Home5Route
   '/leadership': typeof LeadershipRoute
   '/mobile-apps': typeof MobileAppsRoute
   '/our-story': typeof OurStoryRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/saas': typeof SaasRoute
   '/services': typeof ServicesRoute
   '/solutions': typeof SolutionsRoute
+  '/terms': typeof TermsRoute
   '/ui-ux-design': typeof UiUxDesignRoute
   '/works': typeof WorksRoute
+  '/blog_/$slug': typeof BlogSlugRoute
+  '/industries_/$slug': typeof IndustriesSlugRoute
+  '/industries_/b2b-enterprise': typeof IndustriesB2bEnterpriseRoute
+  '/industries_/fintech': typeof IndustriesFintechRoute
+  '/industries_/healthcare': typeof IndustriesHealthcareRoute
+  '/industries_/retail-dtc': typeof IndustriesRetailDtcRoute
+  '/learning_/$slug': typeof LearningSlugRoute
+  '/learning_/guides': typeof LearningGuidesRoute
+  '/learning_/templates': typeof LearningTemplatesRoute
+  '/learning_/tutorials': typeof LearningTutorialsRoute
+  '/learning_/webinars': typeof LearningWebinarsRoute
+  '/services_/$slug': typeof ServicesSlugRoute
+  '/services_/analytics-cro': typeof ServicesAnalyticsCroRoute
+  '/services_/app-store-setup': typeof ServicesAppStoreSetupRoute
+  '/services_/brand-identity': typeof ServicesBrandIdentityRoute
+  '/services_/cms-websites': typeof ServicesCmsWebsitesRoute
+  '/services_/cross-platform-apps': typeof ServicesCrossPlatformAppsRoute
+  '/services_/design-systems': typeof ServicesDesignSystemsRoute
+  '/services_/landing-pages': typeof ServicesLandingPagesRoute
+  '/services_/maintenance-support': typeof ServicesMaintenanceSupportRoute
+  '/services_/monthly-care': typeof ServicesMonthlyCareRoute
+  '/services_/mvp-development': typeof ServicesMvpDevelopmentRoute
+  '/services_/prototyping': typeof ServicesPrototypingRoute
+  '/services_/seo-performance': typeof ServicesSeoPerformanceRoute
+  '/services_/website-development': typeof ServicesWebsiteDevelopmentRoute
+  '/solutions_/$slug': typeof SolutionsSlugRoute
+  '/solutions_/brand-consultancy': typeof SolutionsBrandConsultancyRoute
+  '/solutions_/digital-marketing': typeof SolutionsDigitalMarketingRoute
+  '/solutions_/ecommerce': typeof SolutionsEcommerceRoute
+  '/solutions_/enterprise': typeof SolutionsEnterpriseRoute
+  '/solutions_/growth-cro': typeof SolutionsGrowthCroRoute
+  '/solutions_/internal-tools': typeof SolutionsInternalToolsRoute
+  '/solutions_/marketplaces': typeof SolutionsMarketplacesRoute
+  '/solutions_/rescue-projects': typeof SolutionsRescueProjectsRoute
+  '/solutions_/scale-up': typeof SolutionsScaleUpRoute
+  '/solutions_/startup-mvp': typeof SolutionsStartupMvpRoute
+  '/tools_/$slug': typeof ToolsSlugRoute
+  '/tools_/brand-grader': typeof ToolsBrandGraderRoute
+  '/tools_/roi-calculator': typeof ToolsRoiCalculatorRoute
+  '/tools_/speed-test': typeof ToolsSpeedTestRoute
+  '/tools_/website-audit': typeof ToolsWebsiteAuditRoute
+  '/works_/$slug': typeof WorksSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/blog'
     | '/careers'
     | '/contact'
+    | '/cookies'
     | '/custom-software'
     | '/digital-transformation'
     | '/faq'
+    | '/home-2'
+    | '/home-3'
+    | '/home-4'
+    | '/home-5'
     | '/leadership'
     | '/mobile-apps'
     | '/our-story'
     | '/pricing'
+    | '/privacy'
     | '/resources'
     | '/saas'
     | '/services'
     | '/solutions'
+    | '/terms'
     | '/ui-ux-design'
     | '/works'
+    | '/blog/$slug'
+    | '/industries/$slug'
+    | '/industries/b2b-enterprise'
+    | '/industries/fintech'
+    | '/industries/healthcare'
+    | '/industries/retail-dtc'
+    | '/learning/$slug'
+    | '/learning/guides'
+    | '/learning/templates'
+    | '/learning/tutorials'
+    | '/learning/webinars'
+    | '/services/$slug'
+    | '/services/analytics-cro'
+    | '/services/app-store-setup'
+    | '/services/brand-identity'
+    | '/services/cms-websites'
+    | '/services/cross-platform-apps'
+    | '/services/design-systems'
+    | '/services/landing-pages'
+    | '/services/maintenance-support'
+    | '/services/monthly-care'
+    | '/services/mvp-development'
+    | '/services/prototyping'
+    | '/services/seo-performance'
+    | '/services/website-development'
+    | '/solutions/$slug'
+    | '/solutions/brand-consultancy'
+    | '/solutions/digital-marketing'
+    | '/solutions/ecommerce'
+    | '/solutions/enterprise'
+    | '/solutions/growth-cro'
+    | '/solutions/internal-tools'
+    | '/solutions/marketplaces'
+    | '/solutions/rescue-projects'
+    | '/solutions/scale-up'
+    | '/solutions/startup-mvp'
+    | '/tools/$slug'
+    | '/tools/brand-grader'
+    | '/tools/roi-calculator'
+    | '/tools/speed-test'
+    | '/tools/website-audit'
+    | '/works/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/blog'
     | '/careers'
     | '/contact'
+    | '/cookies'
     | '/custom-software'
     | '/digital-transformation'
     | '/faq'
+    | '/home-2'
+    | '/home-3'
+    | '/home-4'
+    | '/home-5'
     | '/leadership'
     | '/mobile-apps'
     | '/our-story'
     | '/pricing'
+    | '/privacy'
     | '/resources'
     | '/saas'
     | '/services'
     | '/solutions'
+    | '/terms'
     | '/ui-ux-design'
     | '/works'
+    | '/blog/$slug'
+    | '/industries/$slug'
+    | '/industries/b2b-enterprise'
+    | '/industries/fintech'
+    | '/industries/healthcare'
+    | '/industries/retail-dtc'
+    | '/learning/$slug'
+    | '/learning/guides'
+    | '/learning/templates'
+    | '/learning/tutorials'
+    | '/learning/webinars'
+    | '/services/$slug'
+    | '/services/analytics-cro'
+    | '/services/app-store-setup'
+    | '/services/brand-identity'
+    | '/services/cms-websites'
+    | '/services/cross-platform-apps'
+    | '/services/design-systems'
+    | '/services/landing-pages'
+    | '/services/maintenance-support'
+    | '/services/monthly-care'
+    | '/services/mvp-development'
+    | '/services/prototyping'
+    | '/services/seo-performance'
+    | '/services/website-development'
+    | '/solutions/$slug'
+    | '/solutions/brand-consultancy'
+    | '/solutions/digital-marketing'
+    | '/solutions/ecommerce'
+    | '/solutions/enterprise'
+    | '/solutions/growth-cro'
+    | '/solutions/internal-tools'
+    | '/solutions/marketplaces'
+    | '/solutions/rescue-projects'
+    | '/solutions/scale-up'
+    | '/solutions/startup-mvp'
+    | '/tools/$slug'
+    | '/tools/brand-grader'
+    | '/tools/roi-calculator'
+    | '/tools/speed-test'
+    | '/tools/website-audit'
+    | '/works/$slug'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/blog'
     | '/careers'
     | '/contact'
+    | '/cookies'
     | '/custom-software'
     | '/digital-transformation'
     | '/faq'
+    | '/home-2'
+    | '/home-3'
+    | '/home-4'
+    | '/home-5'
     | '/leadership'
     | '/mobile-apps'
     | '/our-story'
     | '/pricing'
+    | '/privacy'
     | '/resources'
     | '/saas'
     | '/services'
     | '/solutions'
+    | '/terms'
     | '/ui-ux-design'
     | '/works'
+    | '/blog_/$slug'
+    | '/industries_/$slug'
+    | '/industries_/b2b-enterprise'
+    | '/industries_/fintech'
+    | '/industries_/healthcare'
+    | '/industries_/retail-dtc'
+    | '/learning_/$slug'
+    | '/learning_/guides'
+    | '/learning_/templates'
+    | '/learning_/tutorials'
+    | '/learning_/webinars'
+    | '/services_/$slug'
+    | '/services_/analytics-cro'
+    | '/services_/app-store-setup'
+    | '/services_/brand-identity'
+    | '/services_/cms-websites'
+    | '/services_/cross-platform-apps'
+    | '/services_/design-systems'
+    | '/services_/landing-pages'
+    | '/services_/maintenance-support'
+    | '/services_/monthly-care'
+    | '/services_/mvp-development'
+    | '/services_/prototyping'
+    | '/services_/seo-performance'
+    | '/services_/website-development'
+    | '/solutions_/$slug'
+    | '/solutions_/brand-consultancy'
+    | '/solutions_/digital-marketing'
+    | '/solutions_/ecommerce'
+    | '/solutions_/enterprise'
+    | '/solutions_/growth-cro'
+    | '/solutions_/internal-tools'
+    | '/solutions_/marketplaces'
+    | '/solutions_/rescue-projects'
+    | '/solutions_/scale-up'
+    | '/solutions_/startup-mvp'
+    | '/tools_/$slug'
+    | '/tools_/brand-grader'
+    | '/tools_/roi-calculator'
+    | '/tools_/speed-test'
+    | '/tools_/website-audit'
+    | '/works_/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BlogRoute: typeof BlogRoute
   CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
+  CookiesRoute: typeof CookiesRoute
   CustomSoftwareRoute: typeof CustomSoftwareRoute
   DigitalTransformationRoute: typeof DigitalTransformationRoute
   FaqRoute: typeof FaqRoute
+  Home2Route: typeof Home2Route
+  Home3Route: typeof Home3Route
+  Home4Route: typeof Home4Route
+  Home5Route: typeof Home5Route
   LeadershipRoute: typeof LeadershipRoute
   MobileAppsRoute: typeof MobileAppsRoute
   OurStoryRoute: typeof OurStoryRoute
   PricingRoute: typeof PricingRoute
+  PrivacyRoute: typeof PrivacyRoute
   ResourcesRoute: typeof ResourcesRoute
   SaasRoute: typeof SaasRoute
   ServicesRoute: typeof ServicesRoute
   SolutionsRoute: typeof SolutionsRoute
+  TermsRoute: typeof TermsRoute
   UiUxDesignRoute: typeof UiUxDesignRoute
   WorksRoute: typeof WorksRoute
+  BlogSlugRoute: typeof BlogSlugRoute
+  IndustriesSlugRoute: typeof IndustriesSlugRoute
+  IndustriesB2bEnterpriseRoute: typeof IndustriesB2bEnterpriseRoute
+  IndustriesFintechRoute: typeof IndustriesFintechRoute
+  IndustriesHealthcareRoute: typeof IndustriesHealthcareRoute
+  IndustriesRetailDtcRoute: typeof IndustriesRetailDtcRoute
+  LearningSlugRoute: typeof LearningSlugRoute
+  LearningGuidesRoute: typeof LearningGuidesRoute
+  LearningTemplatesRoute: typeof LearningTemplatesRoute
+  LearningTutorialsRoute: typeof LearningTutorialsRoute
+  LearningWebinarsRoute: typeof LearningWebinarsRoute
+  ServicesSlugRoute: typeof ServicesSlugRoute
+  ServicesAnalyticsCroRoute: typeof ServicesAnalyticsCroRoute
+  ServicesAppStoreSetupRoute: typeof ServicesAppStoreSetupRoute
+  ServicesBrandIdentityRoute: typeof ServicesBrandIdentityRoute
+  ServicesCmsWebsitesRoute: typeof ServicesCmsWebsitesRoute
+  ServicesCrossPlatformAppsRoute: typeof ServicesCrossPlatformAppsRoute
+  ServicesDesignSystemsRoute: typeof ServicesDesignSystemsRoute
+  ServicesLandingPagesRoute: typeof ServicesLandingPagesRoute
+  ServicesMaintenanceSupportRoute: typeof ServicesMaintenanceSupportRoute
+  ServicesMonthlyCareRoute: typeof ServicesMonthlyCareRoute
+  ServicesMvpDevelopmentRoute: typeof ServicesMvpDevelopmentRoute
+  ServicesPrototypingRoute: typeof ServicesPrototypingRoute
+  ServicesSeoPerformanceRoute: typeof ServicesSeoPerformanceRoute
+  ServicesWebsiteDevelopmentRoute: typeof ServicesWebsiteDevelopmentRoute
+  SolutionsSlugRoute: typeof SolutionsSlugRoute
+  SolutionsBrandConsultancyRoute: typeof SolutionsBrandConsultancyRoute
+  SolutionsDigitalMarketingRoute: typeof SolutionsDigitalMarketingRoute
+  SolutionsEcommerceRoute: typeof SolutionsEcommerceRoute
+  SolutionsEnterpriseRoute: typeof SolutionsEnterpriseRoute
+  SolutionsGrowthCroRoute: typeof SolutionsGrowthCroRoute
+  SolutionsInternalToolsRoute: typeof SolutionsInternalToolsRoute
+  SolutionsMarketplacesRoute: typeof SolutionsMarketplacesRoute
+  SolutionsRescueProjectsRoute: typeof SolutionsRescueProjectsRoute
+  SolutionsScaleUpRoute: typeof SolutionsScaleUpRoute
+  SolutionsStartupMvpRoute: typeof SolutionsStartupMvpRoute
+  ToolsSlugRoute: typeof ToolsSlugRoute
+  ToolsBrandGraderRoute: typeof ToolsBrandGraderRoute
+  ToolsRoiCalculatorRoute: typeof ToolsRoiCalculatorRoute
+  ToolsSpeedTestRoute: typeof ToolsSpeedTestRoute
+  ToolsWebsiteAuditRoute: typeof ToolsWebsiteAuditRoute
+  WorksSlugRoute: typeof WorksSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -265,6 +920,13 @@ declare module '@tanstack/react-router' {
       path: '/ui-ux-design'
       fullPath: '/ui-ux-design'
       preLoaderRoute: typeof UiUxDesignRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/solutions': {
@@ -295,6 +957,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -323,6 +992,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadershipRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/home-5': {
+      id: '/home-5'
+      path: '/home-5'
+      fullPath: '/home-5'
+      preLoaderRoute: typeof Home5RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home-4': {
+      id: '/home-4'
+      path: '/home-4'
+      fullPath: '/home-4'
+      preLoaderRoute: typeof Home4RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home-3': {
+      id: '/home-3'
+      path: '/home-3'
+      fullPath: '/home-3'
+      preLoaderRoute: typeof Home3RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home-2': {
+      id: '/home-2'
+      path: '/home-2'
+      fullPath: '/home-2'
+      preLoaderRoute: typeof Home2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/faq': {
       id: '/faq'
       path: '/faq'
@@ -344,6 +1041,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomSoftwareRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -356,6 +1060,13 @@ declare module '@tanstack/react-router' {
       path: '/careers'
       fullPath: '/careers'
       preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -372,28 +1083,382 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/works_/$slug': {
+      id: '/works_/$slug'
+      path: '/works/$slug'
+      fullPath: '/works/$slug'
+      preLoaderRoute: typeof WorksSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools_/website-audit': {
+      id: '/tools_/website-audit'
+      path: '/tools/website-audit'
+      fullPath: '/tools/website-audit'
+      preLoaderRoute: typeof ToolsWebsiteAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools_/speed-test': {
+      id: '/tools_/speed-test'
+      path: '/tools/speed-test'
+      fullPath: '/tools/speed-test'
+      preLoaderRoute: typeof ToolsSpeedTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools_/roi-calculator': {
+      id: '/tools_/roi-calculator'
+      path: '/tools/roi-calculator'
+      fullPath: '/tools/roi-calculator'
+      preLoaderRoute: typeof ToolsRoiCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools_/brand-grader': {
+      id: '/tools_/brand-grader'
+      path: '/tools/brand-grader'
+      fullPath: '/tools/brand-grader'
+      preLoaderRoute: typeof ToolsBrandGraderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools_/$slug': {
+      id: '/tools_/$slug'
+      path: '/tools/$slug'
+      fullPath: '/tools/$slug'
+      preLoaderRoute: typeof ToolsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions_/startup-mvp': {
+      id: '/solutions_/startup-mvp'
+      path: '/solutions/startup-mvp'
+      fullPath: '/solutions/startup-mvp'
+      preLoaderRoute: typeof SolutionsStartupMvpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions_/scale-up': {
+      id: '/solutions_/scale-up'
+      path: '/solutions/scale-up'
+      fullPath: '/solutions/scale-up'
+      preLoaderRoute: typeof SolutionsScaleUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions_/rescue-projects': {
+      id: '/solutions_/rescue-projects'
+      path: '/solutions/rescue-projects'
+      fullPath: '/solutions/rescue-projects'
+      preLoaderRoute: typeof SolutionsRescueProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions_/marketplaces': {
+      id: '/solutions_/marketplaces'
+      path: '/solutions/marketplaces'
+      fullPath: '/solutions/marketplaces'
+      preLoaderRoute: typeof SolutionsMarketplacesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions_/internal-tools': {
+      id: '/solutions_/internal-tools'
+      path: '/solutions/internal-tools'
+      fullPath: '/solutions/internal-tools'
+      preLoaderRoute: typeof SolutionsInternalToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions_/growth-cro': {
+      id: '/solutions_/growth-cro'
+      path: '/solutions/growth-cro'
+      fullPath: '/solutions/growth-cro'
+      preLoaderRoute: typeof SolutionsGrowthCroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions_/enterprise': {
+      id: '/solutions_/enterprise'
+      path: '/solutions/enterprise'
+      fullPath: '/solutions/enterprise'
+      preLoaderRoute: typeof SolutionsEnterpriseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions_/ecommerce': {
+      id: '/solutions_/ecommerce'
+      path: '/solutions/ecommerce'
+      fullPath: '/solutions/ecommerce'
+      preLoaderRoute: typeof SolutionsEcommerceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions_/digital-marketing': {
+      id: '/solutions_/digital-marketing'
+      path: '/solutions/digital-marketing'
+      fullPath: '/solutions/digital-marketing'
+      preLoaderRoute: typeof SolutionsDigitalMarketingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions_/brand-consultancy': {
+      id: '/solutions_/brand-consultancy'
+      path: '/solutions/brand-consultancy'
+      fullPath: '/solutions/brand-consultancy'
+      preLoaderRoute: typeof SolutionsBrandConsultancyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions_/$slug': {
+      id: '/solutions_/$slug'
+      path: '/solutions/$slug'
+      fullPath: '/solutions/$slug'
+      preLoaderRoute: typeof SolutionsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/website-development': {
+      id: '/services_/website-development'
+      path: '/services/website-development'
+      fullPath: '/services/website-development'
+      preLoaderRoute: typeof ServicesWebsiteDevelopmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/seo-performance': {
+      id: '/services_/seo-performance'
+      path: '/services/seo-performance'
+      fullPath: '/services/seo-performance'
+      preLoaderRoute: typeof ServicesSeoPerformanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/prototyping': {
+      id: '/services_/prototyping'
+      path: '/services/prototyping'
+      fullPath: '/services/prototyping'
+      preLoaderRoute: typeof ServicesPrototypingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/mvp-development': {
+      id: '/services_/mvp-development'
+      path: '/services/mvp-development'
+      fullPath: '/services/mvp-development'
+      preLoaderRoute: typeof ServicesMvpDevelopmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/monthly-care': {
+      id: '/services_/monthly-care'
+      path: '/services/monthly-care'
+      fullPath: '/services/monthly-care'
+      preLoaderRoute: typeof ServicesMonthlyCareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/maintenance-support': {
+      id: '/services_/maintenance-support'
+      path: '/services/maintenance-support'
+      fullPath: '/services/maintenance-support'
+      preLoaderRoute: typeof ServicesMaintenanceSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/landing-pages': {
+      id: '/services_/landing-pages'
+      path: '/services/landing-pages'
+      fullPath: '/services/landing-pages'
+      preLoaderRoute: typeof ServicesLandingPagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/design-systems': {
+      id: '/services_/design-systems'
+      path: '/services/design-systems'
+      fullPath: '/services/design-systems'
+      preLoaderRoute: typeof ServicesDesignSystemsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/cross-platform-apps': {
+      id: '/services_/cross-platform-apps'
+      path: '/services/cross-platform-apps'
+      fullPath: '/services/cross-platform-apps'
+      preLoaderRoute: typeof ServicesCrossPlatformAppsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/cms-websites': {
+      id: '/services_/cms-websites'
+      path: '/services/cms-websites'
+      fullPath: '/services/cms-websites'
+      preLoaderRoute: typeof ServicesCmsWebsitesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/brand-identity': {
+      id: '/services_/brand-identity'
+      path: '/services/brand-identity'
+      fullPath: '/services/brand-identity'
+      preLoaderRoute: typeof ServicesBrandIdentityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/app-store-setup': {
+      id: '/services_/app-store-setup'
+      path: '/services/app-store-setup'
+      fullPath: '/services/app-store-setup'
+      preLoaderRoute: typeof ServicesAppStoreSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/analytics-cro': {
+      id: '/services_/analytics-cro'
+      path: '/services/analytics-cro'
+      fullPath: '/services/analytics-cro'
+      preLoaderRoute: typeof ServicesAnalyticsCroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/$slug': {
+      id: '/services_/$slug'
+      path: '/services/$slug'
+      fullPath: '/services/$slug'
+      preLoaderRoute: typeof ServicesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learning_/webinars': {
+      id: '/learning_/webinars'
+      path: '/learning/webinars'
+      fullPath: '/learning/webinars'
+      preLoaderRoute: typeof LearningWebinarsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learning_/tutorials': {
+      id: '/learning_/tutorials'
+      path: '/learning/tutorials'
+      fullPath: '/learning/tutorials'
+      preLoaderRoute: typeof LearningTutorialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learning_/templates': {
+      id: '/learning_/templates'
+      path: '/learning/templates'
+      fullPath: '/learning/templates'
+      preLoaderRoute: typeof LearningTemplatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learning_/guides': {
+      id: '/learning_/guides'
+      path: '/learning/guides'
+      fullPath: '/learning/guides'
+      preLoaderRoute: typeof LearningGuidesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learning_/$slug': {
+      id: '/learning_/$slug'
+      path: '/learning/$slug'
+      fullPath: '/learning/$slug'
+      preLoaderRoute: typeof LearningSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/industries_/retail-dtc': {
+      id: '/industries_/retail-dtc'
+      path: '/industries/retail-dtc'
+      fullPath: '/industries/retail-dtc'
+      preLoaderRoute: typeof IndustriesRetailDtcRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/industries_/healthcare': {
+      id: '/industries_/healthcare'
+      path: '/industries/healthcare'
+      fullPath: '/industries/healthcare'
+      preLoaderRoute: typeof IndustriesHealthcareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/industries_/fintech': {
+      id: '/industries_/fintech'
+      path: '/industries/fintech'
+      fullPath: '/industries/fintech'
+      preLoaderRoute: typeof IndustriesFintechRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/industries_/b2b-enterprise': {
+      id: '/industries_/b2b-enterprise'
+      path: '/industries/b2b-enterprise'
+      fullPath: '/industries/b2b-enterprise'
+      preLoaderRoute: typeof IndustriesB2bEnterpriseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/industries_/$slug': {
+      id: '/industries_/$slug'
+      path: '/industries/$slug'
+      fullPath: '/industries/$slug'
+      preLoaderRoute: typeof IndustriesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog_/$slug': {
+      id: '/blog_/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BlogRoute: BlogRoute,
   CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
+  CookiesRoute: CookiesRoute,
   CustomSoftwareRoute: CustomSoftwareRoute,
   DigitalTransformationRoute: DigitalTransformationRoute,
   FaqRoute: FaqRoute,
+  Home2Route: Home2Route,
+  Home3Route: Home3Route,
+  Home4Route: Home4Route,
+  Home5Route: Home5Route,
   LeadershipRoute: LeadershipRoute,
   MobileAppsRoute: MobileAppsRoute,
   OurStoryRoute: OurStoryRoute,
   PricingRoute: PricingRoute,
+  PrivacyRoute: PrivacyRoute,
   ResourcesRoute: ResourcesRoute,
   SaasRoute: SaasRoute,
   ServicesRoute: ServicesRoute,
   SolutionsRoute: SolutionsRoute,
+  TermsRoute: TermsRoute,
   UiUxDesignRoute: UiUxDesignRoute,
   WorksRoute: WorksRoute,
+  BlogSlugRoute: BlogSlugRoute,
+  IndustriesSlugRoute: IndustriesSlugRoute,
+  IndustriesB2bEnterpriseRoute: IndustriesB2bEnterpriseRoute,
+  IndustriesFintechRoute: IndustriesFintechRoute,
+  IndustriesHealthcareRoute: IndustriesHealthcareRoute,
+  IndustriesRetailDtcRoute: IndustriesRetailDtcRoute,
+  LearningSlugRoute: LearningSlugRoute,
+  LearningGuidesRoute: LearningGuidesRoute,
+  LearningTemplatesRoute: LearningTemplatesRoute,
+  LearningTutorialsRoute: LearningTutorialsRoute,
+  LearningWebinarsRoute: LearningWebinarsRoute,
+  ServicesSlugRoute: ServicesSlugRoute,
+  ServicesAnalyticsCroRoute: ServicesAnalyticsCroRoute,
+  ServicesAppStoreSetupRoute: ServicesAppStoreSetupRoute,
+  ServicesBrandIdentityRoute: ServicesBrandIdentityRoute,
+  ServicesCmsWebsitesRoute: ServicesCmsWebsitesRoute,
+  ServicesCrossPlatformAppsRoute: ServicesCrossPlatformAppsRoute,
+  ServicesDesignSystemsRoute: ServicesDesignSystemsRoute,
+  ServicesLandingPagesRoute: ServicesLandingPagesRoute,
+  ServicesMaintenanceSupportRoute: ServicesMaintenanceSupportRoute,
+  ServicesMonthlyCareRoute: ServicesMonthlyCareRoute,
+  ServicesMvpDevelopmentRoute: ServicesMvpDevelopmentRoute,
+  ServicesPrototypingRoute: ServicesPrototypingRoute,
+  ServicesSeoPerformanceRoute: ServicesSeoPerformanceRoute,
+  ServicesWebsiteDevelopmentRoute: ServicesWebsiteDevelopmentRoute,
+  SolutionsSlugRoute: SolutionsSlugRoute,
+  SolutionsBrandConsultancyRoute: SolutionsBrandConsultancyRoute,
+  SolutionsDigitalMarketingRoute: SolutionsDigitalMarketingRoute,
+  SolutionsEcommerceRoute: SolutionsEcommerceRoute,
+  SolutionsEnterpriseRoute: SolutionsEnterpriseRoute,
+  SolutionsGrowthCroRoute: SolutionsGrowthCroRoute,
+  SolutionsInternalToolsRoute: SolutionsInternalToolsRoute,
+  SolutionsMarketplacesRoute: SolutionsMarketplacesRoute,
+  SolutionsRescueProjectsRoute: SolutionsRescueProjectsRoute,
+  SolutionsScaleUpRoute: SolutionsScaleUpRoute,
+  SolutionsStartupMvpRoute: SolutionsStartupMvpRoute,
+  ToolsSlugRoute: ToolsSlugRoute,
+  ToolsBrandGraderRoute: ToolsBrandGraderRoute,
+  ToolsRoiCalculatorRoute: ToolsRoiCalculatorRoute,
+  ToolsSpeedTestRoute: ToolsSpeedTestRoute,
+  ToolsWebsiteAuditRoute: ToolsWebsiteAuditRoute,
+  WorksSlugRoute: WorksSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

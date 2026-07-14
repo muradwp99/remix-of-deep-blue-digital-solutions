@@ -34,7 +34,9 @@ export function Preloader() {
         ease: "power4.inOut",
         delay: 0.2,
       })
-      // entrance animation for page
+      // entrance animation for page. clearProps removes the leftover inline
+      // transform — a transformed <main> becomes the containing block for
+      // position:fixed children and silently breaks ScrollTrigger pinning
       .fromTo(
         "[data-entrance]",
         { y: 40, opacity: 0 },
@@ -44,6 +46,7 @@ export function Preloader() {
           duration: 0.9,
           ease: "power3.out",
           stagger: 0.08,
+          clearProps: "transform",
         },
         "-=0.5",
       );
@@ -58,7 +61,7 @@ export function Preloader() {
   return (
     <div
       id="pl-wrap"
-      className="fixed inset-0 z-[100] grid place-items-center bg-background"
+      className="fixed inset-0 z-10000 grid place-items-center bg-background"
     >
       <div className="absolute inset-0 grain-bg opacity-60 pointer-events-none" />
       <div className="relative w-full max-w-md px-8">
@@ -84,7 +87,7 @@ export function Preloader() {
           />
         </div>
         <p className="mt-4 text-xs uppercase tracking-[0.3em] text-muted-foreground">
-          Crafting the experience
+          A studio, not a factory
         </p>
       </div>
     </div>
