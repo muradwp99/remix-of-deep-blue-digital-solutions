@@ -77,13 +77,81 @@ add_action( 'add_meta_boxes', function () {
 			echo '<a class="button" href="' . esc_url( $url ) . '" target="_blank" rel="noopener">Open site ↗</a>';
 			echo '<span style="color:#777;">Save your changes, then refresh — the site renders your live content.</span>';
 			echo '</div>';
-			echo '<iframe id="auxtech-preview-frame" src="' . esc_url( $url ) . '" style="width:100%;height:640px;border:1px solid #333;border-radius:8px;background:#0b0e1a;"></iframe>';
+			echo '<iframe id="auxtech-preview-frame" src="' . esc_url( $url ) . '?edit=1" style="width:100%;height:640px;border:1px solid #333;border-radius:8px;background:#0b0e1a;"></iframe>';
 		},
 		array( 'homepage' ),
 		'normal',
 		'high'
 	);
 } );
+
+/**
+ * LivePress broadcaster: every keystroke in a DynamicForge field on the Home
+ * Page edit screen is streamed into the preview iframe as an `aux-edit`
+ * postMessage. The frontend edit bridge overlays it instantly — realtime
+ * visual editing, no save, no reload.
+ */
+add_action( 'admin_footer-post.php', 'auxtech_livepress_broadcaster' );
+function auxtech_livepress_broadcaster() {
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	if ( ! $screen || 'homepage' !== $screen->post_type ) {
+		return;
+	}
+	$frontend = apply_filters( 'auxtech_frontend_url', 'http://localhost:8080' );
+	?>
+	<script>
+	(function () {
+		var FRONTEND = <?php echo wp_json_encode( $frontend ); ?>;
+		// meta key -> content path (mirrors the frontend homepage mapping).
+		var SCALARS = {
+			hero_trusted_line: 'hero.trustedLine', hero_headline: 'hero.headline',
+			hero_subheadline: 'hero.subheadline', hero_cta_label: 'hero.ctaLabel',
+			hero_cta_note: 'hero.ctaNote', clients_label: 'clients.label',
+			capabilities_eyebrow: 'capabilities.eyebrow', capabilities_heading: 'capabilities.heading',
+			solutions_eyebrow: 'solutions.eyebrow', solutions_heading: 'solutions.heading',
+			process_eyebrow: 'process.eyebrow', process_heading: 'process.heading', process_intro: 'process.intro',
+			work_eyebrow: 'work.eyebrow', work_heading: 'work.heading',
+			kickoff_eyebrow: 'kickoff.eyebrow', kickoff_heading: 'kickoff.heading',
+			why_eyebrow: 'why.eyebrow', why_heading: 'why.heading',
+			compare_eyebrow: 'compare.eyebrow', compare_heading: 'compare.heading',
+			compare_typical_title: 'compare.typicalTitle', compare_northline_title: 'compare.northlineTitle',
+			testimonials_eyebrow: 'testimonialsSection.eyebrow', testimonials_heading: 'testimonialsSection.heading',
+			pricing_eyebrow: 'pricing.eyebrow', pricing_heading: 'pricing.heading',
+			faq_eyebrow: 'faq.eyebrow', faq_heading: 'faq.heading',
+			audit_eyebrow: 'audit.eyebrow', audit_heading: 'audit.heading', audit_text: 'audit.text',
+			cta_eyebrow: 'cta.eyebrow', cta_heading: 'cta.heading', cta_text: 'cta.text',
+			cta_primary_label: 'cta.primaryLabel', cta_secondary_label: 'cta.secondaryLabel'
+		};
+		var LINES = {
+			clients_names: 'clients.names', compare_typical: 'compare.typical',
+			compare_northline: 'compare.northline', pricing_tier_features: 'pricing.tierFeatures',
+			audit_bullets: 'audit.bullets'
+		};
+		var frame = document.getElementById( 'auxtech-preview-frame' );
+		if ( ! frame ) { return; }
+		function send( path, value ) {
+			try { frame.contentWindow.postMessage( { type: 'aux-edit', path: path, value: value }, FRONTEND ); } catch ( e ) {}
+		}
+		var timer = null;
+		document.addEventListener( 'input', function ( e ) {
+			var el = e.target;
+			if ( ! el || ! el.name ) { return; }
+			var match = /^dynf_meta\[([a-z0-9_]+)\]$/.exec( el.name );
+			if ( ! match ) { return; }
+			var key = match[ 1 ];
+			clearTimeout( timer );
+			timer = setTimeout( function () {
+				if ( SCALARS[ key ] ) {
+					send( SCALARS[ key ], el.value );
+				} else if ( LINES[ key ] ) {
+					send( LINES[ key ], el.value.split( '\n' ).map( function ( s ) { return s.trim(); } ).filter( Boolean ) );
+				}
+			}, 120 );
+		}, true );
+	})();
+	</script>
+	<?php
+}
 
 /** Contact-form submissions: private CPT (readable in wp-admin) + POST endpoint. */
 add_action( 'init', function () {

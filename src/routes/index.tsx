@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { cmsFind, cmsFindOne } from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import {
   homeDefaults,
   mergeHomeContent,
@@ -116,7 +117,9 @@ function HomePage() {
   useScrollReveal();
 
   // CMS copy wins when present; homeDefaults is the fail-soft baseline.
-  const { cmsTestimonials, home: hc = homeDefaults } = Route.useLoaderData();
+  // useLiveEdits overlays as-you-type values from the WP admin (LivePress).
+  const { cmsTestimonials, home: hcBase = homeDefaults } = Route.useLoaderData();
+  const hc = useLiveEdits(hcBase);
   const quotes = cmsTestimonials.length ? cmsTestimonials : testimonials;
 
   const containerRef = useRef<HTMLDivElement>(null);
