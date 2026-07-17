@@ -81,7 +81,9 @@ function livepress_render_editor() {
 	}
 
 	// Current values for every field in the schema.
-	$values = array();
+	$values = array(
+		'section_order' => (string) get_post_meta( $post->ID, 'section_order', true ),
+	);
 	foreach ( $schema['sections'] as $section ) {
 		foreach ( $section['fields'] as $field ) {
 			$raw = get_post_meta( $post->ID, $field['key'], true );

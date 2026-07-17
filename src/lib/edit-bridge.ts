@@ -73,6 +73,26 @@ function startListener() {
   } catch {
     /* no parent — fine */
   }
+
+  // Click-to-edit: clicking inside a [data-lp] section focuses its panel in
+  // the editor. Link navigation is suppressed so the preview stays put.
+  document.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as HTMLElement | null;
+      const anchor = target?.closest("a");
+      if (anchor) e.preventDefault();
+      const zone = target?.closest("[data-lp]");
+      const key = zone?.getAttribute("data-lp");
+      if (!key) return;
+      try {
+        window.parent?.postMessage({ type: "aux-focus", section: key }, "*");
+      } catch {
+        /* no parent */
+      }
+    },
+    true,
+  );
 }
 
 /** Immutable deep-set of a dot path. Arrays are copied; unknown segments create objects. */

@@ -16,6 +16,27 @@ return array(
 	'home' => array(
 		'title'        => 'Home',
 		'frontendPath' => '/',
+		// Orderable render blocks (drag panel). Keys match the frontend's
+		// sectionBlocks + data-lp attributes. bento/assemble are code-only
+		// showcase sections — orderable, no fields.
+		'blocks'       => array(
+			array( 'key' => 'clients', 'label' => 'Clients strip' ),
+			array( 'key' => 'capabilities', 'label' => 'Capabilities' ),
+			array( 'key' => 'stats', 'label' => 'Stats counters' ),
+			array( 'key' => 'bento', 'label' => 'Bento showcase' ),
+			array( 'key' => 'solutions', 'label' => 'Solutions' ),
+			array( 'key' => 'process', 'label' => 'Process' ),
+			array( 'key' => 'assemble', 'label' => 'Launch checklist scatter' ),
+			array( 'key' => 'work', 'label' => 'Selected work' ),
+			array( 'key' => 'kickoff', 'label' => 'First 14 days' ),
+			array( 'key' => 'why', 'label' => 'Why Northline' ),
+			array( 'key' => 'compare', 'label' => 'Comparison' ),
+			array( 'key' => 'testimonials', 'label' => 'Testimonials' ),
+			array( 'key' => 'pricing', 'label' => 'Pricing snapshot' ),
+			array( 'key' => 'faq', 'label' => 'FAQ' ),
+			array( 'key' => 'audit', 'label' => 'Free audit' ),
+			array( 'key' => 'cta', 'label' => 'Final CTA' ),
+		),
 		'sections'     => array(
 			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
 				$t( 'hero_trusted_line', 'Trusted line', 'hero.trustedLine' ),

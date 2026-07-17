@@ -16,7 +16,7 @@ import { SiteShell } from "@/components/site-shell";
 import { BentoShowcase } from "@/components/bento-features";
 import { useScrollReveal } from "@/lib/animations";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import {
   ArrowUpRight,
   Zap,
@@ -162,6 +162,734 @@ function HomePage() {
   const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const yCards = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
 
+  /** Orderable page sections, keyed for CMS-driven ordering + click-to-edit. */
+  const sectionBlocks: Record<string, ReactNode> = {
+    clients: (
+      <>
+      {/* Clients marquee */}
+      <section className="border-y border-border/60 bg-surface/40">
+        <div className="container-page py-8 flex items-center gap-10">
+          <span className="shrink-0 text-xs uppercase tracking-[0.28em] text-muted-foreground">
+            {hc.clients.label}
+          </span>
+          <div className="marquee flex-1">
+            <div className="marquee-track">
+              {[...hc.clients.names, ...hc.clients.names].map((c, i) => (
+                <span
+                  key={`${c}-${i}`}
+                  className="mx-8 font-display text-2xl font-medium text-foreground/60 whitespace-nowrap"
+                >
+                  {c}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      </>
+    ),
+    capabilities: (
+      <>
+      {/* Capabilities */}
+      <section className="container-page py-28" data-reveal-group>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+              {hc.capabilities.eyebrow}
+            </p>
+            <h2
+              className="mt-4 font-display text-5xl md:text-6xl leading-tight max-w-2xl font-semibold"
+              data-split
+            >
+              {hc.capabilities.heading}
+            </h2>
+          </div>
+          <Link
+            to="/services"
+            className="text-sm text-foreground hover:text-lime inline-flex items-center gap-1.5"
+            data-reveal-child
+          >
+            All services <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" data-cards>
+          {hc.capabilities.items.map((c, ci) => {
+            const CapIcon = capabilityIcons[ci % capabilityIcons.length];
+            return (
+            <div
+              key={c.title}
+              className="group glare-card lift gradient-card rounded-2xl p-7"
+              data-card
+            >
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-lime/20 to-accent/20 border border-white/10">
+                <CapIcon className="h-5 w-5 text-lime" />
+              </div>
+              <h3 className="mt-8 font-display text-2xl font-semibold">{c.title}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{c.desc}</p>
+            </div>
+            );
+          })}
+        </div>
+      </section>
+
+      </>
+    ),
+    stats: (
+      <>
+      {/* Proof in numbers — bold gold color band */}
+      <section className="block-bold" data-reveal-group>
+        <div className="container-page py-24">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+          {hc.stats.map((s) => (
+            <div key={s.label} data-reveal-child>
+              <div className="font-display text-6xl md:text-7xl font-semibold tracking-tight" data-counter>
+                {s.value}
+              </div>
+              <div className="mt-3 h-px w-10 bg-lime/60" />
+              <p className="mt-3 text-sm text-muted-foreground max-w-[24ch]">{s.label}</p>
+            </div>
+          ))}
+        </div>
+        </div>
+      </section>
+
+      </>
+    ),
+    bento: (
+      <>
+      {/* How an engagement feels — illustrated bento */}
+      <BentoShowcase
+        eyebrow="The Northline way"
+        title={
+          <>
+            What working with us actually <span className="text-gold">feels</span> like.
+          </>
+        }
+        subtitle="No status-meeting theater. You watch the product take shape in real time — every build, every deploy, every decision visible."
+        cards={[
+          {
+            title: "Build faster",
+            desc: "Ship features 2× quicker with one senior pod. From idea to production in weeks, not months.",
+            tone: "warm",
+            visual: { kind: "gauge", stat: "46%", statLabel: "faster time to first launch", value: 0.46 },
+          },
+          {
+            title: "Deploy with confidence",
+            desc: "Automated security checks, CI/CD pipelines, and instant rollbacks. Ship safely, every time.",
+            tone: "cool",
+            visual: {
+              kind: "checklist",
+              rows: ["Code reviewed", "Tests passed", "Security scan clean"],
+            },
+          },
+          {
+            title: "Stay in sync",
+            desc: "Real-time notifications for deploys, builds, and team activity. Never chase a status update again.",
+            tone: "cool",
+            visual: {
+              kind: "inbox",
+              tabs: [
+                { label: "All", count: 3 },
+                { label: "Team", count: 2, active: true },
+                { label: "System", count: 1 },
+              ],
+              rows: [
+                "Sarah deployed to production",
+                "Friday demo recording ready",
+                "Dependency update available",
+              ],
+            },
+          },
+          {
+            title: "Command everything",
+            desc: "Trigger deployments, inspect build logs, and manage workflows from a single command palette.",
+            tone: "warm",
+            visual: {
+              kind: "command",
+              actions: [
+                { label: "Deploy to Production", kbd: "V" },
+                { label: "View Build Logs", kbd: "B" },
+                { label: "Rollback Last Deploy", kbd: "M" },
+              ],
+            },
+          },
+        ]}
+      />
+
+      </>
+    ),
+    solutions: (
+      <>
+      {/* Solutions */}
+      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
+        <div className="mb-14">
+          <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+            {hc.solutions.eyebrow}
+          </p>
+          <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight max-w-3xl font-semibold" data-reveal-child>
+            {hc.solutions.heading}
+          </h2>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" data-cards>
+          {hc.solutions.items.map((s, si) => {
+            const SolIcon = solutionIcons[si % solutionIcons.length];
+            return (
+            <div
+              key={s.title}
+              className="glare-card lift gradient-card-gold rounded-2xl p-7"
+              data-card
+            >
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-gold/30 to-transparent border border-gold/20">
+                <SolIcon className="h-5 w-5 text-gold" />
+              </div>
+              <h3 className="mt-8 font-display text-2xl font-semibold">{s.title}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+            </div>
+            );
+          })}
+        </div>
+      </section>
+
+      </>
+    ),
+    process: (
+      <>
+      {/* Process */}
+      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
+        <div className="grid md:grid-cols-2 gap-16 items-start">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+              {hc.process.eyebrow}
+            </p>
+            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
+              {hc.process.heading}
+            </h2>
+            <p className="mt-6 text-muted-foreground max-w-md" data-reveal-child>
+              {hc.process.intro}
+            </p>
+          </div>
+          <div className="space-y-3">
+            {hc.process.items.map((p) => (
+              <div
+                key={p.n}
+                className="glare-card glass rounded-2xl p-6 flex gap-5 hover:bg-white/5 transition-colors"
+                data-reveal-child
+              >
+                <span className="font-display text-3xl font-semibold text-gradient-lime shrink-0">
+                  {p.n}
+                </span>
+                <div>
+                  <h3 className="font-display text-xl font-semibold">{p.t}</h3>
+                  <p className="mt-1.5 text-sm text-muted-foreground">{p.d}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      </>
+    ),
+    assemble: (
+      <>
+      {/* Everything a launch needs — scattered elements assemble on scroll */}
+      <section className="container-page py-28 border-t border-border/60 overflow-hidden">
+        <div className="grid md:grid-cols-[1fr_1.2fr] gap-16 items-center">
+          <div data-reveal>
+            <p className="text-xs uppercase tracking-[0.28em] text-lime">In every build</p>
+            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold">
+              Scattered concerns,{" "}
+              <span className="text-gold">assembled</span> into one
+              launch.
+            </h2>
+            <p className="mt-6 text-muted-foreground max-w-md">
+              Auth, payments, analytics, SEO, monitoring — the unglamorous parts most
+              agencies bolt on late. We wire them in from sprint one, so launch day is a
+              formality, not a fire drill.
+            </p>
+          </div>
+          <div className="relative" data-scatter>
+            <div
+              className="absolute -top-24 -right-16 h-72 w-72 rounded-full opacity-30 pointer-events-none"
+              style={{ background: "var(--gradient-lime)", filter: "blur(100px)" }}
+              data-parallax="-0.15"
+            />
+            <div className="relative flex flex-wrap justify-center gap-3">
+              {[
+                "Design system",
+                "Auth & SSO",
+                "Payments",
+                "CI/CD",
+                "Analytics",
+                "SEO & schema",
+                "Error monitoring",
+                "A/B testing",
+                "Accessibility",
+                "Email flows",
+                "Docs & handover",
+                "Load testing",
+                "i18n-ready",
+                "Backups & DR",
+              ].map((chip, i) => (
+                <span
+                  key={chip}
+                  data-scatter-item
+                  className={`rounded-full px-5 py-2.5 text-sm font-medium border will-change-transform ${
+                    i % 5 === 0
+                      ? "gradient-card-gold border-gold/25 text-foreground"
+                      : "glass border-white/10 text-foreground/85"
+                  }`}
+                >
+                  {chip}
+                </span>
+              ))}
+            </div>
+            <p className="mt-8 text-center text-xs uppercase tracking-[0.24em] text-muted-foreground">
+              Included in every engagement — never a change order
+            </p>
+          </div>
+        </div>
+      </section>
+
+      </>
+    ),
+    work: (
+      <>
+      {/* Works */}
+      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
+        <div className="flex items-end justify-between gap-6 mb-14">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+              {hc.work.eyebrow}
+            </p>
+            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-split>
+              {hc.work.heading}
+            </h2>
+          </div>
+          <Link
+            to="/works"
+            className="text-sm hover:text-lime inline-flex items-center gap-1.5"
+            data-reveal-child
+          >
+            All works <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          {hc.work.items.map((w) => (
+            <div
+              key={w.name}
+              className="group glare-card relative rounded-2xl overflow-hidden aspect-4/3 border border-white/10"
+              data-reveal-child
+            >
+              <img
+                src={w.img}
+                alt={w.name}
+                className="absolute inset-0 h-full w-full object-cover"
+                loading="lazy"
+                data-parallax-img
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+              <div className="relative h-full p-8 flex flex-col justify-end">
+                <span className="text-xs uppercase tracking-[0.24em] text-lime">
+                  {w.tag}
+                </span>
+                <div className="mt-2 flex items-end justify-between gap-6">
+                  <div>
+                    <h3 className="font-display text-3xl md:text-4xl font-semibold">
+                      {w.name}
+                    </h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{w.result}</p>
+                  </div>
+                  <div className="grid h-11 w-11 place-items-center rounded-full glass shrink-0 group-hover:bg-lime group-hover:text-lime-foreground transition-colors">
+                    <ArrowUpRight className="h-4 w-4" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      </>
+    ),
+    kickoff: (
+      <>
+      {/* First 14 days */}
+      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
+        <div className="mb-16">
+          <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+            {hc.kickoff.eyebrow}
+          </p>
+          <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-split>
+            {hc.kickoff.heading}
+          </h2>
+        </div>
+        <div className="relative">
+          <div className="timeline-line hidden md:block" data-timeline-line />
+          <div className="grid gap-10 md:grid-cols-4">
+            {hc.kickoff.items.map((step) => (
+              <div key={step.day} data-reveal-child>
+                <div className="timeline-dot hidden md:block" />
+                <p className="md:mt-5 text-xs uppercase tracking-[0.24em] text-gold">{step.day}</p>
+                <h3 className="mt-2 font-display text-xl font-semibold">{step.t}</h3>
+                <p className="mt-2 text-sm text-muted-foreground max-w-[30ch]">{step.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      </>
+    ),
+    why: (
+      <>
+      {/* Why */}
+      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
+        <div className="grid md:grid-cols-2 gap-16 items-start">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+              {hc.why.eyebrow}
+            </p>
+            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
+              {hc.why.heading}
+            </h2>
+            <div
+              className="relative mt-10 overflow-hidden rounded-3xl border border-white/10"
+              data-reveal-child
+            >
+              <img
+                src="/images/canva/studio-workspace.jpg"
+                alt="Laptop in a dark studio with glowing lime circuit lines — code in progress"
+                loading="lazy"
+                className="aspect-16/10 w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-background/30" />
+            </div>
+          </div>
+          <div className="space-y-4">
+            {hc.why.items.map((f, fi) => {
+              const WhyIcon = whyIcons[fi % whyIcons.length];
+              return (
+              <div
+                key={f.title}
+                className="glare-card glass rounded-2xl p-6 flex gap-5"
+                data-reveal-child
+              >
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-lime/20 to-transparent border border-lime/20">
+                  <WhyIcon className="h-5 w-5 text-lime" />
+                </div>
+                <div>
+                  <h3 className="font-display text-xl font-semibold">{f.title}</h3>
+                  <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
+                </div>
+              </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      </>
+    ),
+    compare: (
+      <>
+      {/* Comparison — white band */}
+      <section className="block-light">
+        <div className="container-page py-28">
+        <div className="mb-14" data-reveal>
+          <p className="text-xs uppercase tracking-[0.28em] text-lime">{hc.compare.eyebrow}</p>
+          <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight max-w-3xl font-semibold">
+            {hc.compare.heading}
+          </h2>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div
+            className="rounded-3xl border border-black/10 bg-surface p-8 md:p-10"
+            data-slide="left"
+          >
+            <h3 className="font-display text-2xl font-semibold text-muted-foreground">
+              {hc.compare.typicalTitle}
+            </h3>
+            <ul className="mt-8 space-y-5">
+              {hc.compare.typical.map((row) => (
+                <li key={row} className="flex items-start gap-3 text-muted-foreground">
+                  <X className="mt-0.5 h-4 w-4 shrink-0 opacity-50" />
+                  <span className="text-sm leading-relaxed">{row}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div
+            className="glare-card gradient-card-gold rounded-3xl p-8 md:p-10"
+            data-slide="right"
+          >
+            <h3 className="font-display text-2xl font-semibold">{hc.compare.northlineTitle}</h3>
+            <ul className="mt-8 space-y-5">
+              {hc.compare.northline.map((row) => (
+                <li key={row} className="flex items-start gap-3">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                  <span className="text-sm leading-relaxed text-foreground/90">{row}</span>
+                </li>
+              ))}
+            </ul>
+            <Link
+              to="/contact"
+              className="mt-9 inline-flex items-center gap-1.5 text-sm font-semibold text-gold"
+            >
+              Work the Northline way <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+        </div>
+      </section>
+
+      </>
+    ),
+    testimonials: (
+      <>
+      {/* Testimonials */}
+      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
+        <p className="text-xs uppercase tracking-[0.28em] text-lime mb-4" data-reveal-child>
+          {hc.testimonialsSection.eyebrow}
+        </p>
+        <h2 className="font-display text-5xl md:text-6xl leading-tight max-w-3xl font-semibold mb-14" data-reveal-child>
+          {hc.testimonialsSection.heading}
+        </h2>
+        <div className="grid md:grid-cols-3 gap-6" data-cards data-cards-stagger="0.12">
+          {quotes.map((t) => (
+            <blockquote
+              key={t.a}
+              className="glare-card gradient-card rounded-2xl p-7"
+              data-card
+            >
+              <p className="font-display text-lg leading-relaxed">"{t.q}"</p>
+              <footer className="mt-6 pt-6 border-t border-white/10 flex items-center gap-3">
+                <img
+                  src={t.img}
+                  alt={t.a}
+                  loading="lazy"
+                  className="h-10 w-10 rounded-full object-cover border border-white/15"
+                />
+                <div>
+                  <div className="font-semibold text-sm">{t.a}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{t.r}</div>
+                </div>
+              </footer>
+            </blockquote>
+          ))}
+        </div>
+      </section>
+
+      </>
+    ),
+    pricing: (
+      <>
+      {/* Pricing snapshot */}
+      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
+        <div className="flex items-end justify-between mb-14">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+              {hc.pricing.eyebrow}
+            </p>
+            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
+              {hc.pricing.heading}
+            </h2>
+          </div>
+          <Link to="/pricing" className="text-sm hover:text-lime inline-flex items-center gap-1.5" data-reveal-child>
+            Full pricing <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6" data-cards>
+          {hc.pricing.tiers.map((tier) => (
+            <div
+              key={tier.t}
+              className={`glare-card lift rounded-2xl p-8 border ${
+                tier.featured
+                  ? "gradient-card-gold border-lime/30"
+                  : "gradient-card border-white/10"
+              }`}
+              data-card
+            >
+              <h3 className="font-display text-2xl font-semibold">{tier.t}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{tier.d}</p>
+              <div className="mt-8 font-display text-3xl font-semibold text-gradient-lime">
+                {tier.p}
+              </div>
+              <ul className="mt-6 space-y-2 text-sm">
+                {hc.pricing.tierFeatures.map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-muted-foreground">
+                    <Check className="h-4 w-4 text-lime" /> {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      </>
+    ),
+    faq: (
+      <>
+      {/* FAQ */}
+      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
+        <div className="grid md:grid-cols-2 gap-16 items-start">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+              {hc.faq.eyebrow}
+            </p>
+            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
+              {hc.faq.heading}
+            </h2>
+          </div>
+          <div className="space-y-3">
+            {hc.faq.items.map((f) => (
+              <details
+                key={f.q}
+                className="glare-card faq-item glass rounded-2xl p-6 group"
+                data-reveal-child
+              >
+                <summary className="font-display text-lg font-semibold cursor-pointer flex items-center justify-between">
+                  {f.q}
+                  <span className="text-lime group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p className="mt-3 text-sm text-muted-foreground">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      </>
+    ),
+    audit: (
+      <>
+      {/* Free audit — low-commitment conversion path */}
+      <section className="container-page py-24 border-t border-border/60">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div data-slide="left">
+            <p className="text-xs uppercase tracking-[0.28em] text-gold">{hc.audit.eyebrow}</p>
+            <h2 className="mt-4 font-display text-4xl md:text-5xl leading-tight font-semibold">
+              {hc.audit.heading}
+            </h2>
+            <p className="mt-5 text-muted-foreground max-w-lg">
+              {hc.audit.text}
+            </p>
+            <ul className="mt-7 space-y-3 text-sm">
+              {hc.audit.bullets.map((row) => (
+                <li key={row} className="flex items-start gap-3">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                  <span className="text-foreground/85">{row}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="relative" data-slide="right">
+            <div
+              className="absolute -top-16 -left-10 h-56 w-56 rounded-full opacity-25 pointer-events-none"
+              style={{ background: "var(--gradient-lime)", filter: "blur(90px)" }}
+              data-parallax="0.18"
+            />
+            <div className="glare-card gradient-card-gold relative rounded-3xl p-8 md:p-10">
+              <div className="flex items-center justify-between">
+                <span className="font-display text-lg font-semibold">Audit snapshot</span>
+                <span className="rounded-full bg-gold/15 border border-gold/30 px-3 py-1 text-xs font-semibold text-gold">
+                  48h turnaround
+                </span>
+              </div>
+              <div className="mt-7 space-y-4">
+                {[
+                  { l: "Performance", w: "w-[62%]", note: "LCP 4.1s → target 1.8s" },
+                  { l: "SEO", w: "w-[78%]", note: "Missing schema on 12 pages" },
+                  { l: "Conversion", w: "w-[44%]", note: "Checkout drop-off at step 2" },
+                ].map((bar) => (
+                  <div key={bar.l}>
+                    <div className="flex items-baseline justify-between text-sm">
+                      <span className="font-medium">{bar.l}</span>
+                      <span className="text-xs text-muted-foreground">{bar.note}</span>
+                    </div>
+                    <div className="mt-2 h-1.5 rounded-full bg-white/10">
+                      <div className={`h-full rounded-full bg-gold/80 ${bar.w}`} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Link
+                to="/contact"
+                data-magnetic
+                className="mt-9 inline-flex items-center gap-2 rounded-full btn-gold px-6 py-3.5 text-sm font-semibold"
+              >
+                Claim your free audit
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+              <p className="mt-4 text-xs text-muted-foreground">
+                No sales call required. We email the report either way.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      </>
+    ),
+    cta: (
+      <>
+      {/* CTA */}
+      <section className="container-page py-28" data-reveal>
+        <div className="relative overflow-hidden rounded-3xl gradient-card p-12 md:p-20 border border-lime/20">
+          <div className="absolute inset-0 grain-bg pointer-events-none" />
+          <div
+            className="absolute -top-40 -right-40 w-96 h-96 rounded-full opacity-40 pointer-events-none"
+            style={{ background: "var(--gradient-lime)", filter: "blur(80px)" }}
+          />
+          <div className="relative max-w-3xl">
+            <p className="text-xs uppercase tracking-[0.28em] text-lime">{hc.cta.eyebrow}</p>
+            <h2 className="mt-4 font-display text-5xl md:text-7xl leading-[0.95] font-semibold" data-split>
+              {hc.cta.heading}
+            </h2>
+            <p className="mt-6 text-lg text-muted-foreground">
+              {hc.cta.text}
+            </p>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Link
+                to="/contact"
+                data-magnetic
+                className="group inline-flex items-center gap-2 rounded-full btn-navy shine px-6 py-3.5 text-sm font-semibold hover:border-lime/40"
+              >
+                {hc.cta.primaryLabel}
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+              <Link
+                to="/contact"
+                data-magnetic="0.25"
+                className="inline-flex items-center gap-2 rounded-full glass px-6 py-3.5 text-sm font-medium hover:bg-white/5"
+              >
+                {hc.cta.secondaryLabel}
+              </Link>
+            </div>
+            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground">
+              <span className="inline-flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-lime" /> You own all IP and code
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <Zap className="h-4 w-4 text-lime" /> Reply within one business day
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <BadgeCheck className="h-4 w-4 text-lime" /> Free technical audit included
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+      </>
+    ),
+  };
+  const orderedKeys = [
+    ...hc.sectionOrder.filter((k) => k in sectionBlocks),
+    ...Object.keys(sectionBlocks).filter((k) => !hc.sectionOrder.includes(k)),
+  ];
+
   return (
     <SiteShell>
       <div ref={containerRef} className="relative bg-background">
@@ -280,662 +1008,12 @@ function HomePage() {
       </div>
 
 
-      {/* Clients marquee */}
-      <section className="border-y border-border/60 bg-surface/40">
-        <div className="container-page py-8 flex items-center gap-10">
-          <span className="shrink-0 text-xs uppercase tracking-[0.28em] text-muted-foreground">
-            {hc.clients.label}
-          </span>
-          <div className="marquee flex-1">
-            <div className="marquee-track">
-              {[...hc.clients.names, ...hc.clients.names].map((c, i) => (
-                <span
-                  key={`${c}-${i}`}
-                  className="mx-8 font-display text-2xl font-medium text-foreground/60 whitespace-nowrap"
-                >
-                  {c}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Capabilities */}
-      <section className="container-page py-28" data-reveal-group>
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
-          <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              {hc.capabilities.eyebrow}
-            </p>
-            <h2
-              className="mt-4 font-display text-5xl md:text-6xl leading-tight max-w-2xl font-semibold"
-              data-split
-            >
-              {hc.capabilities.heading}
-            </h2>
-          </div>
-          <Link
-            to="/services"
-            className="text-sm text-foreground hover:text-lime inline-flex items-center gap-1.5"
-            data-reveal-child
-          >
-            All services <ArrowUpRight className="h-4 w-4" />
-          </Link>
+      {orderedKeys.map((k) => (
+        <div key={k} data-lp={k}>
+          {sectionBlocks[k]}
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" data-cards>
-          {hc.capabilities.items.map((c, ci) => {
-            const CapIcon = capabilityIcons[ci % capabilityIcons.length];
-            return (
-            <div
-              key={c.title}
-              className="group glare-card lift gradient-card rounded-2xl p-7"
-              data-card
-            >
-              <div className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-lime/20 to-accent/20 border border-white/10">
-                <CapIcon className="h-5 w-5 text-lime" />
-              </div>
-              <h3 className="mt-8 font-display text-2xl font-semibold">{c.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{c.desc}</p>
-            </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Proof in numbers — bold gold color band */}
-      <section className="block-bold" data-reveal-group>
-        <div className="container-page py-24">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-          {hc.stats.map((s) => (
-            <div key={s.label} data-reveal-child>
-              <div className="font-display text-6xl md:text-7xl font-semibold tracking-tight" data-counter>
-                {s.value}
-              </div>
-              <div className="mt-3 h-px w-10 bg-lime/60" />
-              <p className="mt-3 text-sm text-muted-foreground max-w-[24ch]">{s.label}</p>
-            </div>
-          ))}
-        </div>
-        </div>
-      </section>
-
-      {/* How an engagement feels — illustrated bento */}
-      <BentoShowcase
-        eyebrow="The Northline way"
-        title={
-          <>
-            What working with us actually <span className="text-gold">feels</span> like.
-          </>
-        }
-        subtitle="No status-meeting theater. You watch the product take shape in real time — every build, every deploy, every decision visible."
-        cards={[
-          {
-            title: "Build faster",
-            desc: "Ship features 2× quicker with one senior pod. From idea to production in weeks, not months.",
-            tone: "warm",
-            visual: { kind: "gauge", stat: "46%", statLabel: "faster time to first launch", value: 0.46 },
-          },
-          {
-            title: "Deploy with confidence",
-            desc: "Automated security checks, CI/CD pipelines, and instant rollbacks. Ship safely, every time.",
-            tone: "cool",
-            visual: {
-              kind: "checklist",
-              rows: ["Code reviewed", "Tests passed", "Security scan clean"],
-            },
-          },
-          {
-            title: "Stay in sync",
-            desc: "Real-time notifications for deploys, builds, and team activity. Never chase a status update again.",
-            tone: "cool",
-            visual: {
-              kind: "inbox",
-              tabs: [
-                { label: "All", count: 3 },
-                { label: "Team", count: 2, active: true },
-                { label: "System", count: 1 },
-              ],
-              rows: [
-                "Sarah deployed to production",
-                "Friday demo recording ready",
-                "Dependency update available",
-              ],
-            },
-          },
-          {
-            title: "Command everything",
-            desc: "Trigger deployments, inspect build logs, and manage workflows from a single command palette.",
-            tone: "warm",
-            visual: {
-              kind: "command",
-              actions: [
-                { label: "Deploy to Production", kbd: "V" },
-                { label: "View Build Logs", kbd: "B" },
-                { label: "Rollback Last Deploy", kbd: "M" },
-              ],
-            },
-          },
-        ]}
-      />
-
-      {/* Solutions */}
-      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
-        <div className="mb-14">
-          <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-            {hc.solutions.eyebrow}
-          </p>
-          <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight max-w-3xl font-semibold" data-reveal-child>
-            {hc.solutions.heading}
-          </h2>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" data-cards>
-          {hc.solutions.items.map((s, si) => {
-            const SolIcon = solutionIcons[si % solutionIcons.length];
-            return (
-            <div
-              key={s.title}
-              className="glare-card lift gradient-card-gold rounded-2xl p-7"
-              data-card
-            >
-              <div className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-gold/30 to-transparent border border-gold/20">
-                <SolIcon className="h-5 w-5 text-gold" />
-              </div>
-              <h3 className="mt-8 font-display text-2xl font-semibold">{s.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
-            </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Process */}
-      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
-        <div className="grid md:grid-cols-2 gap-16 items-start">
-          <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              {hc.process.eyebrow}
-            </p>
-            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
-              {hc.process.heading}
-            </h2>
-            <p className="mt-6 text-muted-foreground max-w-md" data-reveal-child>
-              {hc.process.intro}
-            </p>
-          </div>
-          <div className="space-y-3">
-            {hc.process.items.map((p) => (
-              <div
-                key={p.n}
-                className="glare-card glass rounded-2xl p-6 flex gap-5 hover:bg-white/5 transition-colors"
-                data-reveal-child
-              >
-                <span className="font-display text-3xl font-semibold text-gradient-lime shrink-0">
-                  {p.n}
-                </span>
-                <div>
-                  <h3 className="font-display text-xl font-semibold">{p.t}</h3>
-                  <p className="mt-1.5 text-sm text-muted-foreground">{p.d}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Everything a launch needs — scattered elements assemble on scroll */}
-      <section className="container-page py-28 border-t border-border/60 overflow-hidden">
-        <div className="grid md:grid-cols-[1fr_1.2fr] gap-16 items-center">
-          <div data-reveal>
-            <p className="text-xs uppercase tracking-[0.28em] text-lime">In every build</p>
-            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold">
-              Scattered concerns,{" "}
-              <span className="text-gold">assembled</span> into one
-              launch.
-            </h2>
-            <p className="mt-6 text-muted-foreground max-w-md">
-              Auth, payments, analytics, SEO, monitoring — the unglamorous parts most
-              agencies bolt on late. We wire them in from sprint one, so launch day is a
-              formality, not a fire drill.
-            </p>
-          </div>
-          <div className="relative" data-scatter>
-            <div
-              className="absolute -top-24 -right-16 h-72 w-72 rounded-full opacity-30 pointer-events-none"
-              style={{ background: "var(--gradient-lime)", filter: "blur(100px)" }}
-              data-parallax="-0.15"
-            />
-            <div className="relative flex flex-wrap justify-center gap-3">
-              {[
-                "Design system",
-                "Auth & SSO",
-                "Payments",
-                "CI/CD",
-                "Analytics",
-                "SEO & schema",
-                "Error monitoring",
-                "A/B testing",
-                "Accessibility",
-                "Email flows",
-                "Docs & handover",
-                "Load testing",
-                "i18n-ready",
-                "Backups & DR",
-              ].map((chip, i) => (
-                <span
-                  key={chip}
-                  data-scatter-item
-                  className={`rounded-full px-5 py-2.5 text-sm font-medium border will-change-transform ${
-                    i % 5 === 0
-                      ? "gradient-card-gold border-gold/25 text-foreground"
-                      : "glass border-white/10 text-foreground/85"
-                  }`}
-                >
-                  {chip}
-                </span>
-              ))}
-            </div>
-            <p className="mt-8 text-center text-xs uppercase tracking-[0.24em] text-muted-foreground">
-              Included in every engagement — never a change order
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Works */}
-      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
-        <div className="flex items-end justify-between gap-6 mb-14">
-          <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              {hc.work.eyebrow}
-            </p>
-            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-split>
-              {hc.work.heading}
-            </h2>
-          </div>
-          <Link
-            to="/works"
-            className="text-sm hover:text-lime inline-flex items-center gap-1.5"
-            data-reveal-child
-          >
-            All works <ArrowUpRight className="h-4 w-4" />
-          </Link>
-        </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          {hc.work.items.map((w) => (
-            <div
-              key={w.name}
-              className="group glare-card relative rounded-2xl overflow-hidden aspect-4/3 border border-white/10"
-              data-reveal-child
-            >
-              <img
-                src={w.img}
-                alt={w.name}
-                className="absolute inset-0 h-full w-full object-cover"
-                loading="lazy"
-                data-parallax-img
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-              <div className="relative h-full p-8 flex flex-col justify-end">
-                <span className="text-xs uppercase tracking-[0.24em] text-lime">
-                  {w.tag}
-                </span>
-                <div className="mt-2 flex items-end justify-between gap-6">
-                  <div>
-                    <h3 className="font-display text-3xl md:text-4xl font-semibold">
-                      {w.name}
-                    </h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{w.result}</p>
-                  </div>
-                  <div className="grid h-11 w-11 place-items-center rounded-full glass shrink-0 group-hover:bg-lime group-hover:text-lime-foreground transition-colors">
-                    <ArrowUpRight className="h-4 w-4" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* First 14 days */}
-      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
-        <div className="mb-16">
-          <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-            {hc.kickoff.eyebrow}
-          </p>
-          <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-split>
-            {hc.kickoff.heading}
-          </h2>
-        </div>
-        <div className="relative">
-          <div className="timeline-line hidden md:block" data-timeline-line />
-          <div className="grid gap-10 md:grid-cols-4">
-            {hc.kickoff.items.map((step) => (
-              <div key={step.day} data-reveal-child>
-                <div className="timeline-dot hidden md:block" />
-                <p className="md:mt-5 text-xs uppercase tracking-[0.24em] text-gold">{step.day}</p>
-                <h3 className="mt-2 font-display text-xl font-semibold">{step.t}</h3>
-                <p className="mt-2 text-sm text-muted-foreground max-w-[30ch]">{step.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Why */}
-      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
-        <div className="grid md:grid-cols-2 gap-16 items-start">
-          <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              {hc.why.eyebrow}
-            </p>
-            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
-              {hc.why.heading}
-            </h2>
-            <div
-              className="relative mt-10 overflow-hidden rounded-3xl border border-white/10"
-              data-reveal-child
-            >
-              <img
-                src="/images/canva/studio-workspace.jpg"
-                alt="Laptop in a dark studio with glowing lime circuit lines — code in progress"
-                loading="lazy"
-                className="aspect-16/10 w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-background/30" />
-            </div>
-          </div>
-          <div className="space-y-4">
-            {hc.why.items.map((f, fi) => {
-              const WhyIcon = whyIcons[fi % whyIcons.length];
-              return (
-              <div
-                key={f.title}
-                className="glare-card glass rounded-2xl p-6 flex gap-5"
-                data-reveal-child
-              >
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-lime/20 to-transparent border border-lime/20">
-                  <WhyIcon className="h-5 w-5 text-lime" />
-                </div>
-                <div>
-                  <h3 className="font-display text-xl font-semibold">{f.title}</h3>
-                  <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
-                </div>
-              </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Comparison — white band */}
-      <section className="block-light">
-        <div className="container-page py-28">
-        <div className="mb-14" data-reveal>
-          <p className="text-xs uppercase tracking-[0.28em] text-lime">{hc.compare.eyebrow}</p>
-          <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight max-w-3xl font-semibold">
-            {hc.compare.heading}
-          </h2>
-        </div>
-        <div className="grid gap-6 md:grid-cols-2">
-          <div
-            className="rounded-3xl border border-black/10 bg-surface p-8 md:p-10"
-            data-slide="left"
-          >
-            <h3 className="font-display text-2xl font-semibold text-muted-foreground">
-              {hc.compare.typicalTitle}
-            </h3>
-            <ul className="mt-8 space-y-5">
-              {hc.compare.typical.map((row) => (
-                <li key={row} className="flex items-start gap-3 text-muted-foreground">
-                  <X className="mt-0.5 h-4 w-4 shrink-0 opacity-50" />
-                  <span className="text-sm leading-relaxed">{row}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div
-            className="glare-card gradient-card-gold rounded-3xl p-8 md:p-10"
-            data-slide="right"
-          >
-            <h3 className="font-display text-2xl font-semibold">{hc.compare.northlineTitle}</h3>
-            <ul className="mt-8 space-y-5">
-              {hc.compare.northline.map((row) => (
-                <li key={row} className="flex items-start gap-3">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                  <span className="text-sm leading-relaxed text-foreground/90">{row}</span>
-                </li>
-              ))}
-            </ul>
-            <Link
-              to="/contact"
-              className="mt-9 inline-flex items-center gap-1.5 text-sm font-semibold text-gold"
-            >
-              Work the Northline way <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
-        <p className="text-xs uppercase tracking-[0.28em] text-lime mb-4" data-reveal-child>
-          {hc.testimonialsSection.eyebrow}
-        </p>
-        <h2 className="font-display text-5xl md:text-6xl leading-tight max-w-3xl font-semibold mb-14" data-reveal-child>
-          {hc.testimonialsSection.heading}
-        </h2>
-        <div className="grid md:grid-cols-3 gap-6" data-cards data-cards-stagger="0.12">
-          {quotes.map((t) => (
-            <blockquote
-              key={t.a}
-              className="glare-card gradient-card rounded-2xl p-7"
-              data-card
-            >
-              <p className="font-display text-lg leading-relaxed">"{t.q}"</p>
-              <footer className="mt-6 pt-6 border-t border-white/10 flex items-center gap-3">
-                <img
-                  src={t.img}
-                  alt={t.a}
-                  loading="lazy"
-                  className="h-10 w-10 rounded-full object-cover border border-white/15"
-                />
-                <div>
-                  <div className="font-semibold text-sm">{t.a}</div>
-                  <div className="text-xs text-muted-foreground mt-0.5">{t.r}</div>
-                </div>
-              </footer>
-            </blockquote>
-          ))}
-        </div>
-      </section>
-
-      {/* Pricing snapshot */}
-      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
-        <div className="flex items-end justify-between mb-14">
-          <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              {hc.pricing.eyebrow}
-            </p>
-            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
-              {hc.pricing.heading}
-            </h2>
-          </div>
-          <Link to="/pricing" className="text-sm hover:text-lime inline-flex items-center gap-1.5" data-reveal-child>
-            Full pricing <ArrowUpRight className="h-4 w-4" />
-          </Link>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6" data-cards>
-          {hc.pricing.tiers.map((tier) => (
-            <div
-              key={tier.t}
-              className={`glare-card lift rounded-2xl p-8 border ${
-                tier.featured
-                  ? "gradient-card-gold border-lime/30"
-                  : "gradient-card border-white/10"
-              }`}
-              data-card
-            >
-              <h3 className="font-display text-2xl font-semibold">{tier.t}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{tier.d}</p>
-              <div className="mt-8 font-display text-3xl font-semibold text-gradient-lime">
-                {tier.p}
-              </div>
-              <ul className="mt-6 space-y-2 text-sm">
-                {hc.pricing.tierFeatures.map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-muted-foreground">
-                    <Check className="h-4 w-4 text-lime" /> {f}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="container-page py-28 border-t border-border/60" data-reveal-group>
-        <div className="grid md:grid-cols-2 gap-16 items-start">
-          <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              {hc.faq.eyebrow}
-            </p>
-            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
-              {hc.faq.heading}
-            </h2>
-          </div>
-          <div className="space-y-3">
-            {hc.faq.items.map((f) => (
-              <details
-                key={f.q}
-                className="glare-card faq-item glass rounded-2xl p-6 group"
-                data-reveal-child
-              >
-                <summary className="font-display text-lg font-semibold cursor-pointer flex items-center justify-between">
-                  {f.q}
-                  <span className="text-lime group-open:rotate-45 transition-transform">+</span>
-                </summary>
-                <p className="mt-3 text-sm text-muted-foreground">{f.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Free audit — low-commitment conversion path */}
-      <section className="container-page py-24 border-t border-border/60">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div data-slide="left">
-            <p className="text-xs uppercase tracking-[0.28em] text-gold">{hc.audit.eyebrow}</p>
-            <h2 className="mt-4 font-display text-4xl md:text-5xl leading-tight font-semibold">
-              {hc.audit.heading}
-            </h2>
-            <p className="mt-5 text-muted-foreground max-w-lg">
-              {hc.audit.text}
-            </p>
-            <ul className="mt-7 space-y-3 text-sm">
-              {hc.audit.bullets.map((row) => (
-                <li key={row} className="flex items-start gap-3">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                  <span className="text-foreground/85">{row}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="relative" data-slide="right">
-            <div
-              className="absolute -top-16 -left-10 h-56 w-56 rounded-full opacity-25 pointer-events-none"
-              style={{ background: "var(--gradient-lime)", filter: "blur(90px)" }}
-              data-parallax="0.18"
-            />
-            <div className="glare-card gradient-card-gold relative rounded-3xl p-8 md:p-10">
-              <div className="flex items-center justify-between">
-                <span className="font-display text-lg font-semibold">Audit snapshot</span>
-                <span className="rounded-full bg-gold/15 border border-gold/30 px-3 py-1 text-xs font-semibold text-gold">
-                  48h turnaround
-                </span>
-              </div>
-              <div className="mt-7 space-y-4">
-                {[
-                  { l: "Performance", w: "w-[62%]", note: "LCP 4.1s → target 1.8s" },
-                  { l: "SEO", w: "w-[78%]", note: "Missing schema on 12 pages" },
-                  { l: "Conversion", w: "w-[44%]", note: "Checkout drop-off at step 2" },
-                ].map((bar) => (
-                  <div key={bar.l}>
-                    <div className="flex items-baseline justify-between text-sm">
-                      <span className="font-medium">{bar.l}</span>
-                      <span className="text-xs text-muted-foreground">{bar.note}</span>
-                    </div>
-                    <div className="mt-2 h-1.5 rounded-full bg-white/10">
-                      <div className={`h-full rounded-full bg-gold/80 ${bar.w}`} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Link
-                to="/contact"
-                data-magnetic
-                className="mt-9 inline-flex items-center gap-2 rounded-full btn-gold px-6 py-3.5 text-sm font-semibold"
-              >
-                Claim your free audit
-                <ArrowUpRight className="h-4 w-4" />
-              </Link>
-              <p className="mt-4 text-xs text-muted-foreground">
-                No sales call required. We email the report either way.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="container-page py-28" data-reveal>
-        <div className="relative overflow-hidden rounded-3xl gradient-card p-12 md:p-20 border border-lime/20">
-          <div className="absolute inset-0 grain-bg pointer-events-none" />
-          <div
-            className="absolute -top-40 -right-40 w-96 h-96 rounded-full opacity-40 pointer-events-none"
-            style={{ background: "var(--gradient-lime)", filter: "blur(80px)" }}
-          />
-          <div className="relative max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.28em] text-lime">{hc.cta.eyebrow}</p>
-            <h2 className="mt-4 font-display text-5xl md:text-7xl leading-[0.95] font-semibold" data-split>
-              {hc.cta.heading}
-            </h2>
-            <p className="mt-6 text-lg text-muted-foreground">
-              {hc.cta.text}
-            </p>
-            <div className="mt-10 flex flex-wrap gap-3">
-              <Link
-                to="/contact"
-                data-magnetic
-                className="group inline-flex items-center gap-2 rounded-full btn-navy shine px-6 py-3.5 text-sm font-semibold hover:border-lime/40"
-              >
-                {hc.cta.primaryLabel}
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
-              <Link
-                to="/contact"
-                data-magnetic="0.25"
-                className="inline-flex items-center gap-2 rounded-full glass px-6 py-3.5 text-sm font-medium hover:bg-white/5"
-              >
-                {hc.cta.secondaryLabel}
-              </Link>
-            </div>
-            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-lime" /> You own all IP and code
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <Zap className="h-4 w-4 text-lime" /> Reply within one business day
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <BadgeCheck className="h-4 w-4 text-lime" /> Free technical audit included
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
+      ))}
       </div>
     </SiteShell>
   );

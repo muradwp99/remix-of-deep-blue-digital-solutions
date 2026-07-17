@@ -357,12 +357,69 @@
 		return box;
 	}
 
+	/* ---------- section-order panel ---------- */
+	function orderSection() {
+		var blocks = B.schema.blocks || [];
+		var labels = {};
+		blocks.forEach( function ( b ) { labels[ b.key ] = b.label; } );
+
+		function currentOrder() {
+			var saved = String( values.section_order || "" ).split( "\n" ).map( function ( s ) { return s.trim(); } ).filter( Boolean );
+			var known = blocks.map( function ( b ) { return b.key; } );
+			var out = saved.filter( function ( k ) { return known.indexOf( k ) !== -1; } );
+			known.forEach( function ( k ) { if ( out.indexOf( k ) === -1 ) { out.push( k ); } } );
+			return out;
+		}
+		function apply( order ) {
+			values.section_order = order.join( "\n" );
+			dirty = true;
+			document.getElementById( "lp-save" ).classList.add( "is-dirty" );
+			try {
+				frame.contentWindow.postMessage( { type: "aux-edit", path: "sectionOrder", value: order }, B.frontend );
+			} catch ( e ) {}
+		}
+
+		var box = el( "div", { class: "lp-fields" } );
+		var list = el( "div", { class: "lp-repeater" } );
+		function rerender() {
+			list.innerHTML = "";
+			currentOrder().forEach( function ( key, idx ) {
+				var handle = el( "span", { class: "lp-drag", text: "⋮⋮", draggable: "true" } );
+				handle.addEventListener( "dragstart", function ( e ) {
+					e.dataTransfer.setData( "text/plain", String( idx ) );
+				} );
+				var rowEl = el( "div", { class: "lp-row lp-order-row" }, [
+					handle,
+					el( "span", { class: "lp-order-label", text: labels[ key ] || key } ),
+				] );
+				rowEl.addEventListener( "dragover", function ( e ) { e.preventDefault(); rowEl.classList.add( "drop" ); } );
+				rowEl.addEventListener( "dragleave", function () { rowEl.classList.remove( "drop" ); } );
+				rowEl.addEventListener( "drop", function ( e ) {
+					e.preventDefault();
+					rowEl.classList.remove( "drop" );
+					var from = parseInt( e.dataTransfer.getData( "text/plain" ), 10 );
+					if ( isNaN( from ) || from === idx ) { return; }
+					var order = currentOrder();
+					var moved = order.splice( from, 1 )[ 0 ];
+					order.splice( idx, 0, moved );
+					apply( order );
+					rerender();
+				} );
+				list.appendChild( rowEl );
+			} );
+		}
+		rerender();
+		box.appendChild( list );
+		return box;
+	}
+
 	/* ---------- sections panel ---------- */
 	function buildPanel() {
 		var panel = el( "div", { class: "lp-sections" } );
 
 		// Pinned global panels (site-wide, shown on every page).
 		[
+			[ "≡ Section order", orderSection ],
 			[ "🎨 Design", designSection ],
 			[ "☰ Main menu", menuSection ],
 			[ "▤ Footer menu", footerSection ],
@@ -388,7 +445,7 @@
 				el( "span", { text: section.label } ),
 				el( "span", { class: "lp-caret", text: "▾" } ),
 			] );
-			var sec = el( "div", { class: "lp-section" + ( i === 0 ? " open" : "" ) }, [ head, fields ] );
+			var sec = el( "div", { class: "lp-section" + ( i === 0 ? " open" : "" ), "data-key": section.key }, [ head, fields ] );
 			head.addEventListener( "click", function () { sec.classList.toggle( "open" ); } );
 			panel.appendChild( sec );
 		} );
@@ -399,7 +456,7 @@
 	function save() {
 		var btn = document.getElementById( "lp-save" );
 		btn.textContent = "Saving…";
-		var meta = {};
+		var meta = { section_order: String( values.section_order || "" ) };
 		B.schema.sections.forEach( function ( s ) {
 			s.fields.forEach( function ( f ) {
 				meta[ f.key ] = f.kind === "repeater"
@@ -476,12 +533,24 @@
 
 		// Re-sync current (possibly unsaved) values whenever the page (re)loads.
 		window.addEventListener( "message", function ( e ) {
-			if ( e.data && e.data.type === "aux-edit-ready" ) {
+			if ( ! e.data ) { return; }
+			if ( e.data.type === "aux-edit-ready" ) {
 				broadcastAll();
 				// Re-apply unsaved global edits after any preview reload.
 				if ( globalsDirty.design ) { sendRaw( { type: "aux-design", tokens: globals.design } ); }
 				if ( globalsDirty.nav ) { sendRaw( { type: "aux-menu", nav: globals.nav } ); }
 				if ( globalsDirty.footer ) { sendRaw( { type: "aux-footer", footer: globals.footer } ); }
+			}
+			// Click-to-edit: clicking a section in the preview opens its panel.
+			if ( e.data.type === "aux-focus" && e.data.section ) {
+				var target = document.querySelector( '.lp-section[data-key="' + e.data.section + '"]' );
+				if ( ! target ) { return; }
+				document.querySelectorAll( ".lp-section.open" ).forEach( function ( s ) {
+					if ( s !== target && ! s.classList.contains( "lp-global" ) ) { s.classList.remove( "open" ); }
+				} );
+				target.classList.add( "open", "flash" );
+				target.scrollIntoView( { behavior: "smooth", block: "start" } );
+				setTimeout( function () { target.classList.remove( "flash" ); }, 1400 );
 			}
 		} );
 		window.addEventListener( "beforeunload", function ( e ) {

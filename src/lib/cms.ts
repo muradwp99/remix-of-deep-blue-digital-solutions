@@ -262,6 +262,7 @@ const COLLECTIONS: Record<
     path: "/wp/v2/sitepage",
     map: (d) => ({
       slug: d.slug ?? "",
+      sectionOrder: lines(d, "section_order"),
       hero: {
         trustedLine: m(d, "hero_trusted_line"),
         headline: m(d, "hero_headline"),

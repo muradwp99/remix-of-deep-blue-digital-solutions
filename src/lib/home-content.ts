@@ -19,7 +19,16 @@ export type HeroCard = {
   s3v: string; s3l: string;
 };
 
+/** Orderable home sections (hero stays fixed on top). */
+export const HOME_SECTION_KEYS = [
+  "clients", "capabilities", "stats", "bento", "solutions", "process",
+  "assemble", "work", "kickoff", "why", "compare", "testimonials",
+  "pricing", "faq", "audit", "cta",
+] as const;
+
 export type HomeContent = {
+  /** Render order of the page sections; unknown keys ignored, missing appended. */
+  sectionOrder: string[];
   hero: {
     trustedLine: string;
     headline: string;
@@ -98,6 +107,7 @@ export type HomeContent = {
 };
 
 export const homeDefaults: HomeContent = {
+  sectionOrder: [...HOME_SECTION_KEYS],
   hero: {
     trustedLine: "25+ Founders & Leaders",
     headline: "Software worth being proud of.",
@@ -304,6 +314,7 @@ export function mergeHomeContent(
   const arr = <T,>(v: T[] | undefined | null, fb: T[]) => (v && v.length ? v : fb);
   const d = homeDefaults;
   return {
+    sectionOrder: arr(cms.sectionOrder, d.sectionOrder),
     hero: {
       trustedLine: s(cms.hero?.trustedLine, d.hero.trustedLine),
       headline: s(cms.hero?.headline, d.hero.headline),
