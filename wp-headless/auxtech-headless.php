@@ -53,9 +53,36 @@ add_action( 'template_redirect', function () {
 	if ( is_admin() || is_user_logged_in() ) {
 		return;
 	}
+	// The `wphome` experiment page renders inside WP itself — never redirect it.
+	if ( is_page( 'wphome' ) ) {
+		return;
+	}
 	$frontend = apply_filters( 'auxtech_frontend_url', 'http://localhost:8080' );
 	wp_redirect( $frontend, 302 );
 	exit;
+} );
+
+/**
+ * Live preview while editing: an iframe of the real frontend on the Home Page
+ * edit screen. Content saves → hit Refresh in the box → see it live.
+ */
+add_action( 'add_meta_boxes', function () {
+	add_meta_box(
+		'auxtech-live-preview',
+		'Live Site Preview',
+		function () {
+			$url = apply_filters( 'auxtech_frontend_url', 'http://localhost:8080' );
+			echo '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">';
+			echo '<button type="button" class="button" onclick="document.getElementById(\'auxtech-preview-frame\').src=document.getElementById(\'auxtech-preview-frame\').src;">↻ Refresh preview</button>';
+			echo '<a class="button" href="' . esc_url( $url ) . '" target="_blank" rel="noopener">Open site ↗</a>';
+			echo '<span style="color:#777;">Save your changes, then refresh — the site renders your live content.</span>';
+			echo '</div>';
+			echo '<iframe id="auxtech-preview-frame" src="' . esc_url( $url ) . '" style="width:100%;height:640px;border:1px solid #333;border-radius:8px;background:#0b0e1a;"></iframe>';
+		},
+		array( 'homepage' ),
+		'normal',
+		'high'
+	);
 } );
 
 /** Contact-form submissions: private CPT (readable in wp-admin) + POST endpoint. */
