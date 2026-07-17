@@ -258,6 +258,91 @@ const COLLECTIONS: Record<
       checks: lines(d, "checks"),
     }),
   },
+  homepage: {
+    path: "/wp/v2/homepage",
+    map: (d) => ({
+      slug: d.slug ?? "",
+      hero: {
+        trustedLine: m(d, "hero_trusted_line"),
+        headline: m(d, "hero_headline"),
+        subheadline: m(d, "hero_subheadline"),
+        ctaLabel: m(d, "hero_cta_label"),
+        ctaHref: m(d, "hero_cta_href"),
+        ctaNote: m(d, "hero_cta_note"),
+      },
+      clients: { label: m(d, "clients_label"), names: lines(d, "clients_names") },
+      capabilities: {
+        eyebrow: m(d, "capabilities_eyebrow"),
+        heading: m(d, "capabilities_heading"),
+        items: rows(d, "capabilities_items"),
+      },
+      stats: rows(d, "stats"),
+      solutions: {
+        eyebrow: m(d, "solutions_eyebrow"),
+        heading: m(d, "solutions_heading"),
+        items: rows(d, "solutions_items"),
+      },
+      process: {
+        eyebrow: m(d, "process_eyebrow"),
+        heading: m(d, "process_heading"),
+        intro: m(d, "process_intro"),
+        items: rows(d, "process_items"),
+      },
+      work: {
+        eyebrow: m(d, "work_eyebrow"),
+        heading: m(d, "work_heading"),
+        items: rows(d, "work_items"),
+      },
+      kickoff: {
+        eyebrow: m(d, "kickoff_eyebrow"),
+        heading: m(d, "kickoff_heading"),
+        items: rows(d, "kickoff_items"),
+      },
+      why: {
+        eyebrow: m(d, "why_eyebrow"),
+        heading: m(d, "why_heading"),
+        items: rows(d, "why_items"),
+      },
+      compare: {
+        eyebrow: m(d, "compare_eyebrow"),
+        heading: m(d, "compare_heading"),
+        typicalTitle: m(d, "compare_typical_title"),
+        northlineTitle: m(d, "compare_northline_title"),
+        typical: lines(d, "compare_typical"),
+        northline: lines(d, "compare_northline"),
+      },
+      testimonialsSection: {
+        eyebrow: m(d, "testimonials_eyebrow"),
+        heading: m(d, "testimonials_heading"),
+      },
+      pricing: {
+        eyebrow: m(d, "pricing_eyebrow"),
+        heading: m(d, "pricing_heading"),
+        tiers: rows<{ t: string; d: string; p: string; featured?: unknown }>(d, "pricing_tiers").map(
+          (t, i) => ({ ...t, featured: t.featured === "1" || t.featured === 1 || i === 1 }),
+        ),
+        tierFeatures: lines(d, "pricing_tier_features"),
+      },
+      faq: {
+        eyebrow: m(d, "faq_eyebrow"),
+        heading: m(d, "faq_heading"),
+        items: rows(d, "faq_items"),
+      },
+      audit: {
+        eyebrow: m(d, "audit_eyebrow"),
+        heading: m(d, "audit_heading"),
+        text: m(d, "audit_text"),
+        bullets: lines(d, "audit_bullets"),
+      },
+      cta: {
+        eyebrow: m(d, "cta_eyebrow"),
+        heading: m(d, "cta_heading"),
+        text: m(d, "cta_text"),
+        primaryLabel: m(d, "cta_primary_label"),
+        secondaryLabel: m(d, "cta_secondary_label"),
+      },
+    }),
+  },
   testimonials: {
     path: "/wp/v2/testimonial",
     map: (d) => ({

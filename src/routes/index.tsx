@@ -1,5 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { cmsFind } from "@/lib/cms";
+import { cmsFind, cmsFindOne } from "@/lib/cms";
+import {
+  homeDefaults,
+  mergeHomeContent,
+  type HomeContent,
+} from "@/lib/home-content";
 import { SiteShell } from "@/components/site-shell";
 import { BentoShowcase } from "@/components/bento-features";
 import { useScrollReveal } from "@/lib/animations";
@@ -32,15 +37,22 @@ import {
 type HomeTestimonial = { q: string; a: string; r: string; img: string };
 
 export const Route = createFileRoute("/")({
-  // Testimonials are CMS-editable; fails soft to the built-in array below.
-  loader: async (): Promise<{ cmsTestimonials: HomeTestimonial[] }> => {
-    const docs = await cmsFind<{
-      quote?: string | null;
-      author?: string | null;
-      role?: string | null;
-      company?: string | null;
-    }>("testimonials", { limit: 6 });
+  // All page copy + testimonials are CMS-editable; fails soft to built-ins.
+  loader: async (): Promise<{
+    cmsTestimonials: HomeTestimonial[];
+    home: HomeContent;
+  }> => {
+    const [docs, homeDoc] = await Promise.all([
+      cmsFind<{
+        quote?: string | null;
+        author?: string | null;
+        role?: string | null;
+        company?: string | null;
+      }>("testimonials", { limit: 6 }),
+      cmsFindOne<Partial<HomeContent>>("homepage", "home"),
+    ]);
     return {
+      home: mergeHomeContent(homeDoc),
       cmsTestimonials: docs
         .filter((d) => d.quote && d.author)
         .map((d) => ({
@@ -67,55 +79,10 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const clients = ["Meridian", "Halcyon", "Northwind", "Orbital", "Cascade", "Vantage", "Ridgeline"];
-
-const capabilities = [
-  { icon: Code2, title: "Custom Software", desc: "Web platforms engineered for speed, scale and reliability." },
-  { icon: Palette, title: "UI/UX Design", desc: "Interfaces that feel obvious. Systems that scale." },
-  { icon: Smartphone, title: "Mobile Apps", desc: "iOS, Android, and cross-platform, built to ship." },
-  { icon: Brain, title: "AI Solutions", desc: "LLM-powered workflows integrated where it matters." },
-];
-
-const solutions = [
-  { icon: ShoppingCart, title: "Ecommerce", desc: "Headless and platform stores that convert." },
-  { icon: Layers, title: "SaaS Products", desc: "MVP to scale — auth, billing, dashboards." },
-  { icon: Building2, title: "Fintech", desc: "Compliant, secure, and beautifully designed." },
-  { icon: Stethoscope, title: "Healthcare", desc: "HIPAA-ready portals, apps, and dashboards." },
-];
-
-const process = [
-  { n: "01", t: "Discovery", d: "Deep-dive workshops to align on goals, users, and success metrics." },
-  { n: "02", t: "Design", d: "Wireframes, prototypes, and pixel-perfect interfaces validated with users." },
-  { n: "03", t: "Build", d: "Engineering-first execution with weekly demos and transparent progress." },
-  { n: "04", t: "Scale", d: "Launch, measure, iterate. Long-term partnership beyond delivery." },
-];
-
-const work = [
-  {
-    name: "Northwind SaaS",
-    tag: "SaaS Rebrand",
-    result: "+184% signups",
-    img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=70",
-  },
-  {
-    name: "Halcyon Health",
-    tag: "Mobile App",
-    result: "4.9★ App Store",
-    img: "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?auto=format&fit=crop&w=1200&q=70",
-  },
-  {
-    name: "Meridian Retail",
-    tag: "Ecommerce",
-    result: "3.1× revenue",
-    img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=70",
-  },
-  {
-    name: "Orbital Cloud",
-    tag: "Marketing Site",
-    result: "98 Lighthouse",
-    img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=70",
-  },
-];
+/** Icons per section, matched to CMS rows by index (icons never serialize). */
+const capabilityIcons = [Code2, Palette, Smartphone, Brain];
+const solutionIcons = [ShoppingCart, Layers, Building2, Stethoscope];
+const whyIcons = [Zap, Layers, ShieldCheck, Coins];
 
 /** Known portrait per author — CMS carries no avatars. */
 const testimonialImgs: Record<string, string> = {
@@ -145,58 +112,11 @@ const testimonials = [
   },
 ];
 
-const kickoff = [
-  {
-    day: "Day 1",
-    t: "Kickoff & access",
-    d: "Shared Slack, repo, and board set up. You meet the whole pod — no bait and switch.",
-  },
-  {
-    day: "Day 3",
-    t: "Clickable prototype",
-    d: "The core flow, tappable in your browser. Direction validated before code is written.",
-  },
-  {
-    day: "Day 7",
-    t: "First live demo",
-    d: "Real features running in staging. Weekly demos from here on out.",
-  },
-  {
-    day: "Day 14",
-    t: "Shippable slice",
-    d: "A production-quality vertical slice, plus a costed roadmap for the rest.",
-  },
-];
-
-const compareTypical = [
-  "Sales closes the deal, then juniors do the work",
-  "Monthly PDF status reports",
-  "Design thrown over the wall to developers",
-  "A change order for every tweak",
-  "Code you can't take with you",
-];
-
-const compareNorthline = [
-  "The seniors you meet are the ones who build",
-  "Weekly live demos in staging",
-  "One pod — design and engineering together",
-  "Transparent scope and pricing up front",
-  "Full IP and repo handover from day one",
-];
-
-const faqs = [
-  { q: "How quickly can we start?", a: "Typically within 1–2 weeks. We'll scope discovery and align on a start date on our first call." },
-  { q: "Do you work with startups or enterprise?", a: "Both. We tailor process and team composition — the craft standard doesn't change." },
-  { q: "What's your pricing model?", a: "Fixed-scope projects, monthly retainers, and dedicated pods. We recommend the fit after discovery." },
-  { q: "Who owns the code and IP?", a: "You do. Full transfer on delivery, with clean docs and repository handover." },
-  { q: "Do you offer post-launch support?", a: "Yes — 84% of our clients continue on a Care plan for maintenance, iteration, and growth." },
-];
-
 function HomePage() {
   useScrollReveal();
 
-  // CMS testimonials win when present; hardcoded array is the fail-soft default.
-  const { cmsTestimonials } = Route.useLoaderData();
+  // CMS copy wins when present; homeDefaults is the fail-soft baseline.
+  const { cmsTestimonials, home: hc = homeDefaults } = Route.useLoaderData();
   const quotes = cmsTestimonials.length ? cmsTestimonials : testimonials;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -239,7 +159,7 @@ function HomePage() {
                <img key={i} src={a} alt="Avatar" className="w-8 h-8 rounded-full border-2 border-background object-cover" />
              ))}
            </div>
-           <span className="text-sm font-medium text-foreground/80">25+ Founders & Leaders</span>
+           <span className="text-sm font-medium text-foreground/80">{hc.hero.trustedLine}</span>
            <div className="flex items-center gap-0.5 ml-2">
              {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-lime text-lime" />)}
            </div>
@@ -247,20 +167,19 @@ function HomePage() {
 
         {/* Hero Copy */}
         <h1 className="relative z-10 mb-6 max-w-[15ch] text-center font-display text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
-          Software worth being proud of.
+          {hc.hero.headline}
         </h1>
 
         <p className="relative z-10 mb-10 max-w-2xl text-center text-lg font-normal leading-relaxed text-muted-foreground">
-          A senior-only studio designing and engineering websites, apps, ecommerce and SaaS
-          for ambitious teams. One team, from strategy to ship.
+          {hc.hero.subheadline}
         </p>
 
         {/* CTA */}
         <div className="flex flex-col items-center gap-3 relative z-10 mb-16">
           <Link to="/contact" className="bg-lime hover:bg-lime/90 text-black px-10 py-4 rounded-full font-display font-bold uppercase tracking-wider text-sm flex items-center gap-2 transition-colors">
-            Get a free audit <ArrowUpRight className="w-4 h-4" />
+            {hc.hero.ctaLabel} <ArrowUpRight className="w-4 h-4" />
           </Link>
-          <span className="text-[11px] text-muted-foreground uppercase tracking-wider">Reviewed by a senior engineer, not a bot</span>
+          <span className="text-[11px] text-muted-foreground uppercase tracking-wider">{hc.hero.ctaNote}</span>
         </div>
 
         {/* Feature Cards Section */}
@@ -587,11 +506,11 @@ function HomePage() {
       <section className="border-y border-border/60 bg-surface/40">
         <div className="container-page py-8 flex items-center gap-10">
           <span className="shrink-0 text-xs uppercase tracking-[0.28em] text-muted-foreground">
-            Trusted by teams at
+            {hc.clients.label}
           </span>
           <div className="marquee flex-1">
             <div className="marquee-track">
-              {[...clients, ...clients].map((c, i) => (
+              {[...hc.clients.names, ...hc.clients.names].map((c, i) => (
                 <span
                   key={`${c}-${i}`}
                   className="mx-8 font-display text-2xl font-medium text-foreground/60 whitespace-nowrap"
@@ -609,13 +528,13 @@ function HomePage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              Core capabilities
+              {hc.capabilities.eyebrow}
             </p>
             <h2
               className="mt-4 font-display text-5xl md:text-6xl leading-tight max-w-2xl font-semibold"
               data-split
             >
-              End-to-end services, delivered by one senior team.
+              {hc.capabilities.heading}
             </h2>
           </div>
           <Link
@@ -627,19 +546,22 @@ function HomePage() {
           </Link>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" data-cards>
-          {capabilities.map((c) => (
+          {hc.capabilities.items.map((c, ci) => {
+            const CapIcon = capabilityIcons[ci % capabilityIcons.length];
+            return (
             <div
               key={c.title}
               className="group glare-card lift gradient-card rounded-2xl p-7"
               data-card
             >
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-lime/20 to-accent/20 border border-white/10">
-                <c.icon className="h-5 w-5 text-lime" />
+                <CapIcon className="h-5 w-5 text-lime" />
               </div>
               <h3 className="mt-8 font-display text-2xl font-semibold">{c.title}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{c.desc}</p>
             </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -647,18 +569,13 @@ function HomePage() {
       <section className="block-bold" data-reveal-group>
         <div className="container-page py-24">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-          {[
-            { v: "120+", l: "Products designed, built, and shipped" },
-            { v: "98", l: "Median Lighthouse score at launch" },
-            { v: "84%", l: "Of clients stay on a Care plan" },
-            { v: "14", l: "Days to your first shippable slice" },
-          ].map((s) => (
-            <div key={s.l} data-reveal-child>
+          {hc.stats.map((s) => (
+            <div key={s.label} data-reveal-child>
               <div className="font-display text-6xl md:text-7xl font-semibold tracking-tight" data-counter>
-                {s.v}
+                {s.value}
               </div>
               <div className="mt-3 h-px w-10 bg-lime/60" />
-              <p className="mt-3 text-sm text-muted-foreground max-w-[24ch]">{s.l}</p>
+              <p className="mt-3 text-sm text-muted-foreground max-w-[24ch]">{s.label}</p>
             </div>
           ))}
         </div>
@@ -728,26 +645,29 @@ function HomePage() {
       <section className="container-page py-28 border-t border-border/60" data-reveal-group>
         <div className="mb-14">
           <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-            Industry solutions
+            {hc.solutions.eyebrow}
           </p>
           <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight max-w-3xl font-semibold" data-reveal-child>
-            Purpose-built for the industries we know deeply.
+            {hc.solutions.heading}
           </h2>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" data-cards>
-          {solutions.map((s) => (
+          {hc.solutions.items.map((s, si) => {
+            const SolIcon = solutionIcons[si % solutionIcons.length];
+            return (
             <div
               key={s.title}
               className="glare-card lift gradient-card-gold rounded-2xl p-7"
               data-card
             >
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-gold/30 to-transparent border border-gold/20">
-                <s.icon className="h-5 w-5 text-gold" />
+                <SolIcon className="h-5 w-5 text-gold" />
               </div>
               <h3 className="mt-8 font-display text-2xl font-semibold">{s.title}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
             </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -756,18 +676,17 @@ function HomePage() {
         <div className="grid md:grid-cols-2 gap-16 items-start">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              How we work
+              {hc.process.eyebrow}
             </p>
             <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
-              A transparent, iterative process.
+              {hc.process.heading}
             </h2>
             <p className="mt-6 text-muted-foreground max-w-md" data-reveal-child>
-              Weekly demos, shared boards, and honest trade-offs. No surprises, no
-              hand-offs to strangers.
+              {hc.process.intro}
             </p>
           </div>
           <div className="space-y-3">
-            {process.map((p) => (
+            {hc.process.items.map((p) => (
               <div
                 key={p.n}
                 className="glare-card glass rounded-2xl p-6 flex gap-5 hover:bg-white/5 transition-colors"
@@ -850,10 +769,10 @@ function HomePage() {
         <div className="flex items-end justify-between gap-6 mb-14">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              Selected work
+              {hc.work.eyebrow}
             </p>
             <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-split>
-              Recent case studies.
+              {hc.work.heading}
             </h2>
           </div>
           <Link
@@ -865,7 +784,7 @@ function HomePage() {
           </Link>
         </div>
         <div className="grid md:grid-cols-2 gap-6">
-          {work.map((w) => (
+          {hc.work.items.map((w) => (
             <div
               key={w.name}
               className="group glare-card relative rounded-2xl overflow-hidden aspect-4/3 border border-white/10"
@@ -904,16 +823,16 @@ function HomePage() {
       <section className="container-page py-28 border-t border-border/60" data-reveal-group>
         <div className="mb-16">
           <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-            After you say go
+            {hc.kickoff.eyebrow}
           </p>
           <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-split>
-            Your first 14 days with us.
+            {hc.kickoff.heading}
           </h2>
         </div>
         <div className="relative">
           <div className="timeline-line hidden md:block" data-timeline-line />
           <div className="grid gap-10 md:grid-cols-4">
-            {kickoff.map((step) => (
+            {hc.kickoff.items.map((step) => (
               <div key={step.day} data-reveal-child>
                 <div className="timeline-dot hidden md:block" />
                 <p className="md:mt-5 text-xs uppercase tracking-[0.24em] text-gold">{step.day}</p>
@@ -930,10 +849,10 @@ function HomePage() {
         <div className="grid md:grid-cols-2 gap-16 items-start">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              Why Northline
+              {hc.why.eyebrow}
             </p>
             <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
-              A studio, not a factory.
+              {hc.why.heading}
             </h2>
             <div
               className="relative mt-10 overflow-hidden rounded-3xl border border-white/10"
@@ -949,26 +868,24 @@ function HomePage() {
             </div>
           </div>
           <div className="space-y-4">
-            {[
-              { icon: Zap, title: "Senior team, always", desc: "No juniors farmed out. Principal designers and engineers on every project." },
-              { icon: Layers, title: "Design + engineering", desc: "One team, one brief. We build what we design, so quality doesn't fall through." },
-              { icon: ShieldCheck, title: "Long-term partners", desc: "84% of our clients continue with a Care plan after launch." },
-              { icon: Coins, title: "Transparent pricing", desc: "Clear scope, honest budgets, no surprises. Try the calculator on the left." },
-            ].map((f) => (
+            {hc.why.items.map((f, fi) => {
+              const WhyIcon = whyIcons[fi % whyIcons.length];
+              return (
               <div
                 key={f.title}
                 className="glare-card glass rounded-2xl p-6 flex gap-5"
                 data-reveal-child
               >
                 <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-lime/20 to-transparent border border-lime/20">
-                  <f.icon className="h-5 w-5 text-lime" />
+                  <WhyIcon className="h-5 w-5 text-lime" />
                 </div>
                 <div>
                   <h3 className="font-display text-xl font-semibold">{f.title}</h3>
                   <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -977,9 +894,9 @@ function HomePage() {
       <section className="block-light">
         <div className="container-page py-28">
         <div className="mb-14" data-reveal>
-          <p className="text-xs uppercase tracking-[0.28em] text-lime">Why teams switch</p>
+          <p className="text-xs uppercase tracking-[0.28em] text-lime">{hc.compare.eyebrow}</p>
           <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight max-w-3xl font-semibold">
-            The usual way, or the Northline way.
+            {hc.compare.heading}
           </h2>
         </div>
         <div className="grid gap-6 md:grid-cols-2">
@@ -988,10 +905,10 @@ function HomePage() {
             data-slide="left"
           >
             <h3 className="font-display text-2xl font-semibold text-muted-foreground">
-              A typical agency
+              {hc.compare.typicalTitle}
             </h3>
             <ul className="mt-8 space-y-5">
-              {compareTypical.map((row) => (
+              {hc.compare.typical.map((row) => (
                 <li key={row} className="flex items-start gap-3 text-muted-foreground">
                   <X className="mt-0.5 h-4 w-4 shrink-0 opacity-50" />
                   <span className="text-sm leading-relaxed">{row}</span>
@@ -1003,9 +920,9 @@ function HomePage() {
             className="glare-card gradient-card-gold rounded-3xl p-8 md:p-10"
             data-slide="right"
           >
-            <h3 className="font-display text-2xl font-semibold">Northline</h3>
+            <h3 className="font-display text-2xl font-semibold">{hc.compare.northlineTitle}</h3>
             <ul className="mt-8 space-y-5">
-              {compareNorthline.map((row) => (
+              {hc.compare.northline.map((row) => (
                 <li key={row} className="flex items-start gap-3">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                   <span className="text-sm leading-relaxed text-foreground/90">{row}</span>
@@ -1026,10 +943,10 @@ function HomePage() {
       {/* Testimonials */}
       <section className="container-page py-28 border-t border-border/60" data-reveal-group>
         <p className="text-xs uppercase tracking-[0.28em] text-lime mb-4" data-reveal-child>
-          What partners say
+          {hc.testimonialsSection.eyebrow}
         </p>
         <h2 className="font-display text-5xl md:text-6xl leading-tight max-w-3xl font-semibold mb-14" data-reveal-child>
-          Trusted by founders and product leaders.
+          {hc.testimonialsSection.heading}
         </h2>
         <div className="grid md:grid-cols-3 gap-6" data-cards data-cards-stagger="0.12">
           {quotes.map((t) => (
@@ -1061,10 +978,10 @@ function HomePage() {
         <div className="flex items-end justify-between mb-14">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              Engagement models
+              {hc.pricing.eyebrow}
             </p>
             <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
-              Fair, transparent pricing.
+              {hc.pricing.heading}
             </h2>
           </div>
           <Link to="/pricing" className="text-sm hover:text-lime inline-flex items-center gap-1.5" data-reveal-child>
@@ -1072,11 +989,7 @@ function HomePage() {
           </Link>
         </div>
         <div className="grid md:grid-cols-3 gap-6" data-cards>
-          {[
-            { t: "Fixed Price", d: "Defined scope, defined budget. Perfect for launches.", p: "from $8k" },
-            { t: "Monthly Retainer", d: "Ongoing partnership with a dedicated pod.", p: "from $9k/mo", featured: true },
-            { t: "Dedicated Team", d: "Embedded team scaling with your product.", p: "custom" },
-          ].map((tier) => (
+          {hc.pricing.tiers.map((tier) => (
             <div
               key={tier.t}
               className={`glare-card lift rounded-2xl p-8 border ${
@@ -1092,7 +1005,7 @@ function HomePage() {
                 {tier.p}
               </div>
               <ul className="mt-6 space-y-2 text-sm">
-                {["Senior team", "Weekly demos", "Full IP transfer"].map((f) => (
+                {hc.pricing.tierFeatures.map((f) => (
                   <li key={f} className="flex items-center gap-2 text-muted-foreground">
                     <Check className="h-4 w-4 text-lime" /> {f}
                   </li>
@@ -1108,14 +1021,14 @@ function HomePage() {
         <div className="grid md:grid-cols-2 gap-16 items-start">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              FAQ
+              {hc.faq.eyebrow}
             </p>
             <h2 className="mt-4 font-display text-5xl md:text-6xl leading-tight font-semibold" data-reveal-child>
-              Answers to common questions.
+              {hc.faq.heading}
             </h2>
           </div>
           <div className="space-y-3">
-            {faqs.map((f) => (
+            {hc.faq.items.map((f) => (
               <details
                 key={f.q}
                 className="glare-card faq-item glass rounded-2xl p-6 group"
@@ -1136,21 +1049,15 @@ function HomePage() {
       <section className="container-page py-24 border-t border-border/60">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div data-slide="left">
-            <p className="text-xs uppercase tracking-[0.28em] text-gold">Not ready to commit?</p>
+            <p className="text-xs uppercase tracking-[0.28em] text-gold">{hc.audit.eyebrow}</p>
             <h2 className="mt-4 font-display text-4xl md:text-5xl leading-tight font-semibold">
-              Get a free 48-hour technical audit instead.
+              {hc.audit.heading}
             </h2>
             <p className="mt-5 text-muted-foreground max-w-lg">
-              Send us your URL. Within two business days you get a prioritized action plan
-              covering speed, SEO, accessibility, and conversion — yours to keep, whoever
-              you build with.
+              {hc.audit.text}
             </p>
             <ul className="mt-7 space-y-3 text-sm">
-              {[
-                "Core Web Vitals breakdown with the three highest-impact fixes",
-                "Conversion leaks ranked by estimated revenue impact",
-                "A senior engineer's notes — not an automated report",
-              ].map((row) => (
+              {hc.audit.bullets.map((row) => (
                 <li key={row} className="flex items-start gap-3">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                   <span className="text-foreground/85">{row}</span>
@@ -1213,12 +1120,12 @@ function HomePage() {
             style={{ background: "var(--gradient-lime)", filter: "blur(80px)" }}
           />
           <div className="relative max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.28em] text-lime">Let's build</p>
+            <p className="text-xs uppercase tracking-[0.28em] text-lime">{hc.cta.eyebrow}</p>
             <h2 className="mt-4 font-display text-5xl md:text-7xl leading-[0.95] font-semibold" data-split>
-              Have a project in mind?
+              {hc.cta.heading}
             </h2>
             <p className="mt-6 text-lg text-muted-foreground">
-              Tell us about it. We reply within one business day with a plan, a timeline, and a fair budget.
+              {hc.cta.text}
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
@@ -1226,7 +1133,7 @@ function HomePage() {
                 data-magnetic
                 className="group inline-flex items-center gap-2 rounded-full btn-navy shine px-6 py-3.5 text-sm font-semibold hover:border-lime/40"
               >
-                Start a Project
+                {hc.cta.primaryLabel}
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
               <Link
@@ -1234,7 +1141,7 @@ function HomePage() {
                 data-magnetic="0.25"
                 className="inline-flex items-center gap-2 rounded-full glass px-6 py-3.5 text-sm font-medium hover:bg-white/5"
               >
-                Book Discovery Call
+                {hc.cta.secondaryLabel}
               </Link>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground">
