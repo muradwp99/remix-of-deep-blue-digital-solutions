@@ -164,7 +164,7 @@ export function LithosHero() {
           className="mt-7 max-w-xl text-base sm:text-lg text-foreground/75 hero-anim hero-fade"
           style={{ animationDelay: "0.62s" }}
         >
-          Northline designs, builds, and grows enterprise-grade web platforms,
+          Auxtech designs, builds, and grows enterprise-grade web platforms,
           apps, and AI products — one senior team, from strategy to scale.
         </p>
 

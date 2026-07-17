@@ -11,11 +11,11 @@ export const Route = createFileRoute("/cookies")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", "Cookie Policy — Northline Studio");
+    const title = pageStr(d, "meta_title", "Cookie Policy — Auxtech");
     const description = pageStr(
       d,
       "meta_description",
-      "What cookies the Northline Studio website sets, why, and how to control them.",
+      "What cookies the Auxtech website sets, why, and how to control them.",
     );
     return {
       meta: [

@@ -19,9 +19,9 @@ export const Route = createFileRoute("/solutions_/marketplaces")({
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
     return { meta: [
-      { title: dto?.metaTitle ?? "Marketplace Development — Northline Studio" },
+      { title: dto?.metaTitle ?? "Marketplace Development — Auxtech" },
       { name: "description", content: dto?.metaDesc ?? "" },
-      { property: "og:title", content: dto?.metaTitle ?? "Marketplace Development — Northline Studio" },
+      { property: "og:title", content: dto?.metaTitle ?? "Marketplace Development — Auxtech" },
       { property: "og:description", content: dto?.metaDesc ?? "" },
     ]};
   },
@@ -213,7 +213,7 @@ function Page() {
       {/* ── BOLD · bright violet pop before the dark close ── */}
       <div className="block-bold">
         <BenefitList
-          eyebrow="Why Northline"
+          eyebrow="Why Auxtech"
           title="What you get that others skip."
           items={page.benefits}
         />

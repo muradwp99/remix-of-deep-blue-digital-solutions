@@ -35,9 +35,9 @@ export const Route = createFileRoute("/services_/cms-websites")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "CMS Website Development — Northline Studio" },
+        { title: dto?.metaTitle ?? "CMS Website Development — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "CMS Website Development — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "CMS Website Development — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -351,7 +351,7 @@ function Page() {
             </div>
             <div>
               <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal>
-                Why Northline
+                Why Auxtech
               </p>
               <h2
                 className="mt-4 font-display text-4xl md:text-5xl leading-tight font-semibold"

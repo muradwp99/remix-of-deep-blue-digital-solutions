@@ -19,7 +19,7 @@ export const tools: Tool[] = [
   {
     slug: "website-audit",
     nav: "Website Audit Tool",
-    metaTitle: "Free Website Audit — Northline Studio",
+    metaTitle: "Free Website Audit — Auxtech",
     metaDesc:
       "A 12-point human audit of your website: speed, SEO, accessibility, and conversion — delivered as an annotated report within two business days.",
     eyebrow: "Free Tool · Website Audit",
@@ -46,7 +46,7 @@ export const tools: Tool[] = [
   {
     slug: "roi-calculator",
     nav: "ROI Calculator",
-    metaTitle: "Website ROI Calculator — Northline Studio",
+    metaTitle: "Website ROI Calculator — Auxtech",
     metaDesc:
       "Estimate the revenue impact of a faster, better-converting website with real numbers from your funnel.",
     eyebrow: "Free Tool · ROI Calculator",
@@ -61,7 +61,7 @@ export const tools: Tool[] = [
   {
     slug: "speed-test",
     nav: "Speed Test",
-    metaTitle: "Website Speed Review — Northline Studio",
+    metaTitle: "Website Speed Review — Auxtech",
     metaDesc:
       "A human Core Web Vitals review of your site: lab data, field data, and the prioritized fix list — free, within two business days.",
     eyebrow: "Free Tool · Speed Review",
@@ -82,7 +82,7 @@ export const tools: Tool[] = [
   {
     slug: "brand-grader",
     nav: "Brand Grader",
-    metaTitle: "Brand Grader — Northline Studio",
+    metaTitle: "Brand Grader — Auxtech",
     metaDesc:
       "Grade your brand's consistency in two minutes: eight questions, an honest score, and what to fix first.",
     eyebrow: "Free Tool · Brand Grader",

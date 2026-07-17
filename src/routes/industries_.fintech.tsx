@@ -22,9 +22,9 @@ export const Route = createFileRoute("/industries_/fintech")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "Fintech Development — Northline Studio" },
+        { title: dto?.metaTitle ?? "Fintech Development — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "Fintech Development — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "Fintech Development — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };

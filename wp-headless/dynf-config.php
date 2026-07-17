@@ -1,6 +1,6 @@
 <?php
 /**
- * Auxtech/Northline — full DynamicForge structure config.
+ * Auxtech/Auxtech — full DynamicForge structure config.
  * Registers 12 CPTs + field groups (incl. built-in post/page groups).
  * Idempotent: safe to re-run (defs are overwritten wholesale).
  * Run: wp eval-file dynf-config.php

@@ -103,7 +103,7 @@ export function SubpageTemplate({ page }: { page: Subpage }) {
 
       <div className="block-light">
         <BenefitList
-          eyebrow="Why Northline"
+          eyebrow="Why Auxtech"
           title="What you get that others skip."
           items={page.benefits}
         />

@@ -22,9 +22,9 @@ export const Route = createFileRoute("/tools_/speed-test")({
     const tool = loaderData?.tool;
     return {
       meta: [
-        { title: tool?.metaTitle ?? "Website Speed Review — Northline Studio" },
+        { title: tool?.metaTitle ?? "Website Speed Review — Auxtech" },
         { name: "description", content: tool?.metaDesc ?? "" },
-        { property: "og:title", content: tool?.metaTitle ?? "Website Speed Review — Northline Studio" },
+        { property: "og:title", content: tool?.metaTitle ?? "Website Speed Review — Auxtech" },
         { property: "og:description", content: tool?.metaDesc ?? "" },
       ],
     };

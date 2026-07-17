@@ -19,9 +19,9 @@ export const Route = createFileRoute("/solutions_/digital-marketing")({
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
     return { meta: [
-      { title: dto?.metaTitle ?? "Digital Marketing — Northline Studio" },
+      { title: dto?.metaTitle ?? "Digital Marketing — Auxtech" },
       { name: "description", content: dto?.metaDesc ?? "" },
-      { property: "og:title", content: dto?.metaTitle ?? "Digital Marketing — Northline Studio" },
+      { property: "og:title", content: dto?.metaTitle ?? "Digital Marketing — Auxtech" },
       { property: "og:description", content: dto?.metaDesc ?? "" },
     ]};
   },
@@ -168,10 +168,10 @@ function Page() {
         </section>
       </div>
 
-      {/* ── LIGHT · why Northline ── */}
+      {/* ── LIGHT · why Auxtech ── */}
       <div className="block-light">
         <BenefitList
-          eyebrow="Why Northline"
+          eyebrow="Why Auxtech"
           title="What you get that others skip."
           items={page.benefits}
         />

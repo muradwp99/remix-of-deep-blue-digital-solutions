@@ -29,11 +29,11 @@ export const Route = createFileRoute("/contact")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", "Contact — Northline Studio");
+    const title = pageStr(d, "meta_title", "Contact — Auxtech");
     const description = pageStr(
       d,
       "meta_description",
-      "Start a project with Northline. We reply within one business day.",
+      "Start a project with Auxtech. We reply within one business day.",
     );
     return {
       meta: [
@@ -198,10 +198,10 @@ function ContactPage() {
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Email</p>
                 <a
-                  href={`mailto:${s("contact_email", "hello@northline.studio")}`}
+                  href={`mailto:${s("contact_email", "hello@auxtech.studio")}`}
                   className="link-underline mt-1 inline-block text-foreground"
                 >
-                  {s("contact_email", "hello@northline.studio")}
+                  {s("contact_email", "hello@auxtech.studio")}
                 </a>
               </div>
             </div>
@@ -282,8 +282,8 @@ function ContactPage() {
                   </div>
                   <p className="pt-2 text-sm text-muted-foreground">
                     In a hurry? Email{" "}
-                    <a href="mailto:hello@northline.studio" className="link-underline text-foreground">
-                      hello@northline.studio
+                    <a href="mailto:hello@auxtech.studio" className="link-underline text-foreground">
+                      hello@auxtech.studio
                     </a>{" "}
                     with "urgent" in the subject and we'll bump you up the queue.
                   </p>

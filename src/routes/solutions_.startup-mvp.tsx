@@ -19,9 +19,9 @@ export const Route = createFileRoute("/solutions_/startup-mvp")({
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
     return { meta: [
-      { title: dto?.metaTitle ?? "Startup MVP — Northline Studio" },
+      { title: dto?.metaTitle ?? "Startup MVP — Auxtech" },
       { name: "description", content: dto?.metaDesc ?? "" },
-      { property: "og:title", content: dto?.metaTitle ?? "Startup MVP — Northline Studio" },
+      { property: "og:title", content: dto?.metaTitle ?? "Startup MVP — Auxtech" },
       { property: "og:description", content: dto?.metaDesc ?? "" },
     ]};
   },
@@ -172,7 +172,7 @@ function Page() {
       {/* ── TINT · why us + answers ── */}
       <div className="block-tint">
         <BenefitList
-          eyebrow="Why Northline"
+          eyebrow="Why Auxtech"
           title="What you get that others skip."
           items={page.benefits}
         />

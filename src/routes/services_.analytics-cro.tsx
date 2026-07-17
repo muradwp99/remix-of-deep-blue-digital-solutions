@@ -20,9 +20,9 @@ export const Route = createFileRoute("/services_/analytics-cro")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "Analytics & CRO — Northline Studio" },
+        { title: dto?.metaTitle ?? "Analytics & CRO — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "Analytics & CRO — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "Analytics & CRO — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -199,7 +199,7 @@ function Page() {
 
       {/* ── DARK bookend ── */}
       <BenefitList
-        eyebrow="Why Northline"
+        eyebrow="Why Auxtech"
         title="What you get that others skip."
         items={page.benefits}
       />

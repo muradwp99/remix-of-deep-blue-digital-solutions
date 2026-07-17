@@ -5,8 +5,8 @@ import { getSubpage } from "@/lib/subpages";
 export const Route = createFileRoute("/solutions_/$slug")({
   head: ({ params }) => {
     const page = getSubpage("solutions", params.slug);
-    const title = page?.metaTitle ?? "Solutions — Northline Studio";
-    const description = page?.metaDesc ?? "Industry and business solutions from Northline Studio.";
+    const title = page?.metaTitle ?? "Solutions — Auxtech";
+    const description = page?.metaDesc ?? "Industry and business solutions from Auxtech.";
     return {
       meta: [
         { title },

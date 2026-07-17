@@ -28,7 +28,7 @@ export const Route = createFileRoute("/services")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", 'Services — Northline Studio');
+    const title = pageStr(d, "meta_title", 'Services — Auxtech');
     const description = pageStr(d, "meta_description", 'Design, engineering and growth — every capability under one roof.');
     return {
       meta: [
@@ -176,7 +176,7 @@ const models = [
 ];
 
 const outcomes = [
-  { value: 38, suffix: "%", decimals: 0, label: "Average conversion lift after a Northline rebuild" },
+  { value: 38, suffix: "%", decimals: 0, label: "Average conversion lift after a Auxtech rebuild" },
   { value: 2.1, suffix: "s", decimals: 1, label: "Median LCP across sites we ship and maintain" },
   { value: 4.9, suffix: "", decimals: 1, label: "Average client rating across 120+ projects" },
   { value: 24, suffix: "h", decimals: 0, label: "Response SLA on every active care plan" },

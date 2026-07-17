@@ -1,6 +1,6 @@
 <?php
 /**
- * "Northline Home" page template — the home design rendered by WordPress.
+ * "Auxtech Home" page template — the home design rendered by WordPress.
  * Same content source as the headless frontend (the `homepage` doc).
  * Animations are CSS/vanilla-JS approximations of the React originals.
  */
@@ -17,7 +17,7 @@ $tiers    = nh_rows( 'pricing_tiers' );
 $faqs     = nh_rows( 'faq_items' );
 $clients  = nh_lines( 'clients_names' );
 $typical  = nh_lines( 'compare_typical' );
-$north    = nh_lines( 'compare_northline' );
+$north    = nh_lines( 'compare_auxtech' );
 $tfeat    = nh_lines( 'pricing_tier_features' );
 $bullets  = nh_lines( 'audit_bullets' );
 $quotes   = get_posts( array( 'post_type' => 'testimonial', 'numberposts' => 3 ) );
@@ -26,7 +26,7 @@ $quotes   = get_posts( array( 'post_type' => 'testimonial', 'numberposts' => 3 )
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><?php echo esc_html( nh_meta( 'hero_headline', 'Northline' ) ); ?> — Northline (WP render)</title>
+<title><?php echo esc_html( nh_meta( 'hero_headline', 'Auxtech' ) ); ?> — Auxtech (WP render)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fustat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -252,7 +252,7 @@ details p{margin-top:12px;font-size:14px;color:var(--muted)}
     <div class="col"><h3><?php echo esc_html( nh_meta( 'compare_typical_title' ) ); ?></h3><ul>
       <?php foreach ( $typical as $row ) : ?><li><span class="x">✕</span><?php echo esc_html( $row ); ?></li><?php endforeach; ?>
     </ul></div>
-    <div class="col win"><h3><?php echo esc_html( nh_meta( 'compare_northline_title' ) ); ?></h3><ul>
+    <div class="col win"><h3><?php echo esc_html( nh_meta( 'compare_auxtech_title' ) ); ?></h3><ul>
       <?php foreach ( $north as $row ) : ?><li><span class="c">✓</span><?php echo esc_html( $row ); ?></li><?php endforeach; ?>
     </ul></div>
   </div>

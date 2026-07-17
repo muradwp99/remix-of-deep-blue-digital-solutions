@@ -22,9 +22,9 @@ export const Route = createFileRoute("/services_/mvp-development")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "MVP Development — Northline Studio" },
+        { title: dto?.metaTitle ?? "MVP Development — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "MVP Development — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "MVP Development — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -102,7 +102,7 @@ function Page() {
             <TerminalWindow
               title="day-one — zsh"
               lines={[
-                { prompt: "$", text: "northline new your-product" },
+                { prompt: "$", text: "auxtech new your-product" },
                 { text: "repo created · CI green · staging live", ok: true, dim: true },
                 { prompt: "$", text: "git push  # day 7" },
                 { text: "demo deployed → day7.your-product.dev", ok: true, dim: true },
@@ -269,7 +269,7 @@ function Page() {
           <div className="mt-12 rounded-3xl bg-card p-3 shadow-panel md:p-5" data-reveal>
             <ComparisonTable
               colA="The everything build"
-              colB="The Northline cut-line"
+              colB="The Auxtech cut-line"
               rows={[
                 {
                   label: "Scope",
@@ -354,7 +354,7 @@ function Page() {
 
             <div>
               <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal>
-                Why Northline
+                Why Auxtech
               </p>
               <h2
                 className="mt-4 font-display text-4xl md:text-5xl leading-tight font-semibold"

@@ -58,7 +58,7 @@ export function BannerCTA({
               <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-gold to-lime font-display text-base font-bold text-primary-foreground">
                 N
               </span>
-              <span className="font-display text-base font-semibold tracking-tight">Northline</span>
+              <span className="font-display text-base font-semibold tracking-tight">Auxtech</span>
             </span>
             <p className="hidden text-right text-sm leading-snug text-foreground/80 sm:block">
               {message[0]}

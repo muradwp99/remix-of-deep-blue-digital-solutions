@@ -19,9 +19,9 @@ export const Route = createFileRoute("/solutions_/rescue-projects")({
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
     return { meta: [
-      { title: dto?.metaTitle ?? "Project Rescue — Northline Studio" },
+      { title: dto?.metaTitle ?? "Project Rescue — Auxtech" },
       { name: "description", content: dto?.metaDesc ?? "" },
-      { property: "og:title", content: dto?.metaTitle ?? "Project Rescue — Northline Studio" },
+      { property: "og:title", content: dto?.metaTitle ?? "Project Rescue — Auxtech" },
       { property: "og:description", content: dto?.metaDesc ?? "" },
     ]};
   },
@@ -174,7 +174,7 @@ function Page() {
       {/* ── LIGHT · why us + answers ── */}
       <div className="block-light">
         <BenefitList
-          eyebrow="Why Northline"
+          eyebrow="Why Auxtech"
           title="What you get that others skip."
           items={page.benefits}
         />

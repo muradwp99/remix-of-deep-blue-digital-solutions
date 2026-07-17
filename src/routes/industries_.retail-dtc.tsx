@@ -22,9 +22,9 @@ export const Route = createFileRoute("/industries_/retail-dtc")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "Retail & DTC — Northline Studio" },
+        { title: dto?.metaTitle ?? "Retail & DTC — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "Retail & DTC — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "Retail & DTC — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };

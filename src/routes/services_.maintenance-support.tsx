@@ -20,9 +20,9 @@ export const Route = createFileRoute("/services_/maintenance-support")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "Maintenance & Support — Northline Studio" },
+        { title: dto?.metaTitle ?? "Maintenance & Support — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "Maintenance & Support — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "Maintenance & Support — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -131,7 +131,7 @@ function Page() {
           </div>
           <ComparisonTable
             colA="Typical maintenance vendor"
-            colB="Northline Maintenance & Support"
+            colB="Auxtech Maintenance & Support"
             rows={[
               {
                 label: "P1 response",
@@ -200,7 +200,7 @@ function Page() {
 
       {/* ── DARK bookend ── */}
       <BenefitList
-        eyebrow="Why Northline"
+        eyebrow="Why Auxtech"
         title="What you get that others skip."
         items={page.benefits}
       />

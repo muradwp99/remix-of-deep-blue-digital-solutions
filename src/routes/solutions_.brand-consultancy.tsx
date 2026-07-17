@@ -19,9 +19,9 @@ export const Route = createFileRoute("/solutions_/brand-consultancy")({
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
     return { meta: [
-      { title: dto?.metaTitle ?? "Brand Consultancy — Northline Studio" },
+      { title: dto?.metaTitle ?? "Brand Consultancy — Auxtech" },
       { name: "description", content: dto?.metaDesc ?? "" },
-      { property: "og:title", content: dto?.metaTitle ?? "Brand Consultancy — Northline Studio" },
+      { property: "og:title", content: dto?.metaTitle ?? "Brand Consultancy — Auxtech" },
       { property: "og:description", content: dto?.metaDesc ?? "" },
     ]};
   },
@@ -125,10 +125,10 @@ function Page() {
         </section>
       </div>
 
-      {/* ── LIGHT · why Northline ── */}
+      {/* ── LIGHT · why Auxtech ── */}
       <div className="block-light">
         <BenefitList
-          eyebrow="Why Northline"
+          eyebrow="Why Auxtech"
           title="What you get that others skip."
           items={page.benefits}
         />

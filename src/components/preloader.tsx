@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AuxtechMark } from "./auxtech-logo";
 import gsap from "gsap";
 
 export function Preloader() {
@@ -67,13 +68,10 @@ export function Preloader() {
       <div className="relative w-full max-w-md px-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <div
-              id="pl-mark"
-              className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-lime to-gold text-primary-foreground font-display text-lg"
-            >
-              N
+            <div id="pl-mark" className="grid h-9 w-9 place-items-center">
+              <AuxtechMark className="h-9 w-9 text-foreground" />
             </div>
-            <span className="font-display text-lg">Northline</span>
+            <span className="font-display text-lg">Auxtech</span>
           </div>
           <div className="font-display text-sm tabular-nums">
             <span id="pl-count">0</span>%

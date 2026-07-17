@@ -22,9 +22,9 @@ export const Route = createFileRoute("/tools_/website-audit")({
     const tool = loaderData?.tool;
     return {
       meta: [
-        { title: tool?.metaTitle ?? "Free Website Audit — Northline Studio" },
+        { title: tool?.metaTitle ?? "Free Website Audit — Auxtech" },
         { name: "description", content: tool?.metaDesc ?? "" },
-        { property: "og:title", content: tool?.metaTitle ?? "Free Website Audit — Northline Studio" },
+        { property: "og:title", content: tool?.metaTitle ?? "Free Website Audit — Auxtech" },
         { property: "og:description", content: tool?.metaDesc ?? "" },
       ],
     };
@@ -68,9 +68,9 @@ function Page() {
           </div>
           <div data-slide="right">
             <TerminalWindow
-              title="audit — northline"
+              title="audit — auxtech"
               lines={[
-                { prompt: "$", text: "northline audit https://yoursite.com" },
+                { prompt: "$", text: "auxtech audit https://yoursite.com" },
                 { text: "crawling 214 pages…", dim: true },
                 { text: "core web vitals: field data pulled", ok: true, dim: true },
                 { text: "a11y: 3 contrast issues found", dim: true },

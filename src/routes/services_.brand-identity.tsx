@@ -22,9 +22,9 @@ export const Route = createFileRoute("/services_/brand-identity")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "Brand Identity Design — Northline Studio" },
+        { title: dto?.metaTitle ?? "Brand Identity Design — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "Brand Identity Design — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "Brand Identity Design — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -347,7 +347,7 @@ function Page() {
               />
             </svg>
             <p className="mt-5 text-sm text-muted-foreground" data-reveal>
-              Creative direction — Northline Studio
+              Creative direction — Auxtech
             </p>
           </div>
         </section>
@@ -355,7 +355,7 @@ function Page() {
 
       {/* ── DARK · why us, FAQ, banner ── */}
       <BenefitList
-        eyebrow="Why Northline"
+        eyebrow="Why Auxtech"
         title="What you get that others skip."
         items={page.benefits}
       />

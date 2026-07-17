@@ -11,11 +11,11 @@ export const Route = createFileRoute("/privacy")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", "Privacy Policy — Northline Studio");
+    const title = pageStr(d, "meta_title", "Privacy Policy — Auxtech");
     const description = pageStr(
       d,
       "meta_description",
-      "How Northline Studio collects, uses, and protects your personal data.",
+      "How Auxtech collects, uses, and protects your personal data.",
     );
     return {
       meta: [
@@ -33,7 +33,7 @@ const sectionsFallback: LegalSection[] = [
   {
     h: "Who we are",
     body: [
-      'Northline Studio ("Northline", "we", "us") is a software design and engineering studio. We are the data controller for personal data collected through this website and through our sales and delivery processes.',
+      'Auxtech ("Auxtech", "we", "us") is a software design and engineering studio. We are the data controller for personal data collected through this website and through our sales and delivery processes.',
     ],
   },
   {

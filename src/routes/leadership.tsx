@@ -17,8 +17,8 @@ type Leader = { name: string; role: string; bio: string; img: string };
 export const Route = createFileRoute("/leadership")({
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", 'Leadership — Northline Studio');
-    const description = pageStr(d, "meta_description", 'The senior team behind Northline Studio.');
+    const title = pageStr(d, "meta_title", 'Leadership — Auxtech');
+    const description = pageStr(d, "meta_description", 'The senior team behind Auxtech.');
     return {
       meta: [
         { title },
@@ -57,7 +57,7 @@ const fallbackLeaders: Leader[] = [
   {
     name: "Elena Marsh",
     role: "CEO & Co-founder",
-    bio: "Scaled product organisations at Shopify and Klarna before co-founding Northline in 2014. She still leads discovery on every new engagement herself.",
+    bio: "Scaled product organisations at Shopify and Klarna before co-founding Auxtech in 2014. She still leads discovery on every new engagement herself.",
     img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=70",
   },
   {
@@ -141,7 +141,7 @@ function Page() {
           <figure className="relative" data-reveal>
             <img
               src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=75"
-              alt="Northline's leadership team"
+              alt="Auxtech's leadership team"
               className="aspect-[4/5] w-full rounded-3xl border border-black/10 object-cover shadow-elegant"
               data-parallax-img
             />

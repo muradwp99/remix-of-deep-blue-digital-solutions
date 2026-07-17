@@ -21,9 +21,9 @@ export const Route = createFileRoute("/tools_/brand-grader")({
     const tool = loaderData?.tool;
     return {
       meta: [
-        { title: tool?.metaTitle ?? "Brand Grader — Northline Studio" },
+        { title: tool?.metaTitle ?? "Brand Grader — Auxtech" },
         { name: "description", content: tool?.metaDesc ?? "" },
-        { property: "og:title", content: tool?.metaTitle ?? "Brand Grader — Northline Studio" },
+        { property: "og:title", content: tool?.metaTitle ?? "Brand Grader — Auxtech" },
         { property: "og:description", content: tool?.metaDesc ?? "" },
       ],
     };

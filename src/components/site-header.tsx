@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { AuxtechMark } from "./auxtech-logo";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { cmsGlobal } from "@/lib/cms";
@@ -187,7 +188,7 @@ const NAV: NavItem[] = [
           kicker: "Company",
           items: [
             { label: "About Us", href: "/about", desc: "Our mission and values" },
-            { label: "Our Story", href: "/our-story", desc: "How Northline came to be" },
+            { label: "Our Story", href: "/our-story", desc: "How Auxtech came to be" },
           ],
         },
         {
@@ -420,10 +421,8 @@ export function SiteHeader() {
           >
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 shrink-0 group">
-              <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-gold to-lime text-primary-foreground font-display text-lg font-bold transition-transform duration-500 group-hover:rotate-6">
-                N
-              </span>
-              <span className="font-display text-lg font-semibold tracking-tight">Northline</span>
+              <AuxtechMark className="h-9 w-9 text-foreground transition-transform duration-500 group-hover:rotate-6" />
+              <span className="font-display text-lg font-semibold tracking-tight">Auxtech</span>
             </Link>
 
             {/* Desktop pill nav */}

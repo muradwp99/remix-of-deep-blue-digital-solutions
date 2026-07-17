@@ -75,9 +75,9 @@ export type HomeContent = {
     eyebrow: string;
     heading: string;
     typicalTitle: string;
-    northlineTitle: string;
+    auxtechTitle: string;
     typical: string[];
-    northline: string[];
+    auxtech: string[];
   };
   testimonialsSection: { eyebrow: string; heading: string };
   pricing: {
@@ -232,7 +232,7 @@ export const homeDefaults: HomeContent = {
     ],
   },
   why: {
-    eyebrow: "Why Northline",
+    eyebrow: "Why Auxtech",
     heading: "A studio, not a factory.",
     items: [
       { title: "Senior team, always", desc: "No juniors farmed out. Principal designers and engineers on every project." },
@@ -243,9 +243,9 @@ export const homeDefaults: HomeContent = {
   },
   compare: {
     eyebrow: "Why teams switch",
-    heading: "The usual way, or the Northline way.",
+    heading: "The usual way, or the Auxtech way.",
     typicalTitle: "A typical agency",
-    northlineTitle: "Northline",
+    auxtechTitle: "Auxtech",
     typical: [
       "Sales closes the deal, then juniors do the work",
       "Monthly PDF status reports",
@@ -253,7 +253,7 @@ export const homeDefaults: HomeContent = {
       "A change order for every tweak",
       "Code you can't take with you",
     ],
-    northline: [
+    auxtech: [
       "The seniors you meet are the ones who build",
       "Weekly live demos in staging",
       "One pod — design and engineering together",
@@ -364,9 +364,9 @@ export function mergeHomeContent(
       eyebrow: s(cms.compare?.eyebrow, d.compare.eyebrow),
       heading: s(cms.compare?.heading, d.compare.heading),
       typicalTitle: s(cms.compare?.typicalTitle, d.compare.typicalTitle),
-      northlineTitle: s(cms.compare?.northlineTitle, d.compare.northlineTitle),
+      auxtechTitle: s(cms.compare?.auxtechTitle, d.compare.auxtechTitle),
       typical: arr(cms.compare?.typical, d.compare.typical),
-      northline: arr(cms.compare?.northline, d.compare.northline),
+      auxtech: arr(cms.compare?.auxtech, d.compare.auxtech),
     },
     testimonialsSection: {
       eyebrow: s(cms.testimonialsSection?.eyebrow, d.testimonialsSection.eyebrow),

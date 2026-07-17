@@ -26,7 +26,7 @@ type PricingTier = {
 export const Route = createFileRoute("/pricing")({
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", 'Pricing — Northline Studio');
+    const title = pageStr(d, "meta_title", 'Pricing — Auxtech');
     const description = pageStr(d, "meta_description", 'Fixed-scope engagements, monthly care plans and per-service pricing.');
     return {
       meta: [

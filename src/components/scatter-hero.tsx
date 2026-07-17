@@ -169,7 +169,7 @@ export function ScatterHero() {
             data-hero
             className="hero-anim text-sm leading-relaxed text-foreground/70"
           >
-            Northline designs, builds, and grows enterprise-grade web platforms, apps, and AI
+            Auxtech designs, builds, and grows enterprise-grade web platforms, apps, and AI
             products — one senior team, from strategy to scale.
           </p>
           <div data-hero className="hero-anim mt-6 flex flex-wrap items-center gap-3">
@@ -218,7 +218,7 @@ export function ScatterHero() {
           data-hero
           className="hero-anim mt-6 max-w-md text-sm leading-relaxed text-foreground/70"
         >
-          Northline designs, builds, and grows enterprise-grade web platforms, apps, and AI
+          Auxtech designs, builds, and grows enterprise-grade web platforms, apps, and AI
           products — one senior team, from strategy to scale.
         </p>
         <div

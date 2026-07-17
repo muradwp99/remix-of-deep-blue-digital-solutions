@@ -23,9 +23,9 @@ export const Route = createFileRoute("/services_/design-systems")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "Design Systems — Northline Studio" },
+        { title: dto?.metaTitle ?? "Design Systems — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "Design Systems — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "Design Systems — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -349,7 +349,7 @@ function Page() {
       <section className="container-page py-24 md:py-28">
         <div className="max-w-2xl">
           <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal>
-            Why Northline
+            Why Auxtech
           </p>
           <h2 className="mt-4 font-display text-4xl md:text-5xl font-semibold" data-reveal>
             What you get that others skip.

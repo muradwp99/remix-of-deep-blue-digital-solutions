@@ -22,9 +22,9 @@ export const Route = createFileRoute("/tools_/roi-calculator")({
     const tool = loaderData?.tool;
     return {
       meta: [
-        { title: tool?.metaTitle ?? "Website ROI Calculator — Northline Studio" },
+        { title: tool?.metaTitle ?? "Website ROI Calculator — Auxtech" },
         { name: "description", content: tool?.metaDesc ?? "" },
-        { property: "og:title", content: tool?.metaTitle ?? "Website ROI Calculator — Northline Studio" },
+        { property: "og:title", content: tool?.metaTitle ?? "Website ROI Calculator — Auxtech" },
         { property: "og:description", content: tool?.metaDesc ?? "" },
       ],
     };

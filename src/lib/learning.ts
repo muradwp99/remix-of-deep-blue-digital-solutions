@@ -28,7 +28,7 @@ export const learningCategories: LearningCategory[] = [
     slug: "guides",
     nav: "Guides",
     icon: BookOpen,
-    metaTitle: "Guides — Northline Studio",
+    metaTitle: "Guides — Auxtech",
     metaDesc:
       "Deep-dive playbooks on replatforming, MVP scoping, design systems, and vendor selection — from a team that ships.",
     eyebrow: "Learning · Guides",
@@ -76,7 +76,7 @@ export const learningCategories: LearningCategory[] = [
     slug: "tutorials",
     nav: "Tutorials",
     icon: ListChecks,
-    metaTitle: "Tutorials — Northline Studio",
+    metaTitle: "Tutorials — Auxtech",
     metaDesc:
       "Step-by-step how-tos: performance budgets in CI, event taxonomies, accessible components, and staged rollouts.",
     eyebrow: "Learning · Tutorials",
@@ -124,7 +124,7 @@ export const learningCategories: LearningCategory[] = [
     slug: "webinars",
     nav: "Webinars",
     icon: MonitorPlay,
-    metaTitle: "Webinars — Northline Studio",
+    metaTitle: "Webinars — Auxtech",
     metaDesc:
       "Live sessions and recordings: replatforming Q&As, MVP scoping workshops, and performance teardowns of real sites.",
     eyebrow: "Learning · Webinars",
@@ -162,7 +162,7 @@ export const learningCategories: LearningCategory[] = [
     slug: "templates",
     nav: "Templates",
     icon: FileDown,
-    metaTitle: "Templates — Northline Studio",
+    metaTitle: "Templates — Auxtech",
     metaDesc:
       "Free starter kits: project brief, MVP cut-line worksheet, design token starter, launch checklist, and vendor scorecard.",
     eyebrow: "Learning · Templates",

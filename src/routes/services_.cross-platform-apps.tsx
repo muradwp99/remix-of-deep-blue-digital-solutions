@@ -22,9 +22,9 @@ export const Route = createFileRoute("/services_/cross-platform-apps")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "Cross-Platform App Development — Northline Studio" },
+        { title: dto?.metaTitle ?? "Cross-Platform App Development — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "Cross-Platform App Development — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "Cross-Platform App Development — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -354,7 +354,7 @@ function Page() {
       <section className="container-page py-20 md:py-24">
         <div className="max-w-2xl">
           <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal>
-            Why Northline
+            Why Auxtech
           </p>
           <h2
             className="mt-4 font-display text-4xl md:text-6xl leading-tight font-semibold"

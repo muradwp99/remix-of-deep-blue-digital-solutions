@@ -21,9 +21,9 @@ export const Route = createFileRoute("/services_/app-store-setup")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "App Store Setup & ASO — Northline Studio" },
+        { title: dto?.metaTitle ?? "App Store Setup & ASO — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "App Store Setup & ASO — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "App Store Setup & ASO — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -381,7 +381,7 @@ function Page() {
 
         <section className="container-page pb-20 md:pb-28">
           <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal>
-            Why Northline
+            Why Auxtech
           </p>
           <h2 className="mt-4 max-w-2xl font-display text-3xl font-semibold md:text-4xl" data-reveal>
             What you get that others skip.

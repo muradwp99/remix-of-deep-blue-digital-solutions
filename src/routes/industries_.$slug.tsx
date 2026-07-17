@@ -10,8 +10,8 @@ import { pageThemes } from "@/lib/themes";
 export const Route = createFileRoute("/industries_/$slug")({
   head: ({ params }) => {
     const ind = getIndustry(params.slug);
-    const title = ind?.metaTitle ?? "Industries — Northline Studio";
-    const description = ind?.metaDesc ?? "Industries Northline Studio builds for.";
+    const title = ind?.metaTitle ?? "Industries — Auxtech";
+    const description = ind?.metaDesc ?? "Industries Auxtech builds for.";
     return {
       meta: [
         { title },

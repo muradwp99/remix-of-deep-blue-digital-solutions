@@ -39,7 +39,7 @@ export const industries: Industry[] = [
   {
     slug: "fintech",
     nav: "Fintech",
-    metaTitle: "Fintech Development — Northline Studio",
+    metaTitle: "Fintech Development — Auxtech",
     metaDesc:
       "Compliant, secure fintech products: ledgers, payments, and dashboards built for regulated rooms — with the case studies to prove it.",
     eyebrow: "Fintech",
@@ -81,7 +81,7 @@ export const industries: Industry[] = [
   {
     slug: "healthcare",
     nav: "Healthcare",
-    metaTitle: "Healthcare Software — Northline Studio",
+    metaTitle: "Healthcare Software — Auxtech",
     metaDesc:
       "HIPAA-ready portals, patient apps, and clinical dashboards — healthcare software that respects both patients and auditors.",
     eyebrow: "Healthcare",
@@ -123,7 +123,7 @@ export const industries: Industry[] = [
   {
     slug: "retail-dtc",
     nav: "Retail & DTC",
-    metaTitle: "Retail & DTC — Northline Studio",
+    metaTitle: "Retail & DTC — Auxtech",
     metaDesc:
       "Commerce experiences for retail and direct-to-consumer brands — headless storefronts, replatforms, and the +48% revenue case study.",
     eyebrow: "Retail & DTC",
@@ -165,7 +165,7 @@ export const industries: Industry[] = [
   {
     slug: "b2b-enterprise",
     nav: "B2B & Enterprise",
-    metaTitle: "B2B & Enterprise Software — Northline Studio",
+    metaTitle: "B2B & Enterprise Software — Auxtech",
     metaDesc:
       "Developer tools, logistics platforms, and enterprise systems — B2B software with SSO, audit trails, and procurement-friendly delivery.",
     eyebrow: "B2B & Enterprise",

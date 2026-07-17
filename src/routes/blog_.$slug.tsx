@@ -103,8 +103,8 @@ export const Route = createFileRoute("/blog_/$slug")({
   },
   head: ({ loaderData }) => {
     const post = loaderData?.post;
-    const title = post ? `${post.title} — Northline Studio` : "Blog — Northline Studio";
-    const description = post?.excerpt ?? "Writing from the Northline team.";
+    const title = post ? `${post.title} — Auxtech` : "Blog — Auxtech";
+    const description = post?.excerpt ?? "Writing from the Auxtech team.";
     return {
       meta: [
         { title },

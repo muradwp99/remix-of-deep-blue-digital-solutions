@@ -29,9 +29,9 @@ export const Route = createFileRoute("/services_/website-development")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "Website Development — Northline Studio" },
+        { title: dto?.metaTitle ?? "Website Development — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "Website Development — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "Website Development — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -221,7 +221,7 @@ function Page() {
       </div>
 
       {/* ── DARK · why us + FAQ + banner ── */}
-      <BenefitList eyebrow="Why Northline" title="What you get that others skip." items={page.benefits} />
+      <BenefitList eyebrow="Why Auxtech" title="What you get that others skip." items={page.benefits} />
       <FAQAccordion faqs={page.faqs} />
       <SubpageBanner page={page} />
       <RelatedPages kind="services" slug={page.slug} />

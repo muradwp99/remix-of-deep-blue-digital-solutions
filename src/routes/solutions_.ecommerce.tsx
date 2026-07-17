@@ -21,9 +21,9 @@ export const Route = createFileRoute("/solutions_/ecommerce")({
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
     return { meta: [
-      { title: dto?.metaTitle ?? "Ecommerce Solutions — Northline Studio" },
+      { title: dto?.metaTitle ?? "Ecommerce Solutions — Auxtech" },
       { name: "description", content: dto?.metaDesc ?? "" },
-      { property: "og:title", content: dto?.metaTitle ?? "Ecommerce Solutions — Northline Studio" },
+      { property: "og:title", content: dto?.metaTitle ?? "Ecommerce Solutions — Auxtech" },
       { property: "og:description", content: dto?.metaDesc ?? "" },
     ]};
   },
@@ -248,7 +248,7 @@ function Page() {
 
         <BenefitList
           variant="grid"
-          eyebrow="Why Northline"
+          eyebrow="Why Auxtech"
           title="What you get that others skip."
           items={page.benefits}
         />

@@ -20,11 +20,11 @@ export const Route = createFileRoute("/resources")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", "Resources — Northline Studio");
+    const title = pageStr(d, "meta_title", "Resources — Auxtech");
     const description = pageStr(
       d,
       "meta_description",
-      "Free tools, learning material and writing from the Northline team.",
+      "Free tools, learning material and writing from the Auxtech team.",
     );
     return {
       meta: [
@@ -90,7 +90,7 @@ function ResourcesPage() {
           <figure className="relative" data-reveal>
             <img
               src={s("hero_img", "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1920&q=70")}
-              alt="Open notebooks and reading material from the Northline studio"
+              alt="Open notebooks and reading material from the Auxtech studio"
               className="aspect-[4/5] w-full rounded-3xl border border-black/10 object-cover shadow-elegant"
               data-parallax-img
             />
@@ -145,7 +145,7 @@ function ResourcesPage() {
           <div className="relative h-72 overflow-hidden rounded-3xl md:h-96" data-reveal>
             <img
               src="/images/canva/digital-flow.jpg"
-              alt="Abstract digital flow artwork from the Northline studio"
+              alt="Abstract digital flow artwork from the Auxtech studio"
               className="absolute inset-0 h-full w-full object-cover"
               data-parallax-img
             />

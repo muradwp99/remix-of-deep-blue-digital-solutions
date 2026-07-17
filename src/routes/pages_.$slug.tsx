@@ -25,7 +25,7 @@ export const Route = createFileRoute("/pages_/$slug")({
   },
   head: ({ loaderData }) => {
     const page = loaderData?.page;
-    const title = page ? `${page.meta?.title || page.title} — Northline Studio` : "Northline Studio";
+    const title = page ? `${page.meta?.title || page.title} — Auxtech` : "Auxtech";
     const description = page?.meta?.description ?? "";
     return {
       meta: [

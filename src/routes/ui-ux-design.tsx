@@ -21,7 +21,7 @@ export const Route = createFileRoute("/ui-ux-design")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", 'UI/UX Design — Northline Studio');
+    const title = pageStr(d, "meta_title", 'UI/UX Design — Auxtech');
     const description = pageStr(d, "meta_description", 'Research-driven interfaces judged by the numbers they move.');
     return {
       meta: [
@@ -250,7 +250,7 @@ function Page() {
         <div className="relative overflow-hidden min-h-[420px] flex items-center">
           <img
             src="/images/canva/studio-workspace.jpg"
-            alt="Northline design review in progress"
+            alt="Auxtech design review in progress"
             className="absolute inset-0 h-full w-full object-cover"
             data-parallax-img
           />

@@ -9,8 +9,8 @@ import { pageThemes } from "@/lib/themes";
 export const Route = createFileRoute("/tools_/$slug")({
   head: ({ params }) => {
     const tool = getTool(params.slug);
-    const title = tool?.metaTitle ?? "Free Tools — Northline Studio";
-    const description = tool?.metaDesc ?? "Free tools from Northline Studio.";
+    const title = tool?.metaTitle ?? "Free Tools — Auxtech";
+    const description = tool?.metaDesc ?? "Free tools from Auxtech.";
     return {
       meta: [
         { title },

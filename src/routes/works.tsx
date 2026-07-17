@@ -30,7 +30,7 @@ type WorkCard = {
 export const Route = createFileRoute("/works")({
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", "Works — Northline Studio");
+    const title = pageStr(d, "meta_title", "Works — Auxtech");
     const description = pageStr(
       d,
       "meta_description",

@@ -12,7 +12,7 @@ export const Route = createFileRoute("/solutions")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", 'Solutions — Northline Studio');
+    const title = pageStr(d, "meta_title", 'Solutions — Auxtech');
     const description = pageStr(d, "meta_description", 'Packaged programs designed to move a specific business number.');
     return {
       meta: [

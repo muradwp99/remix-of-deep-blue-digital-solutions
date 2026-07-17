@@ -19,9 +19,9 @@ export const Route = createFileRoute("/solutions_/enterprise")({
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
     return { meta: [
-      { title: dto?.metaTitle ?? "Enterprise Solutions — Northline Studio" },
+      { title: dto?.metaTitle ?? "Enterprise Solutions — Auxtech" },
       { name: "description", content: dto?.metaDesc ?? "" },
-      { property: "og:title", content: dto?.metaTitle ?? "Enterprise Solutions — Northline Studio" },
+      { property: "og:title", content: dto?.metaTitle ?? "Enterprise Solutions — Auxtech" },
       { property: "og:description", content: dto?.metaDesc ?? "" },
     ]};
   },
@@ -153,7 +153,7 @@ function Page() {
       {/* ── LIGHT · why us + answers ── */}
       <div className="block-light">
         <BenefitList
-          eyebrow="Why Northline"
+          eyebrow="Why Auxtech"
           title="What you get that others skip."
           items={page.benefits}
         />

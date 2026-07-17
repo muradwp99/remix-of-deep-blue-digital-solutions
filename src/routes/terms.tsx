@@ -11,11 +11,11 @@ export const Route = createFileRoute("/terms")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", "Terms of Service — Northline Studio");
+    const title = pageStr(d, "meta_title", "Terms of Service — Auxtech");
     const description = pageStr(
       d,
       "meta_description",
-      "The terms that govern use of the Northline Studio website and our engagement process.",
+      "The terms that govern use of the Auxtech website and our engagement process.",
     );
     return {
       meta: [
@@ -33,7 +33,7 @@ const sectionsFallback: LegalSection[] = [
   {
     h: "Scope",
     body: [
-      "These terms govern your use of the Northline Studio website and the materials published on it. Client engagements are governed by a separately signed services agreement; if that agreement conflicts with these terms, the agreement wins.",
+      "These terms govern your use of the Auxtech website and the materials published on it. Client engagements are governed by a separately signed services agreement; if that agreement conflicts with these terms, the agreement wins.",
     ],
   },
   {
@@ -45,7 +45,7 @@ const sectionsFallback: LegalSection[] = [
   {
     h: "Intellectual property",
     body: [
-      "The design, text, and imagery on this site belong to Northline Studio or their respective licensors. Case-study names and client marks belong to their owners and appear with permission.",
+      "The design, text, and imagery on this site belong to Auxtech or their respective licensors. Case-study names and client marks belong to their owners and appear with permission.",
       "For client work: intellectual property in deliverables transfers to you as set out in your services agreement — typically in full, on final payment.",
     ],
   },
@@ -64,7 +64,7 @@ const sectionsFallback: LegalSection[] = [
   {
     h: "Disclaimers and liability",
     body: [
-      "The site is provided without warranties of any kind, express or implied. To the maximum extent permitted by law, Northline Studio is not liable for indirect or consequential loss arising from use of this site. Nothing here limits liability that cannot lawfully be limited.",
+      "The site is provided without warranties of any kind, express or implied. To the maximum extent permitted by law, Auxtech is not liable for indirect or consequential loss arising from use of this site. Nothing here limits liability that cannot lawfully be limited.",
     ],
   },
   {

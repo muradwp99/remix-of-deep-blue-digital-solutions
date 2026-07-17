@@ -20,9 +20,9 @@ export const Route = createFileRoute("/solutions_/scale-up")({
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
     return { meta: [
-      { title: dto?.metaTitle ?? "Scale-up Engineering — Northline Studio" },
+      { title: dto?.metaTitle ?? "Scale-up Engineering — Auxtech" },
       { name: "description", content: dto?.metaDesc ?? "" },
-      { property: "og:title", content: dto?.metaTitle ?? "Scale-up Engineering — Northline Studio" },
+      { property: "og:title", content: dto?.metaTitle ?? "Scale-up Engineering — Auxtech" },
       { property: "og:description", content: dto?.metaDesc ?? "" },
     ]};
   },
@@ -175,7 +175,7 @@ function Page() {
       {/* ── TINT · why us + answers ── */}
       <div className="block-tint">
         <BenefitList
-          eyebrow="Why Northline"
+          eyebrow="Why Auxtech"
           title="What you get that others skip."
           items={page.benefits}
         />

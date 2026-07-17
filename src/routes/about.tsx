@@ -20,7 +20,7 @@ export const Route = createFileRoute("/about")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc;
-    const title = pageStr(d ?? null, "meta_title", "About — Northline Studio");
+    const title = pageStr(d ?? null, "meta_title", "About — Auxtech");
     const description = pageStr(
       d ?? null,
       "meta_description",
@@ -94,7 +94,7 @@ function AboutPage() {
         <div className="container-page grid items-end gap-12 py-24 md:grid-cols-[1.15fr_0.85fr] md:py-32">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              {s("hero_eyebrow", "About Northline")}
+              {s("hero_eyebrow", "About Auxtech")}
             </p>
             <h1
               className="mt-6 max-w-[14ch] font-display text-5xl font-semibold leading-[0.98] md:text-7xl"
@@ -116,7 +116,7 @@ function AboutPage() {
                 "hero_img",
                 "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=75",
               )}
-              alt="The Northline team collaborating"
+              alt="The Auxtech team collaborating"
               className="aspect-[4/5] w-full rounded-3xl border border-black/10 object-cover shadow-elegant"
               data-parallax-img
             />
@@ -182,7 +182,7 @@ function AboutPage() {
               <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
                 {s(
                   "studio_text",
-                  "Somewhere between Lisbon and Osaka, someone from Northline is shipping right now. The sun never fully sets on a review.",
+                  "Somewhere between Lisbon and Osaka, someone from Auxtech is shipping right now. The sun never fully sets on a review.",
                 )}
               </p>
             </div>
@@ -192,7 +192,7 @@ function AboutPage() {
                   "studio_img",
                   "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80",
                 )}
-                alt="The Northline studio at work"
+                alt="The Auxtech studio at work"
                 className="aspect-[16/10] w-full object-cover"
                 data-parallax-img
               />

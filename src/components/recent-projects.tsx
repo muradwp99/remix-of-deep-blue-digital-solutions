@@ -19,7 +19,7 @@ import {
 /**
  * RecentProjects — a slow, continuous marquee of tall case-study cards.
  * Each card carries a brand line and three glass stat panels (icon + metric +
- * up/down arrow + label) over a project photo, in the Northline navy/gold
+ * up/down arrow + label) over a project photo, in the Auxtech navy/gold
  * system. Hover pauses the rail; motion honours prefers-reduced-motion.
  */
 

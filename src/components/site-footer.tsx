@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { AuxtechMark } from "./auxtech-logo";
 import { ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -78,7 +79,7 @@ export function SiteFooter() {
     ? data.columns.map((c) => ({ title: c.title, links: c.links ?? [] }))
     : cols;
   const copyright =
-    data?.copyright || `© ${new Date().getFullYear()} Northline Studio. All rights reserved.`;
+    data?.copyright || `© ${new Date().getFullYear()} Auxtech. All rights reserved.`;
 
   return (
     <footer className="border-t border-border/60 bg-background">
@@ -86,10 +87,8 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-6">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2">
-              <span className="grid h-8 w-8 place-items-center rounded-md bg-gradient-to-br from-accent to-gold text-primary-foreground font-display text-lg">
-                N
-              </span>
-              <span className="font-display text-xl">Northline</span>
+              <AuxtechMark className="h-8 w-8 text-foreground" />
+              <span className="font-display text-xl">Auxtech</span>
             </div>
             <p className="mt-4 text-sm text-muted-foreground max-w-xs">{blurb}</p>
             <Link

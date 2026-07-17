@@ -90,7 +90,7 @@ export const Route = createFileRoute("/")({
   },
   head: () => ({
     meta: [
-      { title: "Northline — Premium Software Agency" },
+      { title: "Auxtech — Premium Software Agency" },
       {
         name: "description",
         content:
@@ -126,7 +126,7 @@ const testimonialImgs: Record<string, string> = {
 
 const testimonials = [
   {
-    q: "Northline shipped in weeks what our previous partner promised in quarters. The bar for craft is off the charts.",
+    q: "Auxtech shipped in weeks what our previous partner promised in quarters. The bar for craft is off the charts.",
     a: "Emily Carter",
     r: "CTO, Northwind",
     img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=70",
@@ -260,7 +260,7 @@ function HomePage() {
       <>
       {/* How an engagement feels — illustrated bento */}
       <BentoShowcase
-        eyebrow="The Northline way"
+        eyebrow="The Auxtech way"
         title={
           <>
             What working with us actually <span className="text-gold">feels</span> like.
@@ -624,9 +624,9 @@ function HomePage() {
             className="glare-card gradient-card-gold rounded-3xl p-8 md:p-10"
             data-slide="right"
           >
-            <h3 className="font-display text-2xl font-semibold">{hc.compare.northlineTitle}</h3>
+            <h3 className="font-display text-2xl font-semibold">{hc.compare.auxtechTitle}</h3>
             <ul className="mt-8 space-y-5">
-              {hc.compare.northline.map((row) => (
+              {hc.compare.auxtech.map((row) => (
                 <li key={row} className="flex items-start gap-3">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                   <span className="text-sm leading-relaxed text-foreground/90">{row}</span>
@@ -637,7 +637,7 @@ function HomePage() {
               to="/contact"
               className="mt-9 inline-flex items-center gap-1.5 text-sm font-semibold text-gold"
             >
-              Work the Northline way <ArrowUpRight className="h-4 w-4" />
+              Work the Auxtech way <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>
         </div>

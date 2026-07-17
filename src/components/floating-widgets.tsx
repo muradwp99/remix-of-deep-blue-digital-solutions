@@ -177,7 +177,7 @@ const BOT_KB: { k: string[]; a: string }[] = [
   },
   {
     k: ["hi", "hello", "hey"],
-    a: "Hi there 👋 I'm Nova, the Northline assistant. Ask me about pricing, services, timelines, or how to start a project.",
+    a: "Hi there 👋 I'm Nova, the Auxtech assistant. Ask me about pricing, services, timelines, or how to start a project.",
   },
 ];
 
@@ -187,7 +187,7 @@ export function Chatbot() {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "bot",
-      text: "Hi 👋 I'm Nova, the Northline assistant. Ask me about services, pricing, or timelines.",
+      text: "Hi 👋 I'm Nova, the Auxtech assistant. Ask me about services, pricing, or timelines.",
     },
   ]);
   const panelRef = useRef<HTMLDivElement>(null);

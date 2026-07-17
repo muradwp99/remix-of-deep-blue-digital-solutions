@@ -89,7 +89,7 @@ export const subpages: Subpage[] = [
     slug: "website-development",
     kind: "services",
     nav: "Website Development",
-    metaTitle: "Website Development — Northline Studio",
+    metaTitle: "Website Development — Auxtech",
     metaDesc:
       "Marketing sites and company websites engineered for speed and search: 98 median Lighthouse at launch, SEO-ready architecture, first live demo on day 7.",
     eyebrow: "Website Development",
@@ -170,7 +170,7 @@ export const subpages: Subpage[] = [
     slug: "cms-websites",
     kind: "services",
     nav: "CMS Based Website",
-    metaTitle: "CMS Website Development — Northline Studio",
+    metaTitle: "CMS Website Development — Auxtech",
     metaDesc:
       "WordPress, Webflow, and headless CMS builds your team can edit without engineers — structured content, editorial workflows, and full ownership.",
     eyebrow: "CMS Websites",
@@ -257,7 +257,7 @@ export const subpages: Subpage[] = [
     slug: "landing-pages",
     kind: "services",
     nav: "Landing Pages",
-    metaTitle: "Landing Page Development — Northline Studio",
+    metaTitle: "Landing Page Development — Auxtech",
     metaDesc:
       "High-converting campaign landing pages: designed around one action, A/B-test ready, shipped in days with sub-second loads.",
     eyebrow: "Landing Pages",
@@ -344,7 +344,7 @@ export const subpages: Subpage[] = [
     slug: "design-systems",
     kind: "services",
     nav: "Design Systems",
-    metaTitle: "Design Systems — Northline Studio",
+    metaTitle: "Design Systems — Auxtech",
     metaDesc:
       "Design tokens, component libraries, and usage docs built with your engineers — systems that get adopted, not archived.",
     eyebrow: "Design Systems",
@@ -425,7 +425,7 @@ export const subpages: Subpage[] = [
     slug: "brand-identity",
     kind: "services",
     nav: "Brand Identity",
-    metaTitle: "Brand Identity Design — Northline Studio",
+    metaTitle: "Brand Identity Design — Auxtech",
     metaDesc:
       "Logo, voice, and guidelines built for digital-first brands — identity systems that survive real product surfaces, not just a brand book.",
     eyebrow: "Brand Identity",
@@ -503,7 +503,7 @@ export const subpages: Subpage[] = [
     slug: "prototyping",
     kind: "services",
     nav: "Prototyping",
-    metaTitle: "Wireframing & Prototyping — Northline Studio",
+    metaTitle: "Wireframing & Prototyping — Auxtech",
     metaDesc:
       "Clickable, testable prototypes in days — validate flows with real users before engineering commits a sprint.",
     eyebrow: "Prototyping",
@@ -588,7 +588,7 @@ export const subpages: Subpage[] = [
     slug: "cross-platform-apps",
     kind: "services",
     nav: "Cross-Platform Apps",
-    metaTitle: "Cross-Platform App Development — Northline Studio",
+    metaTitle: "Cross-Platform App Development — Auxtech",
     metaDesc:
       "Flutter and React Native apps with pixel parity on iOS and Android — one codebase, two stores, native feel.",
     eyebrow: "Cross-Platform Apps",
@@ -675,7 +675,7 @@ export const subpages: Subpage[] = [
     slug: "mvp-development",
     kind: "services",
     nav: "MVP Development",
-    metaTitle: "MVP Development — Northline Studio",
+    metaTitle: "MVP Development — Auxtech",
     metaDesc:
       "A lean, launchable first version in 8–14 weeks — scope cut ruthlessly, quality kept, demand tested with real users.",
     eyebrow: "MVP Development",
@@ -756,7 +756,7 @@ export const subpages: Subpage[] = [
     slug: "app-store-setup",
     kind: "services",
     nav: "App Store Setup",
-    metaTitle: "App Store Setup & ASO — Northline Studio",
+    metaTitle: "App Store Setup & ASO — Auxtech",
     metaDesc:
       "Store listings, screenshots, review compliance, and ASO for App Store and Google Play — 60+ submissions shipped, rejections pre-empted.",
     eyebrow: "App Store Setup",
@@ -840,7 +840,7 @@ export const subpages: Subpage[] = [
     slug: "monthly-care",
     kind: "services",
     nav: "Monthly Care",
-    metaTitle: "Monthly Care Plans — Northline Studio",
+    metaTitle: "Monthly Care Plans — Auxtech",
     metaDesc:
       "Monitoring, updates, security patches, and continuous iteration for sites and apps — the plan 84% of our clients keep after launch.",
     eyebrow: "Monthly Care",
@@ -924,7 +924,7 @@ export const subpages: Subpage[] = [
     slug: "seo-performance",
     kind: "services",
     nav: "SEO & Performance",
-    metaTitle: "SEO & Performance Optimization — Northline Studio",
+    metaTitle: "SEO & Performance Optimization — Auxtech",
     metaDesc:
       "Core Web Vitals, technical SEO, and structured data — measurable rankings and speed, engineered rather than promised.",
     eyebrow: "SEO & Performance",
@@ -1011,7 +1011,7 @@ export const subpages: Subpage[] = [
     slug: "maintenance-support",
     kind: "services",
     nav: "Maintenance & Support",
-    metaTitle: "Maintenance & Support — Northline Studio",
+    metaTitle: "Maintenance & Support — Auxtech",
     metaDesc:
       "SLA-backed support, monitoring, and incident response for production software — including codebases we didn't build.",
     eyebrow: "Maintenance & Support",
@@ -1099,7 +1099,7 @@ export const subpages: Subpage[] = [
     slug: "analytics-cro",
     kind: "services",
     nav: "Analytics & CRO",
-    metaTitle: "Analytics & CRO — Northline Studio",
+    metaTitle: "Analytics & CRO — Auxtech",
     metaDesc:
       "Measurement that answers questions and experiments that move revenue — event taxonomy, funnels, and a disciplined testing program.",
     eyebrow: "Analytics & CRO",
@@ -1188,7 +1188,7 @@ export const subpages: Subpage[] = [
     slug: "ecommerce",
     kind: "solutions",
     nav: "Ecommerce",
-    metaTitle: "Ecommerce Solutions — Northline Studio",
+    metaTitle: "Ecommerce Solutions — Auxtech",
     metaDesc:
       "Shopify, headless, and custom commerce builds engineered for conversion — like the replatform that lifted revenue 48% in one quarter.",
     eyebrow: "Ecommerce",
@@ -1275,7 +1275,7 @@ export const subpages: Subpage[] = [
     slug: "marketplaces",
     kind: "solutions",
     nav: "Marketplaces",
-    metaTitle: "Marketplace Development — Northline Studio",
+    metaTitle: "Marketplace Development — Auxtech",
     metaDesc:
       "Two-sided marketplace platforms: onboarding, matching, payments with escrow and payouts, trust systems, and liquidity mechanics.",
     eyebrow: "Marketplaces",
@@ -1362,7 +1362,7 @@ export const subpages: Subpage[] = [
     slug: "internal-tools",
     kind: "solutions",
     nav: "Internal Tools",
-    metaTitle: "Internal Tools Development — Northline Studio",
+    metaTitle: "Internal Tools Development — Auxtech",
     metaDesc:
       "Ops dashboards, admin panels, and workflow systems that replace the spreadsheet running your company — built in weeks.",
     eyebrow: "Internal Tools",
@@ -1446,7 +1446,7 @@ export const subpages: Subpage[] = [
     slug: "digital-marketing",
     kind: "solutions",
     nav: "Digital Marketing",
-    metaTitle: "Digital Marketing — Northline Studio",
+    metaTitle: "Digital Marketing — Auxtech",
     metaDesc:
       "SEO, paid acquisition, and content engineered together with your site — a growth engine measured in pipeline, not impressions.",
     eyebrow: "Digital Marketing",
@@ -1533,7 +1533,7 @@ export const subpages: Subpage[] = [
     slug: "brand-consultancy",
     kind: "solutions",
     nav: "Full Brand Consultancy",
-    metaTitle: "Brand Consultancy — Northline Studio",
+    metaTitle: "Brand Consultancy — Auxtech",
     metaDesc:
       "Positioning, identity, messaging, and rollout as one program — strategy that survives contact with product, sales, and hiring.",
     eyebrow: "Brand Consultancy",
@@ -1620,7 +1620,7 @@ export const subpages: Subpage[] = [
     slug: "growth-cro",
     kind: "solutions",
     nav: "Growth & CRO",
-    metaTitle: "Growth & CRO — Northline Studio",
+    metaTitle: "Growth & CRO — Auxtech",
     metaDesc:
       "A disciplined experimentation program across funnel, onboarding, and pricing — test, learn, scale what works.",
     eyebrow: "Growth & CRO",
@@ -1707,7 +1707,7 @@ export const subpages: Subpage[] = [
     slug: "startup-mvp",
     kind: "solutions",
     nav: "Startup MVP",
-    metaTitle: "Startup MVP — Northline Studio",
+    metaTitle: "Startup MVP — Auxtech",
     metaDesc:
       "Idea to launched product for founders: cut-line workshop, fixed price, live in 8–14 weeks, instrumented for the next fundraise.",
     eyebrow: "Startup MVP",
@@ -1782,7 +1782,7 @@ export const subpages: Subpage[] = [
     slug: "enterprise",
     kind: "solutions",
     nav: "Enterprise",
-    metaTitle: "Enterprise Solutions — Northline Studio",
+    metaTitle: "Enterprise Solutions — Auxtech",
     metaDesc:
       "Secure, compliant builds for enterprise: SSO, audit trails, SOC2/HIPAA-ready practices, and procurement-friendly delivery.",
     eyebrow: "Enterprise",
@@ -1870,7 +1870,7 @@ export const subpages: Subpage[] = [
     slug: "rescue-projects",
     kind: "solutions",
     nav: "Rescue Projects",
-    metaTitle: "Project Rescue — Northline Studio",
+    metaTitle: "Project Rescue — Auxtech",
     metaDesc:
       "Stalled build? Vanished agency? We audit, stabilize, and ship stranded software projects — triage in two weeks.",
     eyebrow: "Rescue Projects",
@@ -1958,7 +1958,7 @@ export const subpages: Subpage[] = [
     slug: "scale-up",
     kind: "solutions",
     nav: "Scale-up",
-    metaTitle: "Scale-up Engineering — Northline Studio",
+    metaTitle: "Scale-up Engineering — Auxtech",
     metaDesc:
       "Re-architect for growth: performance, reliability, and team velocity for products that outgrew their v1 — without a rewrite bet.",
     eyebrow: "Scale-up",

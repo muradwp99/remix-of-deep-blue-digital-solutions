@@ -50,7 +50,7 @@ export const Route = createFileRoute("/faq")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", "FAQ — Northline Studio");
+    const title = pageStr(d, "meta_title", "FAQ — Auxtech");
     const description = pageStr(
       d,
       "meta_description",
@@ -179,7 +179,7 @@ function Page() {
           <figure className="relative" data-reveal>
             <img
               src={s("hero_img", "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200&q=75")}
-              alt="The Northline team answering questions"
+              alt="The Auxtech team answering questions"
               className="aspect-[4/5] w-full rounded-3xl border border-black/10 object-cover shadow-elegant"
               data-parallax-img
             />

@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Northline Home Template
- * Description: Experiment — renders the Northline home design fully inside WordPress as a page template ("Northline Home"). Pulls copy from the same `homepage` doc the headless frontend uses.
+ * Plugin Name: Auxtech Home Template
+ * Description: Experiment — renders the Auxtech home design fully inside WordPress as a page template ("Auxtech Home"). Pulls copy from the same `homepage` doc the headless frontend uses.
  * Version: 1.0.0
  */
 
@@ -11,7 +11,7 @@ const NH_TEMPLATE = 'wphome-template';
 
 /** Offer the template in the Page editor's Template dropdown. */
 add_filter( 'theme_page_templates', function ( $templates ) {
-	$templates[ NH_TEMPLATE ] = 'Northline Home';
+	$templates[ NH_TEMPLATE ] = 'Auxtech Home';
 	return $templates;
 } );
 

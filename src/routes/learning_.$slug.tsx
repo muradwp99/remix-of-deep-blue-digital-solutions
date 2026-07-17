@@ -8,8 +8,8 @@ import { pageThemes } from "@/lib/themes";
 export const Route = createFileRoute("/learning_/$slug")({
   head: ({ params }) => {
     const cat = getLearningCategory(params.slug);
-    const title = cat?.metaTitle ?? "Learning — Northline Studio";
-    const description = cat?.metaDesc ?? "Learning material from the Northline team.";
+    const title = cat?.metaTitle ?? "Learning — Auxtech";
+    const description = cat?.metaDesc ?? "Learning material from the Auxtech team.";
     return {
       meta: [
         { title },

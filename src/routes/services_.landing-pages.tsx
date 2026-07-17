@@ -21,9 +21,9 @@ export const Route = createFileRoute("/services_/landing-pages")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "Landing Page Development — Northline Studio" },
+        { title: dto?.metaTitle ?? "Landing Page Development — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "Landing Page Development — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "Landing Page Development — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -190,7 +190,7 @@ function Page() {
           <div data-reveal>
             <ComparisonTable
               colA="Ads → homepage"
-              colB="Ads → Northline landing page"
+              colB="Ads → Auxtech landing page"
               rows={[
                 {
                   label: "Message match",
@@ -346,7 +346,7 @@ function Page() {
           </div>
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal>
-              Why Northline
+              Why Auxtech
             </p>
             <h2
               className="mt-4 font-display text-4xl font-semibold leading-tight md:text-5xl"

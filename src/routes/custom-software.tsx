@@ -21,7 +21,7 @@ export const Route = createFileRoute("/custom-software")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", 'Custom Software — Northline Studio');
+    const title = pageStr(d, "meta_title", 'Custom Software — Auxtech');
     const description = pageStr(d, "meta_description", 'Platforms, portals, and internal tools — architected and shipped by one senior team.');
     return {
       meta: [

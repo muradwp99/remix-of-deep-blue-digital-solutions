@@ -384,7 +384,7 @@ export function cmsToTool(d: CmsTool, fallback?: Tool): Tool {
   return {
     slug: d.slug,
     nav: d.title || fallback?.nav || "",
-    metaTitle: d.meta?.title || fallback?.metaTitle || `${d.title} — Northline Studio`,
+    metaTitle: d.meta?.title || fallback?.metaTitle || `${d.title} — Auxtech`,
     metaDesc: d.meta?.description || d.summary || fallback?.metaDesc || "",
     eyebrow: d.eyebrow || fallback?.eyebrow || "",
     title: d.heading || fallback?.title || d.title,

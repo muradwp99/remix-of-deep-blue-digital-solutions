@@ -118,7 +118,7 @@ function auxtech_livepress_broadcaster() {
 			kickoff_eyebrow: 'kickoff.eyebrow', kickoff_heading: 'kickoff.heading',
 			why_eyebrow: 'why.eyebrow', why_heading: 'why.heading',
 			compare_eyebrow: 'compare.eyebrow', compare_heading: 'compare.heading',
-			compare_typical_title: 'compare.typicalTitle', compare_northline_title: 'compare.northlineTitle',
+			compare_typical_title: 'compare.typicalTitle', compare_auxtech_title: 'compare.auxtechTitle',
 			testimonials_eyebrow: 'testimonialsSection.eyebrow', testimonials_heading: 'testimonialsSection.heading',
 			pricing_eyebrow: 'pricing.eyebrow', pricing_heading: 'pricing.heading',
 			faq_eyebrow: 'faq.eyebrow', faq_heading: 'faq.heading',
@@ -128,7 +128,7 @@ function auxtech_livepress_broadcaster() {
 		};
 		var LINES = {
 			clients_names: 'clients.names', compare_typical: 'compare.typical',
-			compare_northline: 'compare.northline', pricing_tier_features: 'pricing.tierFeatures',
+			compare_auxtech: 'compare.auxtech', pricing_tier_features: 'pricing.tierFeatures',
 			audit_bullets: 'audit.bullets'
 		};
 		var frame = document.getElementById( 'auxtech-preview-frame' );

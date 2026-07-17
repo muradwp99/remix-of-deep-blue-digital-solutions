@@ -22,9 +22,9 @@ export const Route = createFileRoute("/industries_/b2b-enterprise")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "B2B & Enterprise Software — Northline Studio" },
+        { title: dto?.metaTitle ?? "B2B & Enterprise Software — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "B2B & Enterprise Software — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "B2B & Enterprise Software — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };

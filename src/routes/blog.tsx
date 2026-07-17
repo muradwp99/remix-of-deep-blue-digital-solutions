@@ -60,8 +60,8 @@ export const Route = createFileRoute("/blog")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", 'Blog — Northline Studio');
-    const description = pageStr(d, "meta_description", 'Essays, engineering notes, and studio updates from the Northline team.');
+    const title = pageStr(d, "meta_title", 'Blog — Auxtech');
+    const description = pageStr(d, "meta_description", 'Essays, engineering notes, and studio updates from the Auxtech team.');
     return {
       meta: [
         { title },

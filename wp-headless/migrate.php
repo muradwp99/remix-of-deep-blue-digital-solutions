@@ -1,6 +1,6 @@
 <?php
 /**
- * Auxtech/Northline — content migration: Payload JSON dumps → WP.
+ * Auxtech/Auxtech — content migration: Payload JSON dumps → WP.
  * Idempotent: posts are matched by (post_type, slug) and updated in place.
  * Run: wp eval-file migrate.php <dump-dir>
  */

@@ -21,7 +21,7 @@ export const Route = createFileRoute("/mobile-apps")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", 'Mobile Apps — Northline Studio');
+    const title = pageStr(d, "meta_title", 'Mobile Apps — Auxtech');
     const description = pageStr(d, "meta_description", 'Native and cross-platform builds engineered for retention.');
     return {
       meta: [
@@ -129,7 +129,7 @@ function Page() {
               In the box, every build.
             </h2>
             <p className="mt-6 text-lg text-muted-foreground" data-reveal>
-              Not add-ons. Not "phase two." Every Northline app ships with the unglamorous
+              Not add-ons. Not "phase two." Every Auxtech app ships with the unglamorous
               infrastructure that decides whether users are still there in month three.
             </p>
           </div>

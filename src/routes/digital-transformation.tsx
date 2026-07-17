@@ -20,7 +20,7 @@ export const Route = createFileRoute("/digital-transformation")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", 'Digital Transformation — Northline Studio');
+    const title = pageStr(d, "meta_title", 'Digital Transformation — Auxtech');
     const description = pageStr(d, "meta_description", 'Strangler-pattern re-platforms, zero-downtime cutovers, and a rollback plan for every phase.');
     return {
       meta: [
@@ -274,7 +274,7 @@ function Page() {
               </ul>
             </div>
             <div className="glare-card gradient-card-gold rounded-3xl p-8 md:p-10 border border-gold/20" data-slide="right">
-              <h3 className="font-display text-2xl font-semibold">The Northline path</h3>
+              <h3 className="font-display text-2xl font-semibold">The Auxtech path</h3>
               <ul className="mt-8 space-y-4">
                 {[
                   "First module live in production by week 6",

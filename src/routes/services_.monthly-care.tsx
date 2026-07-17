@@ -22,9 +22,9 @@ export const Route = createFileRoute("/services_/monthly-care")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "Monthly Care Plans — Northline Studio" },
+        { title: dto?.metaTitle ?? "Monthly Care Plans — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "Monthly Care Plans — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "Monthly Care Plans — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -206,7 +206,7 @@ function Page() {
 
       {/* ── DARK bookend ── */}
       <BenefitList
-        eyebrow="Why Northline"
+        eyebrow="Why Auxtech"
         title="What you get that others skip."
         items={page.benefits}
       />

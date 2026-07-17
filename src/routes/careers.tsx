@@ -32,7 +32,7 @@ type CmsJob = {
 export const Route = createFileRoute("/careers")({
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", 'Careers — Northline Studio');
+    const title = pageStr(d, "meta_title", 'Careers — Auxtech');
     const description = pageStr(d, "meta_description", 'Join a senior-only, remote-first studio. Open roles across design and engineering.');
     return {
       meta: [
@@ -104,7 +104,7 @@ function Page() {
       <section className="block-bold">
         <div className="container-page py-28 md:py-36">
           <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
-            {s("hero_eyebrow", "Careers at Northline")}
+            {s("hero_eyebrow", "Careers at Auxtech")}
           </p>
           <h1
             className="mt-6 max-w-[16ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
@@ -226,7 +226,7 @@ function Page() {
               After you sign
             </p>
             <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl" data-split>
-              Week one at Northline.
+              Week one at Auxtech.
             </h2>
           </div>
           <div className="relative">

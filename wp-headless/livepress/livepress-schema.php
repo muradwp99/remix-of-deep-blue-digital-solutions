@@ -695,7 +695,7 @@ return array(
 			array( 'key' => 'assemble', 'label' => 'Launch checklist scatter' ),
 			array( 'key' => 'work', 'label' => 'Selected work' ),
 			array( 'key' => 'kickoff', 'label' => 'First 14 days' ),
-			array( 'key' => 'why', 'label' => 'Why Northline' ),
+			array( 'key' => 'why', 'label' => 'Why Auxtech' ),
 			array( 'key' => 'compare', 'label' => 'Comparison' ),
 			array( 'key' => 'testimonials', 'label' => 'Testimonials' ),
 			array( 'key' => 'pricing', 'label' => 'Pricing snapshot' ),
@@ -758,7 +758,7 @@ return array(
 				$rp( 'kickoff_items', 'Timeline', 'kickoff.items', array(
 					$s( 'day', 'Day' ), $s( 't', 'Title' ), $s( 'd', 'Description', 'textarea' ) ) ),
 			) ),
-			array( 'key' => 'why', 'label' => 'Why Northline', 'fields' => array(
+			array( 'key' => 'why', 'label' => 'Why Auxtech', 'fields' => array(
 				$t( 'why_eyebrow', 'Eyebrow', 'why.eyebrow' ),
 				$t( 'why_heading', 'Heading', 'why.heading' ),
 				$rp( 'why_items', 'Cards', 'why.items', array(
@@ -769,8 +769,8 @@ return array(
 				$t( 'compare_heading', 'Heading', 'compare.heading' ),
 				$t( 'compare_typical_title', 'Left column title', 'compare.typicalTitle' ),
 				$ln( 'compare_typical', 'Left rows', 'compare.typical' ),
-				$t( 'compare_northline_title', 'Right column title', 'compare.northlineTitle' ),
-				$ln( 'compare_northline', 'Right rows', 'compare.northline' ),
+				$t( 'compare_auxtech_title', 'Right column title', 'compare.auxtechTitle' ),
+				$ln( 'compare_auxtech', 'Right rows', 'compare.auxtech' ),
 			) ),
 			array( 'key' => 'testimonials', 'label' => 'Testimonials heading', 'fields' => array(
 				$t( 'testimonials_eyebrow', 'Eyebrow', 'testimonialsSection.eyebrow' ),

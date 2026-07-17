@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 /** BrowserFrame — chrome-style window around arbitrary content. */
 export function BrowserFrame({
-  url = "northline.studio",
+  url = "auxtech.studio",
   children,
   className = "",
 }: {

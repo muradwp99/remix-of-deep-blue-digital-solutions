@@ -16,7 +16,7 @@ export type TerminalLine = {
  * final text instantly.
  */
 export function TerminalWindow({
-  title = "northline — zsh",
+  title = "auxtech — zsh",
   lines,
   className = "",
 }: {

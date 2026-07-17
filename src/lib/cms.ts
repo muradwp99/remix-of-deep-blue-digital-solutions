@@ -309,9 +309,9 @@ const COLLECTIONS: Record<
         eyebrow: m(d, "compare_eyebrow"),
         heading: m(d, "compare_heading"),
         typicalTitle: m(d, "compare_typical_title"),
-        northlineTitle: m(d, "compare_northline_title"),
+        auxtechTitle: m(d, "compare_auxtech_title"),
         typical: lines(d, "compare_typical"),
-        northline: lines(d, "compare_northline"),
+        auxtech: lines(d, "compare_auxtech"),
       },
       testimonialsSection: {
         eyebrow: m(d, "testimonials_eyebrow"),

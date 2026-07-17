@@ -33,7 +33,7 @@ export const posts: Post[] = [
     image: u("photo-1522071820081-009f0129c71c"),
     body: [
       {
-        p: "Every Northline engagement includes the same contractual line: a live demo, on a real URL, on day 7. Prospects assume it's marketing. It isn't — it's an engineering constraint we impose on ourselves, and it shapes everything about how we start projects.",
+        p: "Every Auxtech engagement includes the same contractual line: a live demo, on a real URL, on day 7. Prospects assume it's marketing. It isn't — it's an engineering constraint we impose on ourselves, and it shapes everything about how we start projects.",
       },
       {
         h: "What day 7 forces",

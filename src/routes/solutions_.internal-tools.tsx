@@ -20,9 +20,9 @@ export const Route = createFileRoute("/solutions_/internal-tools")({
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
     return { meta: [
-      { title: dto?.metaTitle ?? "Internal Tools Development — Northline Studio" },
+      { title: dto?.metaTitle ?? "Internal Tools Development — Auxtech" },
       { name: "description", content: dto?.metaDesc ?? "" },
-      { property: "og:title", content: dto?.metaTitle ?? "Internal Tools Development — Northline Studio" },
+      { property: "og:title", content: dto?.metaTitle ?? "Internal Tools Development — Auxtech" },
       { property: "og:description", content: dto?.metaDesc ?? "" },
     ]};
   },
@@ -140,10 +140,10 @@ function Page() {
         />
       </div>
 
-      {/* ── LIGHT · why Northline ── */}
+      {/* ── LIGHT · why Auxtech ── */}
       <div className="block-light">
         <BenefitList
-          eyebrow="Why Northline"
+          eyebrow="Why Auxtech"
           title="What you get that others skip."
           items={page.benefits}
         />

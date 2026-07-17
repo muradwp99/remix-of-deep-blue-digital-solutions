@@ -25,9 +25,9 @@ export const Route = createFileRoute("/services_/prototyping")({
     const dto = loaderData?.dto;
     return {
       meta: [
-        { title: dto?.metaTitle ?? "Wireframing & Prototyping — Northline Studio" },
+        { title: dto?.metaTitle ?? "Wireframing & Prototyping — Auxtech" },
         { name: "description", content: dto?.metaDesc ?? "" },
-        { property: "og:title", content: dto?.metaTitle ?? "Wireframing & Prototyping — Northline Studio" },
+        { property: "og:title", content: dto?.metaTitle ?? "Wireframing & Prototyping — Auxtech" },
         { property: "og:description", content: dto?.metaDesc ?? "" },
       ],
     };
@@ -437,7 +437,7 @@ function Page() {
             {/* numbered ledger of benefits */}
             <div>
               <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal>
-                Why Northline
+                Why Auxtech
               </p>
               <h2
                 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-5xl"

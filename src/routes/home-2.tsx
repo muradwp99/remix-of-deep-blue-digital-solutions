@@ -7,12 +7,12 @@ import { VideoHero } from "@/components/video-hero";
 export const Route = createFileRoute("/home-2")({
   head: () => ({
     meta: [
-      { title: "Northline Studio — Software you can watch being built" },
+      { title: "Auxtech — Software you can watch being built" },
       {
         name: "description",
         content: "Scroll-driven film hero and the studio's signature orb hero, side by side.",
       },
-      { property: "og:title", content: "Northline Studio — Software you can watch being built" },
+      { property: "og:title", content: "Auxtech — Software you can watch being built" },
       {
         property: "og:description",
         content: "Scroll-driven film hero and the studio's signature orb hero, side by side.",

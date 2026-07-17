@@ -18,11 +18,11 @@ export const Route = createFileRoute("/our-story")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", "Our Story — Northline Studio");
+    const title = pageStr(d, "meta_title", "Our Story — Auxtech");
     const description = pageStr(
       d,
       "meta_description",
-      "How Northline grew from a two-person studio into a trusted digital transformation partner.",
+      "How Auxtech grew from a two-person studio into a trusted digital transformation partner.",
     );
     return {
       meta: [
@@ -86,7 +86,7 @@ function Page() {
             <p className="mt-7 max-w-md text-lg leading-relaxed text-muted-foreground" data-reveal>
               {s(
                 "hero_subtitle",
-                "We started Northline in 2014 to prove that craft, speed, and business outcomes aren't a trade-off.",
+                "We started Auxtech in 2014 to prove that craft, speed, and business outcomes aren't a trade-off.",
               )}
             </p>
           </div>
@@ -96,7 +96,7 @@ function Page() {
                 "hero_img",
                 "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=75",
               )}
-              alt="The Northline studio over the years"
+              alt="The Auxtech studio over the years"
               className="aspect-[4/5] w-full rounded-3xl border border-black/10 object-cover shadow-elegant"
               data-parallax-img
             />
@@ -143,7 +143,7 @@ function Page() {
             <p>
               {s(
                 "position_p1",
-                "Growth was never the goal — the work was. Every seat at Northline is senior: no juniors, no handoffs, no account managers translating between you and the people building your product.",
+                "Growth was never the goal — the work was. Every seat at Auxtech is senior: no juniors, no handoffs, no account managers translating between you and the people building your product.",
               )}
             </p>
             <p>
