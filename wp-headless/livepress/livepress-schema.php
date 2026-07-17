@@ -24,6 +24,12 @@ return array(
 				$t( 'hero_cta_label', 'CTA label', 'hero.ctaLabel' ),
 				$t( 'hero_cta_href', 'CTA link', 'hero.ctaHref' ),
 				$t( 'hero_cta_note', 'CTA note', 'hero.ctaNote' ),
+				$rp( 'hero_cards', 'Marquee cards', 'hero.cards', array(
+					$s( 'category', 'Category' ), $s( 'title', 'Title' ), $s( 'team', 'Team label' ),
+					$s( 'img', 'Cover image', 'image' ),
+					$s( 's1v', 'Stat 1 value' ), $s( 's1l', 'Stat 1 label' ),
+					$s( 's2v', 'Stat 2 value' ), $s( 's2l', 'Stat 2 label' ),
+					$s( 's3v', 'Stat 3 value' ), $s( 's3l', 'Stat 3 label' ) ) ),
 			) ),
 			array( 'key' => 'clients', 'label' => 'Clients strip', 'fields' => array(
 				$t( 'clients_label', 'Label', 'clients.label' ),
@@ -52,11 +58,12 @@ return array(
 				$rp( 'process_items', 'Steps', 'process.items', array(
 					$s( 'n', 'Number' ), $s( 't', 'Title' ), $s( 'd', 'Description', 'textarea' ) ) ),
 			) ),
+			// Cards themselves auto-mirror the Projects collection (add a
+			// project in WP → it appears here and on /works). Only the
+			// section heading is edited here.
 			array( 'key' => 'work', 'label' => 'Selected work', 'fields' => array(
 				$t( 'work_eyebrow', 'Eyebrow', 'work.eyebrow' ),
 				$t( 'work_heading', 'Heading', 'work.heading' ),
-				$rp( 'work_items', 'Case cards', 'work.items', array(
-					$s( 'name', 'Name' ), $s( 'tag', 'Tag' ), $s( 'result', 'Result' ), $s( 'img', 'Image', 'image' ) ) ),
 			) ),
 			array( 'key' => 'kickoff', 'label' => 'First 14 days', 'fields' => array(
 				$t( 'kickoff_eyebrow', 'Eyebrow', 'kickoff.eyebrow' ),

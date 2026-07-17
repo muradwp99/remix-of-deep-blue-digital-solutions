@@ -113,6 +113,7 @@ cpt( 'job', 'Job', 'Jobs', 'dashicons-id-alt', 'careers', $base );
 group( 'cpt_project', 'Project — Case Study', array( 'project' ), array_merge( array(
 	f( 'client', 'Client' ),
 	f( 'industry', 'Industry' ),
+	f( 'cover_image', 'Cover Image URL', 'url' ),
 	f( 'summary', 'Summary', 'textarea' ),
 	f( 'tag', 'Tag' ),
 	f( 'challenge', 'Challenge', 'textarea' ),

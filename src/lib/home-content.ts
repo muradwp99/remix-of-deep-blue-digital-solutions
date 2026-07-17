@@ -8,6 +8,17 @@
  * icons keep them in the component, matched by row index.
  */
 
+/** One floating hero marquee card (icons/colors stay coded by position). */
+export type HeroCard = {
+  category: string;
+  title: string;
+  team: string;
+  img: string;
+  s1v: string; s1l: string;
+  s2v: string; s2l: string;
+  s3v: string; s3l: string;
+};
+
 export type HomeContent = {
   hero: {
     trustedLine: string;
@@ -16,6 +27,7 @@ export type HomeContent = {
     ctaLabel: string;
     ctaHref: string;
     ctaNote: string;
+    cards: HeroCard[];
   };
   clients: { label: string; names: string[] };
   capabilities: {
@@ -94,6 +106,38 @@ export const homeDefaults: HomeContent = {
     ctaLabel: "Get a free audit",
     ctaHref: "/contact",
     ctaNote: "Reviewed by a senior engineer, not a bot",
+    cards: [
+      {
+        category: "Engineering", title: "Analytics Dashboards For Scale", team: "Data Architecture",
+        img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+        s1v: "99.9%", s1l: "Uptime", s2v: "14", s2l: "Days", s3v: "A+", s3l: "Rating",
+      },
+      {
+        category: "AI / ML", title: "Embed Generative Contextual AI", team: "Machine Learning",
+        img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
+        s1v: "10x", s1l: "Speed", s2v: "21", s2l: "Days", s3v: "PRO", s3l: "Level",
+      },
+      {
+        category: "DevOps", title: "Cloud Scale Architecture", team: "Cloud Platform",
+        img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+        s1v: "1M+", s1l: "Users", s2v: "30", s2l: "Days", s3v: "AAA", s3l: "Tier",
+      },
+      {
+        category: "Product", title: "Native iOS & Android Apps", team: "App Development",
+        img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80",
+        s1v: "4.9", s1l: "Stars", s2v: "21", s2l: "Days", s3v: "TOP", s3l: "Rank",
+      },
+      {
+        category: "Security", title: "Enterprise Infrastructure", team: "Cyber Ops",
+        img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+        s1v: "SOC2", s1l: "Ready", s2v: "14", s2l: "Days", s3v: "MAX", s3l: "Sec",
+      },
+      {
+        category: "Fintech", title: "Frictionless E-Commerce", team: "Growth Team",
+        img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
+        s1v: "3x", s1l: "Revenue", s2v: "21", s2l: "Days", s3v: "ROI", s3l: "Growth",
+      },
+    ],
   },
   clients: {
     label: "Trusted by teams at",
@@ -267,6 +311,7 @@ export function mergeHomeContent(
       ctaLabel: s(cms.hero?.ctaLabel, d.hero.ctaLabel),
       ctaHref: s(cms.hero?.ctaHref, d.hero.ctaHref),
       ctaNote: s(cms.hero?.ctaNote, d.hero.ctaNote),
+      cards: arr(cms.hero?.cards, d.hero.cards),
     },
     clients: {
       label: s(cms.clients?.label, d.clients.label),

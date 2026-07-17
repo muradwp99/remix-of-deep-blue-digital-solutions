@@ -125,7 +125,7 @@ const COLLECTIONS: Record<
       year: m(d, "year") || null,
       tag: m(d, "tag") || null,
       summary: m(d, "summary") || null,
-      coverImage: undefined,
+      coverImage: m(d, "cover_image") || undefined,
       featured: mBool(d, "featured"),
       challenge: m(d, "challenge") || null,
       approach: rows(d, "approach"),
@@ -269,6 +269,7 @@ const COLLECTIONS: Record<
         ctaLabel: m(d, "hero_cta_label"),
         ctaHref: m(d, "hero_cta_href"),
         ctaNote: m(d, "hero_cta_note"),
+        cards: rows(d, "hero_cards"),
       },
       clients: { label: m(d, "clients_label"), names: lines(d, "clients_names") },
       capabilities: {

@@ -1,5 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { cmsFind, cmsFindOne } from "@/lib/cms";
+import {
+  cmsFind,
+  cmsFindOne,
+  cmsMedia,
+  projectPlaceholder,
+  type CmsProject,
+} from "@/lib/cms";
 import { useLiveEdits } from "@/lib/edit-bridge";
 import {
   homeDefaults,
@@ -43,7 +49,7 @@ export const Route = createFileRoute("/")({
     cmsTestimonials: HomeTestimonial[];
     home: HomeContent;
   }> => {
-    const [docs, homeDoc] = await Promise.all([
+    const [docs, homeDoc, projects] = await Promise.all([
       cmsFind<{
         quote?: string | null;
         author?: string | null;
@@ -51,9 +57,24 @@ export const Route = createFileRoute("/")({
         company?: string | null;
       }>("testimonials", { limit: 6 }),
       cmsFindOne<Partial<HomeContent>>("homepage", "home"),
+      cmsFind<CmsProject>("projects", { sort: "-featured", limit: 4 }),
     ]);
+    const home = mergeHomeContent(homeDoc);
+    // "Selected work" mirrors the Projects collection: add a project in WP,
+    // it shows up here (and on /works) automatically. Falls back to the
+    // editable cards when the CMS is unreachable.
+    if (projects.length) {
+      home.work.items = projects.map((p) => ({
+        name: p.title,
+        tag: p.tag ?? p.industry ?? "",
+        result: p.results?.[0]
+          ? `${p.results[0].value} ${p.results[0].label}`
+          : (p.summary ?? ""),
+        img: cmsMedia(p.coverImage) ?? projectPlaceholder(p.slug),
+      }));
+    }
     return {
-      home: mergeHomeContent(homeDoc),
+      home,
       cmsTestimonials: docs
         .filter((d) => d.quote && d.author)
         .map((d) => ({
@@ -84,6 +105,17 @@ export const Route = createFileRoute("/")({
 const capabilityIcons = [Code2, Palette, Smartphone, Brain];
 const solutionIcons = [ShoppingCart, Layers, Building2, Stethoscope];
 const whyIcons = [Zap, Layers, ShieldCheck, Coins];
+
+/** Hero marquee card chrome (backgrounds/avatars stay design-owned, by index). */
+const heroCardBg = ["#0c0f18", "#1a0b2e", "#0b1626", "#18181b", "#0a1f16", "#1f1012"];
+const heroCardAvatars = [
+  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&q=80",
+  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80",
+  "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=80&q=80",
+  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=80&q=80",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80",
+];
 
 /** Known portrait per author — CMS carries no avatars. */
 const testimonialImgs: Record<string, string> = {
@@ -198,305 +230,48 @@ function HomePage() {
             <div className="proj-marquee-track flex gap-6 px-4">
               {[0, 1].map((setIndex) => (
                 <div key={setIndex} className="flex gap-6 shrink-0">
-                  {/* Card 1: Analytics */}
-                  <div className="bg-[#0c0f18] rounded-[32px] overflow-hidden group relative flex flex-col p-6 w-[340px] md:w-[380px] h-[550px] shrink-0 border border-white/5 hover:border-white/10 transition-colors">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Dashboard" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                    
-                    <div className="relative z-20 flex justify-between items-start mb-auto">
-                      <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white font-medium text-sm">
-                        Engineering
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/30 transition-colors cursor-pointer">
-                        <Bookmark className="w-5 h-5" />
-                      </div>
-                    </div>
-
-                    <div className="relative z-20 mt-auto flex flex-col">
-                      <h3 className="text-white font-display font-bold text-3xl leading-tight mb-4">
-                        Analytics Dashboards For Scale
-                      </h3>
-                      
-                      <div className="flex items-center gap-3 mb-6">
-                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&q=80" alt="Avatar" className="w-8 h-8 rounded-full border border-white/20 object-cover" />
-                        <span className="text-white/90 text-sm font-medium">Data Architecture</span>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Flame className="w-5 h-5 text-orange-500 fill-orange-500" />
-                            99.9%
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Uptime</span>
+                  {hc.hero.cards.map((card, ci) => (
+                    <div
+                      key={`${card.title}-${ci}`}
+                      className="rounded-[32px] overflow-hidden group relative flex flex-col p-6 w-[340px] md:w-[380px] h-[550px] shrink-0 border border-white/5 hover:border-white/10 transition-colors"
+                      style={{ backgroundColor: heroCardBg[ci % heroCardBg.length] }}
+                    >
+                      <img src={card.img} alt={card.title} className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen group-hover:scale-105 transition-transform duration-700" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#020509] via-[#020509]/60 to-transparent" />
+                      <div className="relative z-20 flex justify-between items-start mb-auto">
+                        <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white font-medium text-sm">
+                          {card.category}
                         </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Clock className="w-5 h-5 text-white fill-white" />
-                            14
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Days</span>
+                        <div className="bg-white/10 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/30 transition-colors cursor-pointer">
+                          <Bookmark className="w-5 h-5" />
                         </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Plus className="w-5 h-5 text-purple-400 fill-purple-400 bg-purple-400/20 rounded-md p-0.5" />
-                            A+
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Rating</span>
+                      </div>
+                      <div className="relative z-20 mt-auto flex flex-col">
+                        <h3 className="text-white font-display font-bold text-3xl leading-tight mb-4">
+                          {card.title}
+                        </h3>
+                        <div className="flex items-center gap-3 mb-6">
+                          <img src={heroCardAvatars[ci % heroCardAvatars.length]} alt="Avatar" className="w-8 h-8 rounded-full border border-white/20 object-cover" />
+                          <span className="text-white/90 text-sm font-medium">{card.team}</span>
+                        </div>
+                        <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                          {[
+                            { icon: Flame, cls: "w-5 h-5 text-orange-500 fill-orange-500", v: card.s1v, l: card.s1l },
+                            { icon: Clock, cls: "w-5 h-5 text-white fill-white", v: card.s2v, l: card.s2l },
+                            { icon: Plus, cls: "w-5 h-5 text-purple-400 fill-purple-400 bg-purple-400/20 rounded-md p-0.5", v: card.s3v, l: card.s3l },
+                          ].map((stat) => (
+                            <div key={stat.l + stat.v} className="flex flex-col">
+                              <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
+                                <stat.icon className={stat.cls} />
+                                {stat.v}
+                              </div>
+                              <span className="text-white/60 text-xs uppercase tracking-wider">{stat.l}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Card 2: AI Magic */}
-                  <div className="bg-[#1a0b2e] rounded-[32px] overflow-hidden group relative flex flex-col p-6 w-[340px] md:w-[380px] h-[550px] shrink-0 border border-white/5 hover:border-white/10 transition-colors">
-                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80" alt="AI Abstract" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#090214] via-[#090214]/60 to-transparent" />
-                    
-                    <div className="relative z-20 flex justify-between items-start mb-auto">
-                      <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white font-medium text-sm">
-                        AI / ML
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/30 transition-colors cursor-pointer">
-                        <Bookmark className="w-5 h-5" />
-                      </div>
-                    </div>
-
-                    <div className="relative z-20 mt-auto flex flex-col">
-                      <h3 className="text-white font-display font-bold text-3xl leading-tight mb-4">
-                        Embed Generative Contextual AI
-                      </h3>
-                      
-                      <div className="flex items-center gap-3 mb-6">
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80" alt="Avatar" className="w-8 h-8 rounded-full border border-white/20 object-cover" />
-                        <span className="text-white/90 text-sm font-medium">Machine Learning</span>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Flame className="w-5 h-5 text-orange-500 fill-orange-500" />
-                            10x
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Speed</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Clock className="w-5 h-5 text-white fill-white" />
-                            21
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Days</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Plus className="w-5 h-5 text-purple-400 fill-purple-400 bg-purple-400/20 rounded-md p-0.5" />
-                            PRO
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Level</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card 3: Cloud Infrastructure */}
-                  <div className="bg-[#0b1626] rounded-[32px] overflow-hidden group relative flex flex-col p-6 w-[340px] md:w-[380px] h-[550px] shrink-0 border border-white/5 hover:border-white/10 transition-colors">
-                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80" alt="Global Network" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#020509] via-[#020509]/60 to-transparent" />
-                    
-                    <div className="relative z-20 flex justify-between items-start mb-auto">
-                      <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white font-medium text-sm">
-                        DevOps
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/30 transition-colors cursor-pointer">
-                        <Bookmark className="w-5 h-5" />
-                      </div>
-                    </div>
-
-                    <div className="relative z-20 mt-auto flex flex-col">
-                      <h3 className="text-white font-display font-bold text-3xl leading-tight mb-4">
-                        Cloud Scale Architecture
-                      </h3>
-                      
-                      <div className="flex items-center gap-3 mb-6">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80" alt="Avatar" className="w-8 h-8 rounded-full border border-white/20 object-cover" />
-                        <span className="text-white/90 text-sm font-medium">Cloud Platform</span>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Flame className="w-5 h-5 text-orange-500 fill-orange-500" />
-                            1M+
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Users</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Clock className="w-5 h-5 text-white fill-white" />
-                            30
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Days</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Plus className="w-5 h-5 text-purple-400 fill-purple-400 bg-purple-400/20 rounded-md p-0.5" />
-                            AAA
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Tier</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card 4: Mobile Experiences */}
-                  <div className="bg-[#18181b] rounded-[32px] overflow-hidden group relative flex flex-col p-6 w-[340px] md:w-[380px] h-[550px] shrink-0 border border-white/5 hover:border-white/10 transition-colors">
-                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80" alt="Mobile UI" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
-                    
-                    <div className="relative z-20 flex justify-between items-start mb-auto">
-                      <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white font-medium text-sm">
-                        Product
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/30 transition-colors cursor-pointer">
-                        <Bookmark className="w-5 h-5" />
-                      </div>
-                    </div>
-
-                    <div className="relative z-20 mt-auto flex flex-col">
-                      <h3 className="text-white font-display font-bold text-3xl leading-tight mb-4">
-                        Native iOS & Android Apps
-                      </h3>
-                      
-                      <div className="flex items-center gap-3 mb-6">
-                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=80&q=80" alt="Avatar" className="w-8 h-8 rounded-full border border-white/20 object-cover" />
-                        <span className="text-white/90 text-sm font-medium">App Development</span>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Flame className="w-5 h-5 text-orange-500 fill-orange-500" />
-                            4.9
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Stars</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Clock className="w-5 h-5 text-white fill-white" />
-                            21
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Days</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Plus className="w-5 h-5 text-purple-400 fill-purple-400 bg-purple-400/20 rounded-md p-0.5" />
-                            TOP
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Rank</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card 5: Cybersecurity */}
-                  <div className="bg-[#0a1f16] rounded-[32px] overflow-hidden group relative flex flex-col p-6 w-[340px] md:w-[380px] h-[550px] shrink-0 border border-white/5 hover:border-white/10 transition-colors">
-                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80" alt="Cyber Code" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#020a06] via-[#020a06]/60 to-transparent" />
-                    
-                    <div className="relative z-20 flex justify-between items-start mb-auto">
-                      <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white font-medium text-sm">
-                        Security
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/30 transition-colors cursor-pointer">
-                        <Bookmark className="w-5 h-5" />
-                      </div>
-                    </div>
-
-                    <div className="relative z-20 mt-auto flex flex-col">
-                      <h3 className="text-white font-display font-bold text-3xl leading-tight mb-4">
-                        Enterprise Infrastructure
-                      </h3>
-                      
-                      <div className="flex items-center gap-3 mb-6">
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=80&q=80" alt="Avatar" className="w-8 h-8 rounded-full border border-white/20 object-cover" />
-                        <span className="text-white/90 text-sm font-medium">Cyber Ops</span>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Flame className="w-5 h-5 text-orange-500 fill-orange-500" />
-                            SOC2
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Ready</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Clock className="w-5 h-5 text-white fill-white" />
-                            14
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Days</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Plus className="w-5 h-5 text-purple-400 fill-purple-400 bg-purple-400/20 rounded-md p-0.5" />
-                            MAX
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Sec</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card 6: Commerce Solutions */}
-                  <div className="bg-[#1f1012] rounded-[32px] overflow-hidden group relative flex flex-col p-6 w-[340px] md:w-[380px] h-[550px] shrink-0 border border-white/5 hover:border-white/10 transition-colors">
-                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80" alt="Commerce Terminal" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d0405] via-[#0d0405]/60 to-transparent" />
-                    
-                    <div className="relative z-20 flex justify-between items-start mb-auto">
-                      <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white font-medium text-sm">
-                        Fintech
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/30 transition-colors cursor-pointer">
-                        <Bookmark className="w-5 h-5" />
-                      </div>
-                    </div>
-
-                    <div className="relative z-20 mt-auto flex flex-col">
-                      <h3 className="text-white font-display font-bold text-3xl leading-tight mb-4">
-                        Frictionless E-Commerce
-                      </h3>
-                      
-                      <div className="flex items-center gap-3 mb-6">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80" alt="Avatar" className="w-8 h-8 rounded-full border border-white/20 object-cover" />
-                        <span className="text-white/90 text-sm font-medium">Growth Team</span>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Flame className="w-5 h-5 text-orange-500 fill-orange-500" />
-                            3x
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Revenue</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Clock className="w-5 h-5 text-white fill-white" />
-                            21
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Days</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">
-                            <Plus className="w-5 h-5 text-purple-400 fill-purple-400 bg-purple-400/20 rounded-md p-0.5" />
-                            ROI
-                          </div>
-                          <span className="text-white/60 text-xs uppercase tracking-wider">Growth</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               ))}
             </div>

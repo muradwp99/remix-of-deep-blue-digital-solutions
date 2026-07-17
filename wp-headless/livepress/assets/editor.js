@@ -437,6 +437,28 @@
 		var root = document.getElementById( "livepress-root" );
 		frame = el( "iframe", { class: "lp-frame", src: B.frontend + B.path + ( B.path.indexOf( "?" ) === -1 ? "?edit=1" : "&edit=1" ) } );
 
+		// Device-size preview switcher: desktop / laptop / tablet / mobile.
+		var frameWrap = el( "div", { class: "lp-frame-wrap" }, [ frame ] );
+		var deviceBar = el( "div", { class: "lp-devicebar" } );
+		[
+			[ "🖥", "Desktop", "" ],
+			[ "💻", "Laptop", "1280px" ],
+			[ "▯", "Tablet", "834px" ],
+			[ "📱", "Mobile", "390px" ],
+		].forEach( function ( d, i ) {
+			var btn = el( "button", {
+				class: "lp-device" + ( i === 0 ? " active" : "" ),
+				type: "button", text: d[ 0 ], title: d[ 1 ],
+				onclick: function () {
+					deviceBar.querySelectorAll( ".lp-device" ).forEach( function ( b ) { b.classList.remove( "active" ); } );
+					btn.classList.add( "active" );
+					frame.style.width = d[ 2 ] || "100%";
+					frameWrap.classList.toggle( "framed", !! d[ 2 ] );
+				},
+			} );
+			deviceBar.appendChild( btn );
+		} );
+
 		root.appendChild( el( "div", { class: "lp-app" }, [
 			el( "div", { class: "lp-panel" }, [
 				el( "div", { class: "lp-topbar" }, [
@@ -449,7 +471,7 @@
 				] ),
 				buildPanel(),
 			] ),
-			el( "div", { class: "lp-preview" }, [ frame ] ),
+			el( "div", { class: "lp-preview" }, [ deviceBar, frameWrap ] ),
 		] ) );
 
 		// Re-sync current (possibly unsaved) values whenever the page (re)loads.
