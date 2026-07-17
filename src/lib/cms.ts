@@ -259,7 +259,7 @@ const COLLECTIONS: Record<
     }),
   },
   homepage: {
-    path: "/wp/v2/homepage",
+    path: "/wp/v2/sitepage",
     map: (d) => ({
       slug: d.slug ?? "",
       hero: {

@@ -33,7 +33,7 @@ function nh_home_doc() {
 	static $doc = null;
 	if ( null === $doc ) {
 		$found = get_posts( array(
-			'post_type' => 'homepage', 'name' => 'home',
+			'post_type' => 'sitepage', 'name' => 'home',
 			'post_status' => 'publish', 'numberposts' => 1,
 		) );
 		$doc = $found ? $found[0] : false;
