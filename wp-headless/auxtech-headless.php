@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /** Option keys holding the site globals (JSON-encoded arrays). */
-const AUXTECH_GLOBAL_KEYS = array( 'site_settings', 'header', 'footer' );
+const AUXTECH_GLOBAL_KEYS = array( 'site_settings', 'header', 'footer', 'design', 'nav' );
 
 /** Origins allowed to read the API. Filter `auxtech_allowed_origins` to extend in prod. */
 function auxtech_allowed_origins(): array {
@@ -152,6 +152,28 @@ function auxtech_livepress_broadcaster() {
 	</script>
 	<?php
 }
+
+/** Editors (LivePress) can write whitelisted globals. Cookie + REST nonce auth. */
+add_action( 'rest_api_init', function () {
+	register_rest_route( 'auxtech/v1', '/option/(?P<key>[a-z_]+)', array(
+		'methods'             => 'POST',
+		'permission_callback' => function () {
+			return current_user_can( 'edit_theme_options' );
+		},
+		'callback'            => function ( $request ) {
+			$key = sanitize_key( $request['key'] );
+			if ( ! in_array( $key, AUXTECH_GLOBAL_KEYS, true ) ) {
+				return new WP_Error( 'not_found', 'Unknown global', array( 'status' => 404 ) );
+			}
+			$data = $request->get_json_params();
+			if ( null === $data ) {
+				return new WP_Error( 'bad_request', 'Body must be JSON', array( 'status' => 400 ) );
+			}
+			update_option( 'auxtech_' . $key, $data );
+			return rest_ensure_response( array( 'ok' => true ) );
+		},
+	) );
+} );
 
 /** Contact-form submissions: private CPT (readable in wp-admin) + POST endpoint. */
 add_action( 'init', function () {

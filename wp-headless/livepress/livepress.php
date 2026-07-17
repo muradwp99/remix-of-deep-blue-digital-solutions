@@ -114,6 +114,11 @@ function livepress_render_editor() {
 		'backUrl'  => admin_url( 'edit.php?post_type=sitepage' ),
 		'schema'   => $schema,
 		'values'   => $values,
+		'globals'  => array(
+			'design' => (object) ( get_option( 'auxtech_design', array() ) ?: array() ),
+			'nav'    => array_values( (array) get_option( 'auxtech_nav', array() ) ),
+			'footer' => (object) ( get_option( 'auxtech_footer', array() ) ?: array() ),
+		),
 	) ) . ';', 'before' );
 
 	echo '<div id="livepress-root"></div>';

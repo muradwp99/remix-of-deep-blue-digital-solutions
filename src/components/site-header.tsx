@@ -1,5 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { cmsGlobal } from "@/lib/cms";
+import { isEditMode } from "@/lib/edit-bridge";
 import {
   Home,
   Package,
@@ -312,7 +315,52 @@ function FeatureCard({
   );
 }
 
+/** Admin nav config row: matches a coded NAV item by key (original label, lowercased). */
+type NavConfigRow = { key: string; label?: string; visible?: boolean | number | string };
+
+/**
+ * LivePress menu config: order / rename / hide the top-level items from WP.
+ * Mega-panel contents stay in code (they carry icons + layout); the admin
+ * reorders and renames the entries. Fails soft to the coded NAV. In edit
+ * mode, `aux-menu` messages apply the config live while dragging rows.
+ */
+function useNavItems(): NavItem[] {
+  const { data } = useQuery({
+    queryKey: ["nav-global"],
+    queryFn: () => cmsGlobal<NavConfigRow[]>("nav"),
+    staleTime: 5 * 60 * 1000,
+  });
+  const [live, setLive] = useState<NavConfigRow[] | null>(null);
+
+  useEffect(() => {
+    if (!isEditMode()) return;
+    const onMessage = (e: MessageEvent) => {
+      const d = e.data as { type?: string; nav?: NavConfigRow[] } | null;
+      if (d?.type === "aux-menu" && Array.isArray(d.nav)) setLive(d.nav);
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
+
+  const config = live ?? data;
+  if (!config || !Array.isArray(config) || !config.length) return NAV;
+  const byKey = new Map(NAV.map((n) => [n.label.toLowerCase(), n]));
+  const out: NavItem[] = [];
+  for (const row of config) {
+    const k = String(row.key ?? "").toLowerCase();
+    const item = byKey.get(k);
+    if (!item) continue;
+    byKey.delete(k); // claimed by the config — hidden rows must not re-append below
+    if (row.visible === false || row.visible === 0 || row.visible === "0") continue;
+    out.push(row.label && row.label.trim() ? { ...item, label: row.label } : item);
+  }
+  // Anything the config doesn't mention keeps its place at the end.
+  byKey.forEach((item) => out.push(item));
+  return out.length ? out : NAV;
+}
+
 export function SiteHeader() {
+  const nav = useNavItems();
   const [mobileOpen, setMobileOpen] = useState(false);
   // Which mega is hovered/focused right now (null = closed)
   const [openMega, setOpenMega] = useState<string | null>(null);
@@ -322,7 +370,7 @@ export function SiteHeader() {
   const contentRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<number | null>(null);
 
-  const panelItem = NAV.find((n) => n.label === panelLabel && n.mega) ?? null;
+  const panelItem = nav.find((n) => n.label === panelLabel && n.mega) ?? null;
   const megaOpen = openMega !== null;
 
   const cancelClose = () => {
@@ -380,7 +428,7 @@ export function SiteHeader() {
 
             {/* Desktop pill nav */}
             <nav className="hidden lg:flex items-center gap-1 rounded-full bg-background/40 px-1.5 py-1.5 border border-white/5">
-              {NAV.map((item) => (
+              {nav.map((item) => (
                 <div key={item.label} onMouseEnter={() => openFor(item)}>
                   <Link
                     to={item.href}
@@ -505,7 +553,7 @@ export function SiteHeader() {
         {mobileOpen && (
           <div className="lg:hidden mt-2 glass-strong rounded-2xl p-3 animate-mega-in">
             <div className="space-y-1">
-              {NAV.map((item) => (
+              {nav.map((item) => (
                 <div key={item.label}>
                   <Link
                     to={item.href}

@@ -170,9 +170,212 @@
 		return box;
 	}
 
+	/* ---------- global panels: design tokens + menus ---------- */
+	var globals = B.globals || { design: {}, nav: [], footer: {} };
+	var globalsDirty = {};
+
+	function markGlobalDirty( key ) {
+		globalsDirty[ key ] = true;
+		dirty = true;
+		document.getElementById( "lp-save" ).classList.add( "is-dirty" );
+	}
+	function sendRaw( msg ) {
+		try { frame.contentWindow.postMessage( msg, B.frontend ); } catch ( e ) {}
+	}
+
+	function designSection() {
+		var d = globals.design || {};
+		globals.design = d;
+		var fields = el( "div", { class: "lp-fields" } );
+
+		function push() {
+			sendRaw( { type: "aux-design", tokens: d } );
+			markGlobalDirty( "design" );
+		}
+		// Border radius slider.
+		var radiusVal = el( "span", { class: "lp-range-val", text: ( d.radius || "12" ) + "px" } );
+		var radius = el( "input", { class: "lp-range", type: "range", min: "0", max: "32", step: "1" } );
+		radius.value = d.radius || "12";
+		radius.addEventListener( "input", function () {
+			d.radius = radius.value;
+			radiusVal.textContent = radius.value + "px";
+			push();
+		} );
+		fields.appendChild( el( "div", { class: "lp-field" }, [
+			el( "label", { class: "lp-label", text: "Border radius" } ),
+			el( "div", { class: "lp-range-row" }, [ radius, radiusVal ] ),
+		] ) );
+		// Brand colors.
+		[ [ "gold", "Gold accent", "#e3c257" ], [ "lime", "Primary accent", "#e6cb4e" ] ].forEach( function ( c ) {
+			var key = c[ 0 ];
+			var picker = el( "input", { class: "lp-color", type: "color" } );
+			picker.value = d[ key ] || c[ 2 ];
+			picker.addEventListener( "input", function () {
+				d[ key ] = picker.value;
+				push();
+			} );
+			fields.appendChild( el( "div", { class: "lp-field" }, [
+				el( "label", { class: "lp-label", text: c[ 1 ] } ),
+				picker,
+			] ) );
+		} );
+		return fields;
+	}
+
+	function menuSection() {
+		var box = el( "div", { class: "lp-fields" } );
+		var list = el( "div", { class: "lp-repeater" } );
+
+		function push() {
+			sendRaw( { type: "aux-menu", nav: globals.nav } );
+			markGlobalDirty( "nav" );
+		}
+		function rerender() {
+			list.innerHTML = "";
+			globals.nav.forEach( function ( row, idx ) {
+				var handle = el( "span", { class: "lp-drag", text: "⋮⋮", draggable: "true" } );
+				handle.addEventListener( "dragstart", function ( e ) {
+					e.dataTransfer.setData( "text/plain", String( idx ) );
+				} );
+				var label = el( "input", { class: "lp-input", type: "text" } );
+				label.value = row.label || row.key;
+				label.addEventListener( "input", function () {
+					row.label = label.value;
+					push();
+				} );
+				var visible = el( "button", {
+					class: "lp-eye" + ( row.visible === 0 || row.visible === false ? " off" : "" ),
+					type: "button", text: row.visible === 0 || row.visible === false ? "🚫" : "👁",
+					title: "Show / hide",
+					onclick: function () {
+						row.visible = ( row.visible === 0 || row.visible === false ) ? 1 : 0;
+						push();
+						rerender();
+					},
+				} );
+				var rowEl = el( "div", { class: "lp-row lp-nav-row" }, [
+					handle,
+					el( "span", { class: "lp-nav-key", text: row.key } ),
+					label,
+					visible,
+				] );
+				rowEl.addEventListener( "dragover", function ( e ) { e.preventDefault(); rowEl.classList.add( "drop" ); } );
+				rowEl.addEventListener( "dragleave", function () { rowEl.classList.remove( "drop" ); } );
+				rowEl.addEventListener( "drop", function ( e ) {
+					e.preventDefault();
+					rowEl.classList.remove( "drop" );
+					var from = parseInt( e.dataTransfer.getData( "text/plain" ), 10 );
+					if ( isNaN( from ) || from === idx ) { return; }
+					var moved = globals.nav.splice( from, 1 )[ 0 ];
+					globals.nav.splice( idx, 0, moved );
+					push();
+					rerender();
+				} );
+				list.appendChild( rowEl );
+			} );
+		}
+		rerender();
+		box.appendChild( list );
+		return box;
+	}
+
+	function footerSection() {
+		var f = globals.footer || {};
+		globals.footer = f;
+		f.columns = f.columns || [];
+		var box = el( "div", { class: "lp-fields" } );
+
+		function push() {
+			sendRaw( { type: "aux-footer", footer: f } );
+			markGlobalDirty( "footer" );
+		}
+		var blurb = el( "textarea", { class: "lp-input", rows: 2 } );
+		blurb.value = f.blurb || "";
+		blurb.addEventListener( "input", function () { f.blurb = blurb.value; push(); } );
+		box.appendChild( el( "div", { class: "lp-field" }, [
+			el( "label", { class: "lp-label", text: "Blurb" } ), blurb,
+		] ) );
+
+		var colsBox = el( "div", { class: "lp-repeater" } );
+		function rerender() {
+			colsBox.innerHTML = "";
+			f.columns.forEach( function ( col, ci ) {
+				col.links = col.links || [];
+				var title = el( "input", { class: "lp-input", type: "text" } );
+				title.value = col.title || "";
+				title.addEventListener( "input", function () { col.title = title.value; push(); } );
+
+				var linksBox = el( "div", { class: "lp-links" } );
+				col.links.forEach( function ( link, li ) {
+					var lab = el( "input", { class: "lp-input", type: "text", placeholder: "Label" } );
+					lab.value = link.label || "";
+					lab.addEventListener( "input", function () { link.label = lab.value; push(); } );
+					var href = el( "input", { class: "lp-input", type: "text", placeholder: "/path" } );
+					href.value = link.href || "";
+					href.addEventListener( "input", function () { link.href = href.value; push(); } );
+					var up = el( "button", { class: "lp-mini", type: "button", text: "↑", onclick: function () {
+						if ( li === 0 ) { return; }
+						col.links.splice( li - 1, 0, col.links.splice( li, 1 )[ 0 ] );
+						push(); rerender();
+					} } );
+					var down = el( "button", { class: "lp-mini", type: "button", text: "↓", onclick: function () {
+						if ( li >= col.links.length - 1 ) { return; }
+						col.links.splice( li + 1, 0, col.links.splice( li, 1 )[ 0 ] );
+						push(); rerender();
+					} } );
+					var del = el( "button", { class: "lp-mini danger", type: "button", text: "✕", onclick: function () {
+						col.links.splice( li, 1 );
+						push(); rerender();
+					} } );
+					linksBox.appendChild( el( "div", { class: "lp-link-row" }, [ lab, href, up, down, del ] ) );
+				} );
+				linksBox.appendChild( el( "button", { class: "lp-row-add", type: "button", text: "+ Add link", onclick: function () {
+					col.links.push( { label: "", href: "" } );
+					push(); rerender();
+				} } ) );
+
+				var delCol = el( "button", { class: "lp-row-del", type: "button", text: "✕", title: "Remove column", onclick: function () {
+					f.columns.splice( ci, 1 );
+					push(); rerender();
+				} } );
+				colsBox.appendChild( el( "div", { class: "lp-col" }, [
+					el( "div", { class: "lp-col-head" }, [
+						el( "label", { class: "lp-sublabel", text: "Column title" } ), delCol,
+					] ),
+					title, linksBox,
+				] ) );
+			} );
+			colsBox.appendChild( el( "button", { class: "lp-row-add", type: "button", text: "+ Add column", onclick: function () {
+				f.columns.push( { title: "", links: [] } );
+				push(); rerender();
+			} } ) );
+		}
+		rerender();
+		box.appendChild( el( "div", { class: "lp-field" }, [
+			el( "label", { class: "lp-label", text: "Columns" } ), colsBox,
+		] ) );
+		return box;
+	}
+
 	/* ---------- sections panel ---------- */
 	function buildPanel() {
 		var panel = el( "div", { class: "lp-sections" } );
+
+		// Pinned global panels (site-wide, shown on every page).
+		[
+			[ "🎨 Design", designSection ],
+			[ "☰ Main menu", menuSection ],
+			[ "▤ Footer menu", footerSection ],
+		].forEach( function ( g ) {
+			var body = g[ 1 ]();
+			var head = el( "button", { class: "lp-sec-head", type: "button" }, [
+				el( "span", { text: g[ 0 ] } ),
+				el( "span", { class: "lp-caret", text: "▾" } ),
+			] );
+			var sec = el( "div", { class: "lp-section lp-global" }, [ head, body ] );
+			head.addEventListener( "click", function () { sec.classList.toggle( "open" ); } );
+			panel.appendChild( sec );
+		} );
 		B.schema.sections.forEach( function ( section, i ) {
 			var fields = el( "div", { class: "lp-fields" } );
 			section.fields.forEach( function ( def ) {
@@ -204,9 +407,20 @@
 					: String( values[ f.key ] == null ? "" : values[ f.key ] );
 			} );
 		} );
-		wp.apiFetch( { path: "/wp/v2/" + B.restBase + "/" + B.postId, method: "POST", data: { meta: meta } } )
+		var jobs = [
+			wp.apiFetch( { path: "/wp/v2/" + B.restBase + "/" + B.postId, method: "POST", data: { meta: meta } } ),
+		];
+		Object.keys( globalsDirty ).forEach( function ( key ) {
+			jobs.push( wp.apiFetch( {
+				path: "/auxtech/v1/option/" + key,
+				method: "POST",
+				data: globals[ key ],
+			} ) );
+		} );
+		Promise.all( jobs )
 			.then( function () {
 				dirty = false;
+				globalsDirty = {};
 				btn.classList.remove( "is-dirty" );
 				btn.textContent = "Saved ✓";
 				setTimeout( function () { btn.textContent = "Save"; }, 1600 );
@@ -240,7 +454,13 @@
 
 		// Re-sync current (possibly unsaved) values whenever the page (re)loads.
 		window.addEventListener( "message", function ( e ) {
-			if ( e.data && e.data.type === "aux-edit-ready" ) { broadcastAll(); }
+			if ( e.data && e.data.type === "aux-edit-ready" ) {
+				broadcastAll();
+				// Re-apply unsaved global edits after any preview reload.
+				if ( globalsDirty.design ) { sendRaw( { type: "aux-design", tokens: globals.design } ); }
+				if ( globalsDirty.nav ) { sendRaw( { type: "aux-menu", nav: globals.nav } ); }
+				if ( globalsDirty.footer ) { sendRaw( { type: "aux-footer", footer: globals.footer } ); }
+			}
 		} );
 		window.addEventListener( "beforeunload", function ( e ) {
 			if ( dirty ) { e.preventDefault(); e.returnValue = ""; }

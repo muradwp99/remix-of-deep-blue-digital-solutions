@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { cmsGlobal, type CmsFooter } from "@/lib/cms";
+import { isEditMode } from "@/lib/edit-bridge";
 
 type FooterLink = { label: string; href: string };
 
@@ -50,11 +52,25 @@ const cols: { title: string; links: FooterLink[] }[] = [
 export function SiteFooter() {
   // Footer content is CMS-editable via the `footer` global; fails soft to the
   // built-in columns/blurb/copyright when the CMS is unreachable.
-  const { data } = useQuery({
+  const { data: saved } = useQuery({
     queryKey: ["footer-global"],
     queryFn: () => cmsGlobal<CmsFooter>("footer"),
     staleTime: 5 * 60 * 1000,
   });
+  // LivePress: footer edits stream in live while the admin edits columns.
+  const [live, setLive] = useState<CmsFooter | null>(null);
+  useEffect(() => {
+    if (!isEditMode()) return;
+    const onMessage = (e: MessageEvent) => {
+      const d = e.data as { type?: string; footer?: CmsFooter } | null;
+      if (d?.type === "aux-footer" && d.footer && typeof d.footer === "object") {
+        setLive(d.footer);
+      }
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
+  const data = live ?? saved;
   const blurb =
     data?.blurb ||
     "A software studio designing and engineering premium digital products for ambitious teams.";

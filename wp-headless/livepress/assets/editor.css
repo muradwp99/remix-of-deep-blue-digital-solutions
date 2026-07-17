@@ -61,6 +61,29 @@
   cursor: pointer; padding: 0 12px; font-size: 15px; }
 .lp-media-btn:hover { border-color: #e8c15a; }
 
+/* ---------- global panels (design / menus) ---------- */
+.lp-section.lp-global { border-color: #3a3358; background: #141230; }
+.lp-range-row { display: flex; align-items: center; gap: 12px; }
+.lp-range { flex: 1; accent-color: #e8c15a; }
+.lp-range-val { font-size: 12px; color: #cdd3ec; min-width: 42px; text-align: right; }
+.lp-color { width: 100%; height: 38px; border: 1px solid #2a3154; border-radius: 8px;
+  background: #0c1020; padding: 3px; cursor: pointer; }
+.lp-nav-row { align-items: center; }
+.lp-nav-key { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: #6d76a0; min-width: 64px; }
+.lp-eye { background: none; border: 1px solid #2a3154; border-radius: 8px; cursor: pointer;
+  font-size: 13px; padding: 6px 9px; }
+.lp-eye.off { opacity: 0.55; }
+.lp-eye:hover { border-color: #e8c15a; }
+.lp-col { background: #0c1020; border: 1px solid #2a3154; border-radius: 10px; padding: 12px; }
+.lp-col-head { display: flex; justify-content: space-between; align-items: center; }
+.lp-links { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.lp-link-row { display: grid; grid-template-columns: 1fr 1fr auto auto auto; gap: 6px; align-items: center; }
+.lp-mini { background: #1a2038; border: 1px solid #2a3154; border-radius: 6px; color: #cdd3ec;
+  cursor: pointer; font-size: 11px; padding: 6px 8px; }
+.lp-mini:hover { border-color: #e8c15a; }
+.lp-mini.danger:hover { border-color: #ff7a7a; color: #ff7a7a; }
+
 /* ---------- right preview ---------- */
 .lp-preview { flex: 1; background: #05070d; padding: 14px; }
 .lp-frame { width: 100%; height: 100%; border: 1px solid #232842; border-radius: 14px;

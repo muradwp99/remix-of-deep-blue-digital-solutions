@@ -3,6 +3,7 @@ import { SiteHeader } from "./site-header";
 import { SiteFooter } from "./site-footer";
 import { Preloader } from "./preloader";
 import { CostCalculator, Chatbot } from "./floating-widgets";
+import { DesignTokensStyle } from "./design-tokens";
 import { useScrollReveal } from "@/lib/animations";
 import type { PageTheme } from "@/lib/themes";
 
@@ -14,6 +15,7 @@ export function SiteShell({ children, theme }: { children: ReactNode; theme?: Pa
       data-theme={theme?.id}
       className="min-h-screen flex flex-col bg-background text-foreground"
     >
+      <DesignTokensStyle />
       <Preloader />
       <SiteHeader />
       <main className="flex-1" data-entrance>
