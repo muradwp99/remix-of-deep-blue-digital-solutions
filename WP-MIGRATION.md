@@ -48,6 +48,34 @@ project 6 · service 13 · solution 10 · industry 4 · tool 4 · learning 22 ·
 
 Also wired: **home testimonials** (index.tsx loader → `testimonials` collection, per-author portrait map, fail-soft; sentinel-verified). `testimonials` + `resources` added to the cms.ts registry. Resources page (`/resources`) intentionally NOT wired — its curated marketing sections differ from the 5 CMS resource docs; wiring would downgrade content.
 
-## Remaining to go fully live
-1. Prod: move LocalWP → Hostinger (All-in-One WP Migration), set `VITE_CMS_URL`, add prod origin to `auxtech_allowed_origins` filter, new strong admin pw, hardening (subdomain, IP-allowlist wp-admin, disable XML-RPC, Cloudflare).
-2. Then Payload/Neon/Postgres stack can be retired (northline-payload/ + local Postgres).
+## Roadmap to fully live
+
+### Phase 1 — Content polish (local, no hosting needed)
+- Review all 12 CPTs in wp-admin; fix copy, fill empty `meta_title`/`meta_description`.
+- Add real media: project covers, team photos → WP media library. Needs a small mapper update in `cms.ts` (featured-image → `coverImage`/`photo`) — currently images use built-in fallbacks.
+- Optional: extend DynamicForge with a flexible-content field type for a nicer Pages-builder admin (layout_json textarea works meanwhile).
+
+### Phase 2 — Production WP (needs Hostinger)
+- Create WP on `cms.` subdomain (Hostinger one-click).
+- Migrate LocalWP → Hostinger (All-in-One WP Migration or Local export). **Gotcha:** most migration plugins skip `mu-plugins/` — copy `auxtech-headless.php` manually.
+- DynamicForge defs travel in the DB (wp_options) — nothing to re-run.
+- New strong admin password; delete/rename default `auxadmin` if exposed.
+- Add prod frontend origin via the `auxtech_allowed_origins` filter (tiny mu-plugin edit).
+
+### Phase 3 — Hardening (prod WP)
+- Cloudflare in front (WAF, rate-limit login, bot protection — free tier).
+- IP-allowlist `/wp-admin` + `/wp-login.php`; custom login path + 2FA.
+- Disable XML-RPC, user enumeration (`?author=`, REST `/users`), file editing (`DISALLOW_FILE_EDIT`).
+- Auto-update core + plugins; hide WP version; HTTPS-only + security headers.
+- REST: world gets GET only (auth-gated writes are already the default; contact POST stays open by design).
+
+### Phase 4 — Frontend production deploy
+- Set `VITE_CMS_URL` = prod CMS URL at build time.
+- `npm run build` + deploy (Vercel/Netlify/Hostinger Node — SSR needs a Node runtime).
+- Smoke test with a **sentinel edit** in prod CMS → must render on the prod site (fail-soft masks dead wiring; bodyLen alone lies).
+- DNS: apex → frontend, `cms.` → WP.
+
+### Phase 5 — Retire Payload
+- Stop `northline-payload` dev server; drop local Postgres db `northline-payload`.
+- Archive or delete `northline-payload/` (untracked in this repo).
+- Remove `:3000` references (env, docs); update HANDOFF.md + memory.
