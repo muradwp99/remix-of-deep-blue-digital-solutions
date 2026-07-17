@@ -44,6 +44,20 @@ add_action( 'rest_api_init', function () {
 	) );
 } );
 
+/**
+ * Headless: WP never renders a public site. Any normal front-end request is
+ * redirected to the real frontend (filter `auxtech_frontend_url` in prod).
+ * Admin, login, REST, and cron are untouched.
+ */
+add_action( 'template_redirect', function () {
+	if ( is_admin() || is_user_logged_in() ) {
+		return;
+	}
+	$frontend = apply_filters( 'auxtech_frontend_url', 'http://localhost:8080' );
+	wp_redirect( $frontend, 302 );
+	exit;
+} );
+
 /** Contact-form submissions: private CPT (readable in wp-admin) + POST endpoint. */
 add_action( 'init', function () {
 	register_post_type( 'submission', array(
