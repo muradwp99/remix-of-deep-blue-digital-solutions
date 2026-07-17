@@ -154,6 +154,63 @@ return array(
 			) ),
 		),
 	),
+	'about' => array(
+		'title'        => 'About',
+		'frontendPath' => '/about',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+				$t( 'hero_img', 'Hero image', 'hero_img' ),
+				$t( 'hero_caption', 'Image caption', 'hero_caption' ),
+			) ),
+			array( 'key' => 'story', 'label' => 'Story', 'fields' => array(
+				$ta( 'story_heading', 'Heading', 'story_heading' ),
+				$t( 'story_img', 'Image', 'story_img' ),
+				$ta( 'story_p1', 'Paragraph 1', 'story_p1' ),
+				$ta( 'story_p2', 'Paragraph 2', 'story_p2' ),
+				$ta( 'story_p3', 'Paragraph 3', 'story_p3' ),
+			) ),
+			array( 'key' => 'stats', 'label' => 'Stats band', 'fields' => array(
+				$rp( 'stats', 'Stats', 'stats', array(
+					$s( 'value', 'Value' ), $s( 'label', 'Label' ) ) ),
+			) ),
+			array( 'key' => 'studio', 'label' => 'Studio band', 'fields' => array(
+				$ta( 'studio_heading', 'Heading', 'studio_heading' ),
+				$ta( 'studio_text', 'Text', 'studio_text' ),
+				$t( 'studio_img', 'Image', 'studio_img' ),
+			) ),
+			array( 'key' => 'principles', 'label' => 'Principles', 'fields' => array(
+				$t( 'principles_heading', 'Heading', 'principles_heading' ),
+				$rp( 'values', 'Principle cards', 'values', array(
+					$s( 'n', 'Number' ), $s( 't', 'Title' ), $s( 'd', 'Description', 'textarea' ) ) ),
+			) ),
+			array( 'key' => 'wired', 'label' => 'How we\'re wired', 'fields' => array(
+				$t( 'wired_eyebrow', 'Eyebrow', 'wired_eyebrow' ),
+				$ta( 'wired_heading', 'Heading', 'wired_heading' ),
+				$ln( 'wired_chips', 'Chips (one per line)', 'wired_chips' ),
+			) ),
+			array( 'key' => 'team', 'label' => 'Team', 'fields' => array(
+				$t( 'team_heading', 'Heading', 'team_heading' ),
+				$ta( 'team_sub', 'Subtext', 'team_sub' ),
+				$rp( 'team_members', 'Members', 'team_members', array(
+					$s( 'name', 'Name' ), $s( 'role', 'Role' ), $s( 'img', 'Photo', 'image' ) ) ),
+			) ),
+			array( 'key' => 'cta', 'label' => 'CTA', 'fields' => array(
+				$t( 'cta_eyebrow', 'Eyebrow', 'cta_eyebrow' ),
+				$t( 'cta_title', 'Title', 'cta_title' ),
+				$ta( 'cta_subtitle', 'Subtitle', 'cta_subtitle' ),
+				$t( 'cta_primary_label', 'Primary button', 'cta_primary_label' ),
+				$t( 'cta_secondary_label', 'Secondary button', 'cta_secondary_label' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
 	'home' => array(
 		'title'        => 'Home',
 		'frontendPath' => '/',

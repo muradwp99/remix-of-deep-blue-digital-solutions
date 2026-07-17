@@ -367,6 +367,30 @@ const COLLECTIONS: Record<
       meta: seoMeta(d),
     }),
   },
+  /**
+   * Generic Site Pages passthrough: every meta key comes through flat;
+   * JSON-looking strings (repeaters) are parsed to arrays/objects. Bespoke
+   * page routes consume it via pageStr/pageRows/pageLines with inline
+   * fallbacks — no per-page mapper needed.
+   */
+  sitepages: {
+    path: "/wp/v2/sitepage",
+    map: (d) => {
+      const out: Record<string, unknown> = { slug: d.slug ?? "", title: wpTitle(d) };
+      for (const [k, v] of Object.entries(d.meta ?? {})) {
+        if (typeof v === "string" && (v.startsWith("[") || v.startsWith("{"))) {
+          try {
+            out[k] = JSON.parse(v);
+            continue;
+          } catch {
+            /* keep the raw string */
+          }
+        }
+        out[k] = v;
+      }
+      return out;
+    },
+  },
   pages: {
     path: "/wp/v2/pages",
     map: (d) => {
@@ -413,6 +437,33 @@ function sortParams(sort?: string): {
 /* ------------------------------------------------------------------ */
 /* Public API (unchanged surface)                                      */
 /* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
+/* Site Page doc helpers (generic `sitepages` collection consumers)    */
+/* ------------------------------------------------------------------ */
+
+/** A flat Site Page doc: meta keys passthrough, repeaters pre-parsed. */
+export type SitePageDoc = Record<string, unknown> | null;
+
+/** String field with fallback: CMS wins only when non-empty. */
+export function pageStr(doc: SitePageDoc, key: string, fallback: string): string {
+  const v = doc?.[key];
+  return typeof v === "string" && v.trim() ? v : fallback;
+}
+
+/** Repeater rows with fallback: CMS wins only when non-empty. */
+export function pageRows<T>(doc: SitePageDoc, key: string, fallback: T[]): T[] {
+  const v = doc?.[key];
+  return Array.isArray(v) && v.length ? (v as T[]) : fallback;
+}
+
+/** Newline-list field with fallback: CMS wins only when non-empty. */
+export function pageLines(doc: SitePageDoc, key: string, fallback: string[]): string[] {
+  const v = doc?.[key];
+  if (typeof v !== "string" || !v.trim()) return fallback;
+  const lines = v.split("\n").map((s) => s.trim()).filter(Boolean);
+  return lines.length ? lines : fallback;
+}
 
 export async function cmsFind<T = Record<string, unknown>>(
   collection: string,

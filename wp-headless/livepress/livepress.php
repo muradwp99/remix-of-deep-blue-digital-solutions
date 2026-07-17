@@ -40,6 +40,22 @@ add_action( 'init', function () {
 	) );
 } );
 
+/** Every schema field is REST-visible post meta — no DynamicForge group needed. */
+add_action( 'init', function () {
+	foreach ( livepress_schema() as $schema ) {
+		foreach ( $schema['sections'] as $section ) {
+			foreach ( $section['fields'] as $field ) {
+				register_meta( 'post', $field['key'], array(
+					'single'       => true,
+					'type'         => 'string',
+					'show_in_rest' => true,
+				) );
+			}
+		}
+	}
+	register_meta( 'post', 'section_order', array( 'single' => true, 'type' => 'string', 'show_in_rest' => true ) );
+}, 20 );
+
 /* ------------------------------------------------------------------ */
 /* Route edits into the fullscreen editor                               */
 /* ------------------------------------------------------------------ */
