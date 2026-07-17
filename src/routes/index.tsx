@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { cmsFind } from "@/lib/cms";
 import { SiteShell } from "@/components/site-shell";
 import { BentoShowcase } from "@/components/bento-features";
 import { useScrollReveal } from "@/lib/animations";
@@ -27,7 +28,32 @@ import {
   Plus,
 } from "lucide-react";
 
+/** Serializable testimonial shape rendered by the home page. */
+type HomeTestimonial = { q: string; a: string; r: string; img: string };
+
 export const Route = createFileRoute("/")({
+  // Testimonials are CMS-editable; fails soft to the built-in array below.
+  loader: async (): Promise<{ cmsTestimonials: HomeTestimonial[] }> => {
+    const docs = await cmsFind<{
+      quote?: string | null;
+      author?: string | null;
+      role?: string | null;
+      company?: string | null;
+    }>("testimonials", { limit: 6 });
+    return {
+      cmsTestimonials: docs
+        .filter((d) => d.quote && d.author)
+        .map((d) => ({
+          q: d.quote as string,
+          a: d.author as string,
+          r: [d.role, d.company].filter(Boolean).join(", "),
+          // Portraits are not in the CMS — keep the known faces, generic otherwise.
+          img:
+            testimonialImgs[d.author as string] ??
+            `https://i.pravatar.cc/160?u=${encodeURIComponent(d.author as string)}`,
+        })),
+    };
+  },
   head: () => ({
     meta: [
       { title: "Northline — Premium Software Agency" },
@@ -90,6 +116,13 @@ const work = [
     img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=70",
   },
 ];
+
+/** Known portrait per author — CMS carries no avatars. */
+const testimonialImgs: Record<string, string> = {
+  "Emily Carter": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=70",
+  "Marcus Chen": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=70",
+  "Priya Shah": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=160&q=70",
+};
 
 const testimonials = [
   {
@@ -161,6 +194,10 @@ const faqs = [
 
 function HomePage() {
   useScrollReveal();
+
+  // CMS testimonials win when present; hardcoded array is the fail-soft default.
+  const { cmsTestimonials } = Route.useLoaderData();
+  const quotes = cmsTestimonials.length ? cmsTestimonials : testimonials;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -995,7 +1032,7 @@ function HomePage() {
           Trusted by founders and product leaders.
         </h2>
         <div className="grid md:grid-cols-3 gap-6" data-cards data-cards-stagger="0.12">
-          {testimonials.map((t) => (
+          {quotes.map((t) => (
             <blockquote
               key={t.a}
               className="glare-card gradient-card rounded-2xl p-7"
