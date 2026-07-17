@@ -2,27 +2,47 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { Mail, MapPin, Phone, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
-import { cmsFind, cmsSubmitForm } from "@/lib/cms";
+import {
+  cmsFind,
+  cmsFindOne,
+  cmsSubmitForm,
+  pageLines,
+  pageRows,
+  pageStr,
+  type SitePageDoc,
+} from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact — Northline Studio" },
-      { name: "description", content: "Start a project with Northline. We reply within one business day." },
-      { property: "og:title", content: "Contact — Northline Studio" },
-      { property: "og:description", content: "Start a project with Northline. We reply within one business day." },
-    ],
-  }),
-  // Resolve the CMS "Contact" form id so submissions can be saved. Fails soft
-  // to null (never throws) if the CMS is unreachable or the form isn't seeded;
-  // the page still works and simply no-ops the save in that case.
-  loader: async (): Promise<{ formId: string | number | null }> => {
-    const docs = await cmsFind<{ id: string | number }>("forms", {
-      where: { title: { equals: "Contact" } },
-      limit: 1,
-      depth: 0,
-    });
-    return { formId: docs[0]?.id ?? null };
+  // Resolve the CMS "Contact" form id so submissions can be saved, plus the
+  // `contact` Site Page doc for LivePress copy. Both fail soft.
+  loader: async (): Promise<{ formId: string | number | null; doc: SitePageDoc }> => {
+    const [docs, doc] = await Promise.all([
+      cmsFind<{ id: string | number }>("forms", {
+        where: { title: { equals: "Contact" } },
+        limit: 1,
+        depth: 0,
+      }),
+      cmsFindOne<Record<string, unknown>>("sitepages", "contact"),
+    ]);
+    return { formId: docs[0]?.id ?? null, doc };
+  },
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", "Contact — Northline Studio");
+    const description = pageStr(
+      d,
+      "meta_description",
+      "Start a project with Northline. We reply within one business day.",
+    );
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
   },
   component: ContactPage,
 });
@@ -60,7 +80,13 @@ const nextSteps = [
 ];
 
 function ContactPage() {
-  const { formId } = Route.useLoaderData();
+  const { formId, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
+  const serviceOptions = pageLines(d, "service_options", services);
+  const budgetOptions = pageLines(d, "budget_options", budgets);
+  const steps = pageRows(d, "next_steps", nextSteps);
   const [submitted, setSubmitted] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -106,22 +132,25 @@ function ContactPage() {
         <div className="container-page grid items-end gap-12 py-24 md:grid-cols-[1.1fr_0.9fr] md:py-32">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              Contact
+              {s("hero_eyebrow", "Contact")}
             </p>
             <h1
               className="mt-6 max-w-[15ch] font-display text-5xl font-semibold leading-[0.98] md:text-7xl"
               data-reveal
             >
-              Tell us about your <span className="text-gold">project</span>.
+              {s("hero_title", "Tell us about your")}{" "}
+              <span className="text-gold">{s("hero_title_em", "project")}</span>.
             </h1>
             <p className="mt-7 max-w-md text-lg leading-relaxed text-muted-foreground" data-reveal>
-              Answer a few questions and we'll reply within one business day with a plan, a
-              timeline, and a fair budget.
+              {s(
+                "hero_subtitle",
+                "Answer a few questions and we'll reply within one business day with a plan, a timeline, and a fair budget.",
+              )}
             </p>
           </div>
           <figure className="relative" data-reveal>
             <img
-              src="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?auto=format&fit=crop&w=1200&q=75"
+              src={s("hero_img", "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?auto=format&fit=crop&w=1200&q=75")}
               alt="A quiet place to start the conversation"
               className="aspect-[4/5] w-full rounded-3xl border border-black/10 object-cover shadow-elegant"
               data-parallax-img
@@ -142,18 +171,18 @@ function ContactPage() {
         <div className="space-y-12 md:col-span-4">
           <div data-reveal-group>
             <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              What happens next
+              {s("steps_eyebrow", "What happens next")}
             </p>
             <h2 className="mt-4 font-display text-3xl font-semibold" data-reveal-child>
-              Three steps, no run-around.
+              {s("steps_heading", "Three steps, no run-around.")}
             </h2>
             <div className="mt-8 space-y-3">
-              {nextSteps.map((s) => (
-                <div key={s.n} className="glass lift flex gap-5 rounded-2xl p-6" data-reveal-child>
-                  <span className="shrink-0 font-display text-2xl font-semibold text-gradient-lime">{s.n}</span>
+              {steps.map((step) => (
+                <div key={step.n} className="glass lift flex gap-5 rounded-2xl p-6" data-reveal-child>
+                  <span className="shrink-0 font-display text-2xl font-semibold text-gradient-lime">{step.n}</span>
                   <div>
-                    <h3 className="font-display text-base font-semibold">{s.t}</h3>
-                    <p className="mt-1.5 text-sm text-muted-foreground">{s.d}</p>
+                    <h3 className="font-display text-base font-semibold">{step.t}</h3>
+                    <p className="mt-1.5 text-sm text-muted-foreground">{step.d}</p>
                   </div>
                 </div>
               ))}
@@ -168,8 +197,11 @@ function ContactPage() {
               </div>
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Email</p>
-                <a href="mailto:hello@northline.studio" className="link-underline mt-1 inline-block text-foreground">
-                  hello@northline.studio
+                <a
+                  href={`mailto:${s("contact_email", "hello@northline.studio")}`}
+                  className="link-underline mt-1 inline-block text-foreground"
+                >
+                  {s("contact_email", "hello@northline.studio")}
                 </a>
               </div>
             </div>
@@ -179,8 +211,11 @@ function ContactPage() {
               </div>
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Phone</p>
-                <a href="tel:+14155550134" className="link-underline mt-1 inline-block text-foreground">
-                  +1 (415) 555-0134
+                <a
+                  href={`tel:${s("contact_phone", "+1 (415) 555-0134").replace(/[^+\d]/g, "")}`}
+                  className="link-underline mt-1 inline-block text-foreground"
+                >
+                  {s("contact_phone", "+1 (415) 555-0134")}
                 </a>
               </div>
             </div>
@@ -190,18 +225,24 @@ function ContactPage() {
               </div>
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Studio</p>
-                <p className="mt-1 text-foreground">San Francisco · London · Lisbon</p>
+                <p className="mt-1 text-foreground">{s("contact_studio", "San Francisco · London · Lisbon")}</p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Remote-first since 2014 — 50+ senior designers and engineers across nine time zones. Someone is awake when you are.
+                  {s(
+                    "contact_studio_note",
+                    "Remote-first since 2014 — 50+ senior designers and engineers across nine time zones. Someone is awake when you are.",
+                  )}
                 </p>
               </div>
             </div>
           </div>
 
           <div className="gradient-card-gold rounded-2xl border border-gold/25 p-6" data-reveal>
-            <p className="text-xs uppercase tracking-[0.2em] text-gold">Response time</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-gold">{s("response_eyebrow", "Response time")}</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Reply within one business day — from a senior, not a sales rep. Usually the same afternoon.
+              {s(
+                "response_text",
+                "Reply within one business day — from a senior, not a sales rep. Usually the same afternoon.",
+              )}
             </p>
           </div>
         </div>
@@ -294,7 +335,7 @@ function ContactPage() {
 
               <Field label="What do you need?">
                 <div className="flex flex-wrap gap-2">
-                  {services.map((s) => (
+                  {serviceOptions.map((s) => (
                     <label
                       key={s}
                       className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
@@ -313,7 +354,7 @@ function ContactPage() {
 
               <Field label="Budget">
                 <div className="flex flex-wrap gap-2">
-                  {budgets.map((b) => (
+                  {budgetOptions.map((b) => (
                     <label
                       key={b}
                       className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"

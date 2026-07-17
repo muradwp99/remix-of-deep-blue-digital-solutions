@@ -3,6 +3,24 @@ import { SiteShell } from "@/components/site-shell";
 
 export type LegalSection = { h: string; body: string[] };
 
+/**
+ * LivePress rows carry `body` as a newline-joined string; built-in fallbacks
+ * carry string[]. Normalize either into the render shape.
+ */
+export function normalizeLegalSections(
+  rows: { h: string; body: string[] | string }[],
+): LegalSection[] {
+  return rows.map((r) => ({
+    h: r.h,
+    body: Array.isArray(r.body)
+      ? r.body
+      : String(r.body ?? "")
+          .split("\n")
+          .map((p) => p.trim())
+          .filter(Boolean),
+  }));
+}
+
 export function LegalPage({
   title,
   intro,

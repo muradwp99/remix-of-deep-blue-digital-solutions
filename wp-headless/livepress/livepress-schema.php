@@ -211,6 +211,165 @@ return array(
 			) ),
 		),
 	),
+	'our-story' => array(
+		'title'        => 'Our Story',
+		'frontendPath' => '/our-story',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+				$t( 'hero_img', 'Hero image', 'hero_img' ),
+			) ),
+			array( 'key' => 'journey', 'label' => 'Journey timeline', 'fields' => array(
+				$t( 'journey_eyebrow', 'Eyebrow', 'journey_eyebrow' ),
+				$t( 'journey_heading', 'Heading', 'journey_heading' ),
+				$rp( 'timeline', 'Milestones', 'timeline', array(
+					$s( 'year', 'Year' ), $s( 't', 'Title' ), $s( 'd', 'Description', 'textarea' ) ) ),
+			) ),
+			array( 'key' => 'position', 'label' => 'Position statement', 'fields' => array(
+				$t( 'position_heading', 'Heading', 'position_heading' ),
+				$ta( 'position_p1', 'Paragraph 1', 'position_p1' ),
+				$ta( 'position_p2', 'Paragraph 2', 'position_p2' ),
+			) ),
+			array( 'key' => 'stats', 'label' => 'Stats band', 'fields' => array(
+				$rp( 'stats', 'Stats', 'stats', array(
+					$s( 'value', 'Value' ), $s( 'label', 'Label' ) ) ),
+			) ),
+			array( 'key' => 'quotes', 'label' => 'Testimonials', 'fields' => array(
+				$rp( 'quotes', 'Quotes', 'quotes', array(
+					$s( 'q', 'Quote', 'textarea' ), $s( 'a', 'Author' ), $s( 'r', 'Role' ) ) ),
+			) ),
+			array( 'key' => 'cta', 'label' => 'CTA', 'fields' => array(
+				$t( 'cta_eyebrow', 'Eyebrow', 'cta_eyebrow' ),
+				$t( 'cta_title', 'Title', 'cta_title' ),
+				$ta( 'cta_subtitle', 'Subtitle', 'cta_subtitle' ),
+				$t( 'cta_primary_label', 'Primary button', 'cta_primary_label' ),
+				$t( 'cta_secondary_label', 'Secondary button', 'cta_secondary_label' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'terms' => array(
+		'title'        => 'Terms of Service',
+		'frontendPath' => '/terms',
+		'sections'     => array(
+			array( 'key' => 'legal', 'label' => 'Document', 'fields' => array(
+				$t( 'legal_title', 'Title', 'legal_title' ),
+				$ta( 'legal_intro', 'Intro', 'legal_intro' ),
+				$t( 'legal_updated', 'Last updated', 'legal_updated' ),
+				$rp( 'legal_sections', 'Sections', 'legal_sections', array(
+					$s( 'h', 'Heading' ), $s( 'body', 'Paragraphs (one per line)', 'textarea' ) ) ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'privacy' => array(
+		'title'        => 'Privacy Policy',
+		'frontendPath' => '/privacy',
+		'sections'     => array(
+			array( 'key' => 'legal', 'label' => 'Document', 'fields' => array(
+				$t( 'legal_title', 'Title', 'legal_title' ),
+				$ta( 'legal_intro', 'Intro', 'legal_intro' ),
+				$t( 'legal_updated', 'Last updated', 'legal_updated' ),
+				$rp( 'legal_sections', 'Sections', 'legal_sections', array(
+					$s( 'h', 'Heading' ), $s( 'body', 'Paragraphs (one per line)', 'textarea' ) ) ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'resources' => array(
+		'title'        => 'Resources',
+		'frontendPath' => '/resources',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+				$t( 'hero_img', 'Hero image', 'hero_img' ),
+			) ),
+			array( 'key' => 'tools', 'label' => 'Free tools', 'fields' => array(
+				$t( 'tools_eyebrow', 'Eyebrow', 'tools_eyebrow' ),
+				$t( 'tools_heading', 'Heading', 'tools_heading' ),
+				$ta( 'tools_note', 'Side note', 'tools_note' ),
+				$rp( 'tools', 'Tool rows', 'tools', array(
+					$s( 'title', 'Title' ), $s( 'desc', 'Description', 'textarea' ) ) ),
+			) ),
+			array( 'key' => 'prov', 'label' => 'Provenance band', 'fields' => array(
+				$t( 'prov_eyebrow', 'Eyebrow', 'prov_eyebrow' ),
+				$ta( 'prov_text', 'Text', 'prov_text' ),
+			) ),
+			array( 'key' => 'learning', 'label' => 'Learning', 'fields' => array(
+				$t( 'learning_eyebrow', 'Eyebrow', 'learning_eyebrow' ),
+				$t( 'learning_heading', 'Heading', 'learning_heading' ),
+				$rp( 'learning', 'Items', 'learning', array(
+					$s( 'tag', 'Tag' ), $s( 'title', 'Title' ), $s( 'desc', 'Description', 'textarea' ) ) ),
+			) ),
+			array( 'key' => 'banner', 'label' => 'Banner CTA', 'fields' => array(
+				$t( 'banner_message_line1', 'Message line 1', 'banner_message_line1' ),
+				$t( 'banner_message_line2', 'Message line 2', 'banner_message_line2' ),
+				$t( 'banner_title', 'Title (before gold word)', 'banner_title' ),
+				$t( 'banner_title_em', 'Title gold word', 'banner_title_em' ),
+				$t( 'banner_label', 'CTA label', 'banner_label' ),
+			) ),
+			array( 'key' => 'writing', 'label' => 'Writing', 'fields' => array(
+				$t( 'writing_eyebrow', 'Eyebrow', 'writing_eyebrow' ),
+				$t( 'writing_heading', 'Heading', 'writing_heading' ),
+				$rp( 'writing', 'Rows', 'writing', array(
+					$s( 'tag', 'Tag' ), $s( 'title', 'Title' ), $s( 'desc', 'Description', 'textarea' ) ) ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'contact' => array(
+		'title'        => 'Contact',
+		'frontendPath' => '/contact',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+				$t( 'hero_img', 'Hero image', 'hero_img' ),
+			) ),
+			array( 'key' => 'steps', 'label' => 'What happens next', 'fields' => array(
+				$t( 'steps_eyebrow', 'Eyebrow', 'steps_eyebrow' ),
+				$t( 'steps_heading', 'Heading', 'steps_heading' ),
+				$rp( 'next_steps', 'Steps', 'next_steps', array(
+					$s( 'n', 'Number' ), $s( 't', 'Title' ), $s( 'd', 'Description', 'textarea' ) ) ),
+			) ),
+			array( 'key' => 'lines', 'label' => 'Direct lines', 'fields' => array(
+				$t( 'contact_email', 'Email', 'contact_email' ),
+				$t( 'contact_phone', 'Phone', 'contact_phone' ),
+				$t( 'contact_studio', 'Studio line', 'contact_studio' ),
+				$ta( 'contact_studio_note', 'Studio note', 'contact_studio_note' ),
+				$t( 'response_eyebrow', 'Response box — eyebrow', 'response_eyebrow' ),
+				$ta( 'response_text', 'Response box — text', 'response_text' ),
+			) ),
+			array( 'key' => 'form', 'label' => 'Form options', 'fields' => array(
+				$ln( 'service_options', 'Service choices (one per line)', 'service_options' ),
+				$ln( 'budget_options', 'Budget choices (one per line)', 'budget_options' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
 	'home' => array(
 		'title'        => 'Home',
 		'frontendPath' => '/',

@@ -4,16 +4,37 @@ import { pageThemes } from "@/lib/themes";
 import { BannerCTA } from "@/components/banner-cta";
 import { ArrowUpRight, Send } from "lucide-react";
 import { useState } from "react";
+import {
+  cmsFindOne,
+  pageRows,
+  pageStr,
+  type SitePageDoc,
+} from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 
 export const Route = createFileRoute("/resources")({
-  head: () => ({
-    meta: [
-      { title: "Resources — Northline Studio" },
-      { name: "description", content: "Free tools, learning material and writing from the Northline team." },
-      { property: "og:title", content: "Resources — Northline Studio" },
-      { property: "og:description", content: "Free tools, learning material and writing from the Northline team." },
-    ],
-  }),
+  // LivePress: editable via the `resources` Site Page doc, fail-soft to copy below.
+  loader: async (): Promise<{ doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "resources");
+    return { doc };
+  },
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", "Resources — Northline Studio");
+    const description = pageStr(
+      d,
+      "meta_description",
+      "Free tools, learning material and writing from the Northline team.",
+    );
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: ResourcesPage,
 });
 
@@ -39,6 +60,13 @@ const writing = [
 ];
 
 function ResourcesPage() {
+  const { doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
+  const toolsRows = pageRows(d, "tools", tools);
+  const learningRows = pageRows(d, "learning", learning);
+  const writingRows = pageRows(d, "writing", writing);
   return (
     <SiteShell theme={pageThemes["resources"]}>
       {/* ---- Hero (light editorial, asymmetric split) ---- */}
@@ -46,21 +74,22 @@ function ResourcesPage() {
         <div className="container-page grid items-end gap-12 py-24 md:grid-cols-[1.15fr_0.85fr] md:py-32">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              Resources
+              {s("hero_eyebrow", "Resources")}
             </p>
             <h1
               className="mt-6 max-w-[15ch] font-display text-5xl font-semibold leading-[0.98] md:text-7xl"
               data-reveal
             >
-              Free tools, learning and <span className="text-gold">writing</span>.
+              {s("hero_title", "Free tools, learning and")}{" "}
+              <span className="text-gold">{s("hero_title_em", "writing")}</span>.
             </h1>
             <p className="mt-7 max-w-md text-lg leading-relaxed text-muted-foreground" data-reveal>
-              Everything we've built to help teams ship better software — no signup, no gate.
+              {s("hero_subtitle", "Everything we've built to help teams ship better software — no signup, no gate.")}
             </p>
           </div>
           <figure className="relative" data-reveal>
             <img
-              src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1920&q=70"
+              src={s("hero_img", "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1920&q=70")}
               alt="Open notebooks and reading material from the Northline studio"
               className="aspect-[4/5] w-full rounded-3xl border border-black/10 object-cover shadow-elegant"
               data-parallax-img
@@ -75,18 +104,18 @@ function ResourcesPage() {
           <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
               <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-                Free tools
+                {s("tools_eyebrow", "Free tools")}
               </p>
               <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl" data-reveal>
-                Run by us, for you.
+                {s("tools_heading", "Run by us, for you.")}
               </h2>
             </div>
             <p className="max-w-sm text-sm text-muted-foreground" data-reveal>
-              These run as part of our free audit — a senior runs the tool on your site and walks you through the results. No self-serve dashboard, no upsell script.
+              {s("tools_note", "These run as part of our free audit — a senior runs the tool on your site and walks you through the results. No self-serve dashboard, no upsell script.")}
             </p>
           </div>
           <div className="border-t border-black/10" data-cards>
-            {tools.map((t, i) => (
+            {toolsRows.map((t, i) => (
               <Link
                 key={t.title}
                 to="/contact"
@@ -122,9 +151,9 @@ function ResourcesPage() {
             />
             <div className="absolute inset-0 bg-linear-to-t from-background/90 via-background/30 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">
-              <p className="text-xs uppercase tracking-[0.28em] text-gold">Since 2014</p>
+              <p className="text-xs uppercase tracking-[0.28em] text-gold">{s("prov_eyebrow", "Since 2014")}</p>
               <p className="mt-3 max-w-xl font-display text-2xl font-semibold leading-snug md:text-4xl">
-                Everything here comes from paid client work — published once it's proven.
+                {s("prov_text", "Everything here comes from paid client work — published once it's proven.")}
               </p>
             </div>
           </div>
@@ -136,14 +165,14 @@ function ResourcesPage() {
         <div className="container-page py-24">
           <div className="mb-12 max-w-2xl">
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              Learning
+              {s("learning_eyebrow", "Learning")}
             </p>
             <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl" data-reveal>
-              Courses &amp; guides.
+              {s("learning_heading", "Courses & guides.")}
             </h2>
           </div>
           <div className="grid gap-x-12 gap-y-10 md:grid-cols-2" data-cards data-cards-stagger="0.08">
-            {learning.map((it) => (
+            {learningRows.map((it) => (
               <article key={it.title} className="border-t border-black/10 pt-6" data-card>
                 <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold">
                   {it.tag}
@@ -157,15 +186,18 @@ function ResourcesPage() {
       </section>
 
       <BannerCTA
-        message={["Your URL from you,", "a 12-point teardown from us."]}
+        message={[
+          s("banner_message_line1", "Your URL from you,"),
+          s("banner_message_line2", "a 12-point teardown from us."),
+        ]}
         title={
           <>
-            Want this applied to
+            {s("banner_title", "Want this applied to")}
             <br />
-            your <span className="text-gold">product</span>?
+            your <span className="text-gold">{s("banner_title_em", "product")}</span>?
           </>
         }
-        cta={{ label: "Book the Free Audit", to: "/contact" }}
+        cta={{ label: s("banner_label", "Book the Free Audit"), to: "/contact" }}
       />
 
       {/* ---- Writing — studio index ---- */}
@@ -173,14 +205,14 @@ function ResourcesPage() {
         <div className="container-page py-24">
           <div className="mb-12 max-w-2xl">
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              Blog &amp; news
+              {s("writing_eyebrow", "Blog & news")}
             </p>
             <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl" data-reveal>
-              Writing from the studio.
+              {s("writing_heading", "Writing from the studio.")}
             </h2>
           </div>
           <ul className="border-t border-black/10" data-cards data-cards-stagger="0.08">
-            {writing.map((it) => (
+            {writingRows.map((it) => (
               <li
                 key={it.title}
                 className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-black/10 py-7"
