@@ -4,33 +4,43 @@ import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
 import { getLearningCategory, type LearningItem } from "@/lib/learning";
 import { pageThemes } from "@/lib/themes";
-import { cmsFind } from "@/lib/cms";
+import { cmsFind, cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { cmsToLearningItems, type CmsLearning } from "@/lib/cms-catalog";
 
 const cat = getLearningCategory("guides")!;
 
 export const Route = createFileRoute("/learning_/guides")({
-  loader: async (): Promise<{ items: LearningItem[] }> => {
+  loader: async (): Promise<{ items: LearningItem[]; doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "learning-guides");
     const docs = await cmsFind<CmsLearning>("learning", {
       where: { type: { equals: "guide" } },
       sort: "order",
       depth: 0,
     });
-    return { items: docs.length ? cmsToLearningItems(docs) : cat.items };
+    return { doc, items: docs.length ? cmsToLearningItems(docs) : cat.items };
   },
-  head: () => ({
-    meta: [
-      { title: cat.metaTitle },
-      { name: "description", content: cat.metaDesc },
-      { property: "og:title", content: cat.metaTitle },
-      { property: "og:description", content: cat.metaDesc },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", cat.metaTitle);
+    const description = pageStr(d, "meta_description", cat.metaDesc);
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: Page,
 });
 
 function Page() {
-  const { items } = Route.useLoaderData();
+  const { items, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell theme={pageThemes["learning/guides"]}>
       {/* Hero — light editorial, asymmetric split with a cover figure */}
@@ -38,16 +48,16 @@ function Page() {
         <div className="container-page grid items-end gap-12 py-24 md:grid-cols-[1.1fr_0.9fr] md:py-32">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              {cat.eyebrow}
+              {s("hero_eyebrow", cat.eyebrow)}
             </p>
             <h1
               className="mt-6 max-w-[15ch] font-display text-5xl font-semibold leading-[0.98] md:text-7xl"
               data-reveal
             >
-              Playbooks with the <span className="text-gold">scars</span> left in.
+              {s("hero_title", "Playbooks with the")} <span className="text-gold">{s("hero_title_em", "scars")}</span> {s("hero_title_after", "left in.")}
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-              {cat.subtitle}
+              {s("hero_subtitle", cat.subtitle)}
             </p>
           </div>
           <figure className="relative" data-reveal>

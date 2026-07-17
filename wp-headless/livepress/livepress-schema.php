@@ -618,6 +618,67 @@ return array(
 			) ),
 		),
 	),
+	'learning-guides' => array(
+		'title' => 'Learning — Guides', 'frontendPath' => '/learning/guides',
+		'sections' => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold)', 'hero_title' ),
+				$t( 'hero_title_em', 'Gold words', 'hero_title_em' ),
+				$t( 'hero_title_after', 'Title after', 'hero_title_after' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'learning-templates' => array(
+		'title' => 'Learning — Templates', 'frontendPath' => '/learning/templates',
+		'sections' => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold)', 'hero_title' ),
+				$t( 'hero_title_em', 'Gold words', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'learning-tutorials' => array(
+		'title' => 'Learning — Tutorials', 'frontendPath' => '/learning/tutorials',
+		'sections' => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold)', 'hero_title' ),
+				$t( 'hero_title_em', 'Gold words', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'learning-webinars' => array(
+		'title' => 'Learning — Webinars', 'frontendPath' => '/learning/webinars',
+		'sections' => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold)', 'hero_title' ),
+				$t( 'hero_title_em', 'Gold words', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
 	'home' => array(
 		'title'        => 'Home',
 		'frontendPath' => '/',

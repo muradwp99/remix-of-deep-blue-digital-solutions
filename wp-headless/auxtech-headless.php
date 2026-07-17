@@ -63,15 +63,19 @@ add_action( 'template_redirect', function () {
 } );
 
 /**
- * Live preview while editing: an iframe of the real frontend on the Home Page
- * edit screen. Content saves → hit Refresh in the box → see it live.
+ * Live preview while editing blog posts: an iframe of the real frontend
+ * article on the post edit screen. Update → hit Refresh → see it live.
+ * (Site Pages and collections use the LivePress fullscreen editor instead.)
  */
 add_action( 'add_meta_boxes', function () {
 	add_meta_box(
 		'auxtech-live-preview',
 		'Live Site Preview',
-		function () {
+		function ( $post ) {
 			$url = apply_filters( 'auxtech_frontend_url', 'http://localhost:8080' );
+			if ( $post && 'post' === $post->post_type && $post->post_name ) {
+				$url .= '/blog/' . $post->post_name;
+			}
 			echo '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">';
 			echo '<button type="button" class="button" onclick="document.getElementById(\'auxtech-preview-frame\').src=document.getElementById(\'auxtech-preview-frame\').src;">↻ Refresh preview</button>';
 			echo '<a class="button" href="' . esc_url( $url ) . '" target="_blank" rel="noopener">Open site ↗</a>';
@@ -79,7 +83,7 @@ add_action( 'add_meta_boxes', function () {
 			echo '</div>';
 			echo '<iframe id="auxtech-preview-frame" src="' . esc_url( $url ) . '?edit=1" style="width:100%;height:640px;border:1px solid #333;border-radius:8px;background:#0b0e1a;"></iframe>';
 		},
-		array( 'homepage' ),
+		array( 'post' ),
 		'normal',
 		'high'
 	);

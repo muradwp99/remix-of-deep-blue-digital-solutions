@@ -4,33 +4,43 @@ import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
 import { getLearningCategory, type LearningItem } from "@/lib/learning";
 import { pageThemes } from "@/lib/themes";
-import { cmsFind } from "@/lib/cms";
+import { cmsFind, cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { cmsToLearningItems, type CmsLearning } from "@/lib/cms-catalog";
 
 const cat = getLearningCategory("webinars")!;
 
 export const Route = createFileRoute("/learning_/webinars")({
-  loader: async (): Promise<{ items: LearningItem[] }> => {
+  loader: async (): Promise<{ items: LearningItem[]; doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "learning-webinars");
     const docs = await cmsFind<CmsLearning>("learning", {
       where: { type: { equals: "webinar" } },
       sort: "order",
       depth: 0,
     });
-    return { items: docs.length ? cmsToLearningItems(docs) : cat.items };
+    return { doc, items: docs.length ? cmsToLearningItems(docs) : cat.items };
   },
-  head: () => ({
-    meta: [
-      { title: cat.metaTitle },
-      { name: "description", content: cat.metaDesc },
-      { property: "og:title", content: cat.metaTitle },
-      { property: "og:description", content: cat.metaDesc },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", cat.metaTitle);
+    const description = pageStr(d, "meta_description", cat.metaDesc);
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: Page,
 });
 
 function Page() {
-  const { items } = Route.useLoaderData();
+  const { items, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell theme={pageThemes["learning/webinars"]}>
       {/* Hero — light, centered */}
@@ -43,13 +53,13 @@ function Page() {
             className="mx-auto mt-6 max-w-3xl font-display text-5xl font-semibold leading-[0.98] md:text-7xl"
             data-reveal
           >
-            Live, unrehearsed, <span className="text-gold">on the record</span>.
+            {s("hero_title", "Live, unrehearsed,")} <span className="text-gold">{s("hero_title_em", "on the record")}</span>.
           </h1>
           <p
             className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground"
             data-reveal
           >
-            {cat.subtitle}
+            {s("hero_subtitle", cat.subtitle)}
           </p>
         </div>
       </section>
