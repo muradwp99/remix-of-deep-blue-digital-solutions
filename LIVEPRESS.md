@@ -1,65 +1,113 @@
 # LivePress — realtime visual editing for headless WordPress
 
-**The invention:** WordPress as a *live visual editor* for a modern JS frontend
-(React/TanStack here; the pattern fits Next.js identically). Sanity and
-Storyblok sell this experience; WordPress headless has never had it. We build
-it as a reusable, open pattern: schema-driven fields in WP, a postMessage
-bridge, and a frontend overlay — **keystrokes in wp-admin appear on the real
-rendered site instantly, before saving.**
+WordPress as a **live visual editor** for a modern JS frontend. Type in
+wp-admin, watch the real rendered site change **before saving**. Sanity and
+Storyblok sell this experience; WordPress headless never had it. This repo
+contains the working reference implementation — built on TanStack Start, and
+the pattern maps 1:1 to Next.js.
 
-## What already works (Phase A — DONE)
-- **Edit bridge** (`src/lib/edit-bridge.ts`): when the site runs in the admin
-  preview iframe (or `?edit=1`), it listens for `aux-edit` postMessages and
-  overlays values onto page content via `useLiveEdits(content)` — one hook per
-  page. Memory-only; saved content untouched until Update.
-- **Broadcaster** (mu-plugin): every keystroke in a Home Page field streams
-  into the preview iframe (debounced 120ms). Scalars + line-lists live now.
-- **Preview metabox**: iframe of the real site on the edit screen.
-- Verified end-to-end: message → React → DOM in <400ms.
+## What it does (all shipped, all verified)
 
-## Message contract (the protocol other devs can adopt)
+- **Fullscreen editor** — WP chrome hidden; schema-driven field panel left,
+  live iframe of the real page right. Accordion sections, drag-reorder
+  repeaters, media-library image pickers, device-size preview
+  (desktop/laptop/tablet/mobile).
+- **Realtime streaming** — every keystroke posts into the preview and renders
+  in <400ms. No save, no reload. Unsaved edits survive preview reloads.
+- **One "Site Pages" list** — 25 pages in a single CPT list, not 25 sidebar
+  menus. Collections (projects, services, …) open the same editor from their
+  native lists.
+- **Section drag-reorder** — the home page renders keyed blocks in
+  CMS-driven order; drag rows, the live page rearranges.
+- **Click-to-edit** — click any section in the preview; its panel opens,
+  scrolls, flashes. Link navigation is suppressed in edit mode.
+- **Design tokens** — border-radius slider + brand color pickers restyle the
+  whole site live (`:root` CSS variable overrides), standalone "Design" screen.
+- **Menu editor** — drag/rename/hide top-level nav + full footer columns
+  editor, standalone "Menus" screen (mega-panel contents stay code-owned).
+- **Fail-soft everywhere** — the frontend renders its built-in copy when WP
+  is unreachable; the bridge is inert outside the editor. Zero prod cost.
+
+## Architecture
+
 ```
-admin → frontend: { type: "aux-edit",       path: "hero.headline", value }
-                  { type: "aux-edit-bulk",  edits: [{ path, value }] }
-                  { type: "aux-edit-reset" }
-frontend → admin: { type: "aux-edit-ready" }
+┌───────────────────────────── wp-admin ──────────────────────────────┐
+│  LivePress editor (plugin)                                          │
+│  schema registry → field panel → postMessage per keystroke ──────┐  │
+│  Save → REST (post meta / auxtech options)                       │  │
+└──────────────────────────────────────────────────────────────────┼──┘
+                                                                   ▼
+┌───────────────────────── frontend (iframe) ─────────────────────────┐
+│  edit-bridge: useLiveEdits(content) overlays paths immutably        │
+│  DesignTokensStyle / useNavItems / footer listener (globals)        │
+│  loaders fetch WP REST; inline fallbacks when CMS absent            │
+└─────────────────────────────────────────────────────────────────────┘
 ```
-`path` = dot path into the page content object; `value` = string | string[] |
-row[]. Frontend validates path shape + applies immutably.
 
-## Phase B — one "Site Pages" list + modern editor (next)
-Kills the 35-CPT sidebar problem and the dated metabox UI in one move:
-1. **Single CPT `sitepage`** — one doc per route, admin shows ONE list (like
-   Pages). `homepage` CPT merges into it (doc `home`).
-2. **Schema registry** — one JSON file (versioned in repo, mirrored to WP)
-   declaring each page's sections/fields. Frontend types + admin UI + REST
-   mapping all generate from it. Single source of truth.
-3. **React edit screen** (replaces metaboxes for `sitepage`, built on
-   @wordpress/components): left = modern field panel (sections, repeaters with
-   **drag-reorder**, media-library image pickers), right = live preview
-   iframe. Save via REST. Repeater edits stream as row arrays (bridge already
-   accepts them).
+### The protocol (adopt this, everything else follows)
 
-## Phase C — design flexibility (images, radius, tokens, menus)
-- **Design tokens doc** (global): radius, colors, spacing, font scale →
-  frontend reads as CSS variables; token changes stream over the same bridge
-  (instant restyle). This answers "border radius from admin".
-- **Image fields** = WP media library picker; URL lands in the field, streams
-  live like text. (Frontend `cmsMedia` already resolves relative URLs.)
-- **Menu editor**: header/footer nav as drag-sortable tree in the React admin,
-  stored in the `auxtech_header` / `auxtech_footer` options the frontend
-  already reads; live preview via bridge.
+```
+admin → frontend:
+  { type: "aux-edit",      path: "hero.headline", value }   // dot-path overlay
+  { type: "aux-edit-bulk", edits: [{ path, value }] }
+  { type: "aux-edit-reset" }
+  { type: "aux-design",    tokens: { radius, gold, lime } } // CSS vars
+  { type: "aux-menu",      nav: [{ key, label, visible }] }
+  { type: "aux-footer",    footer: { blurb, columns } }
+frontend → admin:
+  { type: "aux-edit-ready" }                                // rebroadcast hook
+  { type: "aux-focus",     section }                        // click-to-edit
+```
 
-## Phase D — polish to product
-- Click-to-edit: clicking an element in the preview focuses its field
-  (frontend sends `{type:"aux-focus", path}` upward).
-- Draft/publish preview states; per-field revision diff.
-- Extract plugin + `edit-bridge` into a standalone package: **the reusable
-  "LivePress" kit any WP + React/Next project can drop in.**
+`value` is a string, string[] (line lists) or row[] (repeaters). The frontend
+validates path shape and applies immutably.
 
-## Design rules learned so far
-- CPT-per-page does NOT scale in the admin sidebar — single `sitepage` CPT +
-  per-page schema is the way.
-- Fail-soft everywhere: bridge inactive outside iframe/?edit → zero prod cost.
-- Keep the schema in the repo, mirror into WP — code review + types stay
-  authoritative.
+## The kit — what you copy into another project
+
+**WordPress side** (drop into `wp-content/plugins/` + `mu-plugins/`):
+- `wp-headless/livepress/` — the editor: CPT, schema registry, fullscreen
+  screens, REST meta registration, redirects. No build step, vanilla JS.
+- `wp-headless/auxtech-headless.php` — headless bridge mu-plugin: globals
+  REST, option writer, CORS, contact endpoint, front-end redirect, post
+  preview metabox. Rename the `auxtech_*` prefix to taste.
+
+**Frontend side** (framework-agnostic React):
+- `src/lib/edit-bridge.ts` — the whole runtime: `useLiveEdits(content)`,
+  `isEditMode()`, click-to-edit sender. ~180 lines, zero deps beyond React.
+- `src/lib/cms.ts` `sitepages` collection + `pageStr/pageRows/pageLines` —
+  flat page-doc consumption with inline fallbacks.
+- `src/components/design-tokens.tsx` — token overlay.
+
+### Wiring a page (the proven 4-step recipe)
+
+1. **Route**: loader fetches `cmsFindOne("sitepages", "<slug>")`; component
+   runs `const d = useLiveEdits(doc)` and replaces literals with
+   `pageStr(d, "key", "fallback")` / `pageRows` / `pageLines`.
+2. **Schema**: add a `<slug>` entry in `livepress-schema.php` — flat paths
+   (path == meta key) unless the page pre-maps nested docs.
+3. **Seed**: `wp_insert_post` a `sitepage` doc with current copy so editors
+   see real values, not blanks.
+4. **Verify with a sentinel**: change one WP value, curl the page, expect the
+   sentinel — fail-soft masks dead wiring; body length alone lies.
+
+Collections work the same with `collection:{post_type}` schemas; the route
+overlays the raw doc and re-maps (`works_.$slug.tsx` is the reference).
+
+## Hard-won rules
+
+- Register REST meta for **every schema field** in the plugin itself
+  (`register_meta` on init) — meta invisible in REST is the silent killer.
+- CPTs must include `custom-fields` support or WP omits `meta` from REST.
+- Repeaters travel as JSON strings; parse at the adapter boundary.
+- Icons/animation chrome stay code-owned, matched to CMS rows by index —
+  serialization contract (loaders return data only).
+- One `sitepage` CPT, never CPT-per-page — sidebars don't scale.
+- Blog posts keep Gutenberg (best long-form editor) + a preview iframe.
+
+## Status / roadmap
+
+- ✅ Phases A–D shipped: bridge, editor, tokens, menus, sections,
+  click-to-edit, device preview, 25 Site Pages + 32 collection editors.
+- ◻ Extraction to standalone repos (`livepress` plugin + `@livepress/bridge`
+  npm package) — mechanical: the code is already framework-clean.
+- ◻ Production: LocalWP → Hostinger per `WP-MIGRATION.md` phases.
