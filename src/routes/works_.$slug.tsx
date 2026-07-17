@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { CTABand } from "@/components/sections";
@@ -61,7 +62,7 @@ const cmsToCard = (p: CmsProject): NextCard => ({
 });
 
 export const Route = createFileRoute("/works_/$slug")({
-  loader: async ({ params }): Promise<{ study: DetailStudy | null; next: NextCard | null }> => {
+  loader: async ({ params }): Promise<{ study: DetailStudy | null; next: NextCard | null; doc?: CmsProject | null }> => {
     const [one, all] = await Promise.all([
       cmsFindOne<CmsProject>("projects", params.slug, { depth: 2 }),
       cmsFind<CmsProject>("projects", { sort: "-featured", limit: 20, depth: 1 }),
@@ -69,7 +70,7 @@ export const Route = createFileRoute("/works_/$slug")({
     if (one) {
       const idx = all.findIndex((x) => x.slug === one.slug);
       const nextDoc = all.length ? all[(idx + 1) % all.length] : one;
-      return { study: cmsToStudy(one), next: cmsToCard(nextDoc) };
+      return { study: cmsToStudy(one), next: cmsToCard(nextDoc), doc: one };
     }
     // Fallback to the built-in case studies
     const cs = getCaseStudy(params.slug);
@@ -99,7 +100,10 @@ export const Route = createFileRoute("/works_/$slug")({
 });
 
 function CaseStudyPage() {
-  const { study, next } = Route.useLoaderData();
+  const { study: studyBase, next, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes on the raw project doc, then re-map.
+  const liveDoc = useLiveEdits(doc ?? null);
+  const study = liveDoc ? cmsToStudy(liveDoc) : studyBase;
 
   if (!study) {
     return (

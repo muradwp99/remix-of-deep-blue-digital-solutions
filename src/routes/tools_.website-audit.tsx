@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { ArrowDown } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
@@ -12,10 +13,10 @@ import { cmsToTool, type CmsTool } from "@/lib/cms-catalog";
 const SLUG = "website-audit";
 
 export const Route = createFileRoute("/tools_/website-audit")({
-  loader: async (): Promise<{ tool: Tool }> => {
+  loader: async (): Promise<{ tool: Tool; doc: CmsTool | null }> => {
     const fallback = getTool(SLUG)!;
     const doc = await cmsFindOne<CmsTool>("tools", SLUG, { depth: 1 });
-    return { tool: doc ? cmsToTool(doc, fallback) : fallback };
+    return { tool: doc ? cmsToTool(doc, fallback) : fallback, doc };
   },
   head: ({ loaderData }) => {
     const tool = loaderData?.tool;
@@ -32,7 +33,10 @@ export const Route = createFileRoute("/tools_/website-audit")({
 });
 
 function Page() {
-  const { tool } = Route.useLoaderData();
+  const { tool, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes on the raw doc, then re-map.
+  const liveDoc = useLiveEdits(doc);
+  const liveTool = liveDoc ? cmsToTool(liveDoc, tool) : tool;
   return (
     <SiteShell theme={pageThemes["tools/website-audit"]}>
       {/* DEEP · deep-blue color hero — the audit runs live in the terminal */}
@@ -40,7 +44,7 @@ function Page() {
         <div className="container-page grid items-center gap-14 py-24 md:py-32 lg:grid-cols-[1.05fr_1fr]">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              {tool.eyebrow}
+              {liveTool.eyebrow}
             </p>
             <h1
               className="mt-5 font-display text-5xl md:text-6xl xl:text-7xl leading-[0.98] font-semibold"
@@ -49,7 +53,7 @@ function Page() {
               Twelve points, zero spin
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground" data-reveal>
-              {tool.subtitle}
+              {liveTool.subtitle}
             </p>
             <div className="mt-9" data-reveal>
               <a
@@ -80,7 +84,7 @@ function Page() {
 
       {/* LIGHT · the request widget on a clean, legible surface */}
       <div id="request" className="block-light scroll-mt-24">
-        <AuditRequest checks={tool.checks} ctaLabel="Request the Audit" />
+        <AuditRequest checks={liveTool.checks} ctaLabel="Request the Audit" />
       </div>
 
       <BannerCTA

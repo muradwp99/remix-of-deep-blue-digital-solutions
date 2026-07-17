@@ -45,7 +45,7 @@ add_action( 'init', function () {
 /* ------------------------------------------------------------------ */
 
 /** Collections whose edit screens open in the LivePress live editor. */
-const LIVEPRESS_COLLECTIONS = array( 'service', 'solution', 'industry' );
+const LIVEPRESS_COLLECTIONS = array( 'service', 'solution', 'industry', 'tool', 'project' );
 
 /** LivePress home in the sidebar: Site Pages · Menus · Design. */
 add_action( 'admin_menu', function () {

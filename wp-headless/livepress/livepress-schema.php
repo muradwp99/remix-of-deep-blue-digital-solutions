@@ -101,6 +101,59 @@ return array(
 			) ),
 		),
 	),
+	'collection:tool' => array(
+		'title'        => 'Tool',
+		'frontendPath' => '/tools/{slug}',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'eyebrow', 'Eyebrow', 'eyebrow' ),
+				$t( 'heading', 'Heading', 'heading' ),
+				$t( 'heading_em', 'Heading emphasis', 'headingEm' ),
+				$t( 'heading_after', 'Heading after', 'headingAfter' ),
+				$ta( 'subtitle', 'Subtitle', 'subtitle' ),
+				$ta( 'summary', 'Card summary', 'summary' ),
+			) ),
+			array( 'key' => 'checks', 'label' => 'Checklist', 'fields' => array(
+				$ln( 'checks', 'Checks (one per line)', 'checks' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta.title' ),
+				$ta( 'meta_description', 'SEO description', 'meta.description' ),
+			) ),
+		),
+	),
+	'collection:project' => array(
+		'title'        => 'Project',
+		'frontendPath' => '/works/{slug}',
+		'sections'     => array(
+			array( 'key' => 'overview', 'label' => 'Overview', 'fields' => array(
+				$t( 'client', 'Client', 'client' ),
+				$t( 'industry', 'Industry', 'industry' ),
+				$t( 'tag', 'Tag', 'tag' ),
+				$t( 'year', 'Year', 'year' ),
+				$ta( 'summary', 'Summary', 'summary' ),
+				$t( 'cover_image', 'Cover image', 'coverImage' ),
+			) ),
+			array( 'key' => 'story', 'label' => 'Challenge & approach', 'fields' => array(
+				$ta( 'challenge', 'Challenge', 'challenge' ),
+				$rp( 'approach', 'Approach phases', 'approach', array(
+					$s( 'phase', 'Phase' ), $s( 'detail', 'Detail', 'textarea' ) ) ),
+			) ),
+			array( 'key' => 'results', 'label' => 'Results', 'fields' => array(
+				$rp( 'results', 'Result stats', 'results', array(
+					$s( 'value', 'Value' ), $s( 'label', 'Label' ), $s( 'direction', 'Direction (up/down)' ) ) ),
+			) ),
+			array( 'key' => 'scope', 'label' => 'Scope', 'fields' => array(
+				$ln( 'services_list', 'Services (one per line)', 'services' ),
+				$ln( 'stack', 'Stack (one per line)', 'stack' ),
+			) ),
+			array( 'key' => 'quote', 'label' => 'Testimonial', 'fields' => array(
+				$ta( 'testimonial_quote', 'Quote', 'testimonial.quote' ),
+				$t( 'testimonial_author', 'Author', 'testimonial.author' ),
+				$t( 'testimonial_role', 'Role', 'testimonial.role' ),
+			) ),
+		),
+	),
 	'home' => array(
 		'title'        => 'Home',
 		'frontendPath' => '/',

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { ArrowDown } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
@@ -12,10 +13,10 @@ import { cmsToTool, type CmsTool } from "@/lib/cms-catalog";
 const SLUG = "speed-test";
 
 export const Route = createFileRoute("/tools_/speed-test")({
-  loader: async (): Promise<{ tool: Tool }> => {
+  loader: async (): Promise<{ tool: Tool; doc: CmsTool | null }> => {
     const fallback = getTool(SLUG)!;
     const doc = await cmsFindOne<CmsTool>("tools", SLUG, { depth: 1 });
-    return { tool: doc ? cmsToTool(doc, fallback) : fallback };
+    return { tool: doc ? cmsToTool(doc, fallback) : fallback, doc };
   },
   head: ({ loaderData }) => {
     const tool = loaderData?.tool;
@@ -32,14 +33,17 @@ export const Route = createFileRoute("/tools_/speed-test")({
 });
 
 function Page() {
-  const { tool } = Route.useLoaderData();
+  const { tool, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes on the raw doc, then re-map.
+  const liveDoc = useLiveEdits(doc);
+  const liveTool = liveDoc ? cmsToTool(liveDoc, tool) : tool;
   return (
     <SiteShell theme={pageThemes["tools/speed-test"]}>
       {/* BOLD · vivid color hero, poster-scale headline */}
       <section className="block-bold">
         <div className="container-page py-24 md:py-32">
           <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
-            {tool.eyebrow}
+            {liveTool.eyebrow}
           </p>
           <h1
             className="mt-6 max-w-[15ch] font-display text-5xl md:text-7xl xl:text-8xl leading-[0.95] font-semibold"
@@ -48,7 +52,7 @@ function Page() {
             Find the seconds you're losing
           </h1>
           <p className="mt-7 max-w-xl text-lg text-muted-foreground" data-reveal>
-            {tool.subtitle}
+            {liveTool.subtitle}
           </p>
           <div className="mt-9" data-reveal>
             <a
@@ -90,7 +94,7 @@ function Page() {
 
       {/* TINT · the request widget on a clean pale surface */}
       <div id="request" className="block-tint scroll-mt-24">
-        <AuditRequest checks={tool.checks} ctaLabel="Request the Review" />
+        <AuditRequest checks={liveTool.checks} ctaLabel="Request the Review" />
       </div>
 
       <BannerCTA
