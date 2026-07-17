@@ -1,17 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell, PageHeader } from "@/components/site-shell";
 import { CTABand } from "@/components/sections";
 import { ShoppingBag, Boxes, Megaphone, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/solutions")({
-  head: () => ({
-    meta: [
-      { title: "Solutions — Northline Studio" },
-      { name: "description", content: "Ecommerce, SaaS, digital marketing and full brand consultancy — outcomes we deliver." },
-      { property: "og:title", content: "Solutions — Northline Studio" },
-      { property: "og:description", content: "Ecommerce, SaaS, digital marketing and full brand consultancy." },
-    ],
-  }),
+  loader: async (): Promise<{ doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "solutions");
+    return { doc };
+  },
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", 'Solutions — Northline Studio');
+    const description = pageStr(d, "meta_description", 'Packaged programs designed to move a specific business number.');
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: SolutionsPage,
 });
 
@@ -78,13 +89,17 @@ const industries = [
 ];
 
 function SolutionsPage() {
+  const { doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell>
       <PageHeader
-        eyebrow="Solutions"
+        eyebrow={s("hero_eyebrow", "Solutions")}
         image="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=70"
-        title={<>Outcomes, not just <em className="font-playfair font-medium text-gold">deliverables</em>.</>}
-        subtitle="Packaged programs designed to move a specific business number — revenue, retention, brand equity, or speed to market."
+        title={<>{s("hero_title", "Outcomes, not just")} <em className="font-playfair font-medium text-gold">{s("hero_title_em", "deliverables")}</em>.</>}
+        subtitle={s("hero_subtitle", "Packaged programs designed to move a specific business number — revenue, retention, brand equity, or speed to market.")}
       />
 
       {/* Solution programs */}
@@ -151,9 +166,9 @@ function SolutionsPage() {
       </section>
 
       <CTABand
-        eyebrow="Pick a number"
-        title="Which metric do you need to move?"
-        subtitle="Tell us the business number that matters this quarter. We'll reply within one business day with the program, the timeline, and a fair budget."
+        eyebrow={s("cta_eyebrow", "Pick a number")}
+        title={s("cta_title", "Which metric do you need to move?")}
+        subtitle={s("cta_subtitle", "Tell us the business number that matters this quarter. We'll reply within one business day with the program, the timeline, and a fair budget.")}
         primary={{ label: "Start a Project", to: "/contact" }}
         secondary={{ label: "See Pricing", to: "/pricing" }}
       />

@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { BentoShowcase } from "@/components/bento-features";
@@ -13,35 +15,47 @@ import {
 import { ArrowUpRight, Layers, Cloud, Building2, RefreshCw } from "lucide-react";
 
 export const Route = createFileRoute("/custom-software")({
-  head: () => ({
-    meta: [
-      { title: "Custom Software Development — Northline Studio" },
-      { name: "description", content: "Custom platforms, portals, and internal tools built by one senior team. First live demo on day 7, a shippable slice by day 14, full IP transfer at delivery." },
-      { property: "og:title", content: "Custom Software Development — Northline Studio" },
-      { property: "og:description", content: "Custom platforms built by one senior team. First live demo on day 7. Full IP transfer at delivery." },
-    ],
-  }),
+  loader: async (): Promise<{ doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "custom-software");
+    return { doc };
+  },
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", 'Custom Software — Northline Studio');
+    const description = pageStr(d, "meta_description", 'Platforms, portals, and internal tools — architected and shipped by one senior team.');
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: Page,
 });
 
 function Page() {
+  const { doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell theme={pageThemes["custom-software"]}>
       {/* ---- Hero (deep violet color-block — premium, light ink) ---- */}
       <section className="block-deep">
         <div className="container-page py-28 md:py-36">
           <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-            Custom Software
+            {s("hero_eyebrow", "Custom Software")}
           </p>
           <h1
             className="mt-6 max-w-[18ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
             data-reveal
           >
-            Software built like it has to <span className="text-gold">last</span>
+            {s("hero_title", "Software built like it has to")} <span className="text-gold">{s("hero_title_em", "last")}</span>
           </h1>
           <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-            Platforms, portals, and internal tools — architected and shipped by one senior team.
-            You see it running on day 7, not in a deck on week 6.
+            {s("hero_subtitle", "Platforms, portals, and internal tools — architected and shipped by one senior team. You see it running on day 7, not in a deck on week 6.")}
           </p>
           <div className="mt-10" data-reveal>
             <Link

@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { BentoShowcase } from "@/components/bento-features";
@@ -13,14 +15,23 @@ import {
 import { ArrowUpRight, Cloud, Boxes, Plug } from "lucide-react";
 
 export const Route = createFileRoute("/saas")({
-  head: () => ({
-    meta: [
-      { title: "SaaS Development — Northline Studio" },
-      { name: "description", content: "SaaS platforms engineered to invoice: multi-tenant architecture, billing, and compliance from the first commit. First live demo day 7, MVP in a median 12 weeks." },
-      { property: "og:title", content: "SaaS Development — Northline Studio" },
-      { property: "og:description", content: "Multi-tenant architecture, billing, and compliance from the first commit. MVP in a median 12 weeks." },
-    ],
-  }),
+  loader: async (): Promise<{ doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "saas");
+    return { doc };
+  },
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", 'SaaS Development — Northline Studio');
+    const description = pageStr(d, "meta_description", 'Multi-tenant architecture, subscription billing, and compliance wired in from the first commit.');
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: Page,
 });
 
@@ -31,23 +42,26 @@ const growthFeatures = [
 ];
 
 function Page() {
+  const { doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell theme={pageThemes["saas"]}>
       {/* ---- Hero (bold indigo color-block — energetic, ink on saturation) ---- */}
       <section className="block-bold">
         <div className="container-page py-28 md:py-36">
           <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
-            SaaS Development
+            {s("hero_eyebrow", "SaaS Development")}
           </p>
           <h1
             className="mt-6 max-w-[15ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
             data-split
           >
-            SaaS engineered to invoice
+            {s("hero_title", "SaaS engineered to invoice")}
           </h1>
           <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-            Multi-tenant architecture, subscription billing, and compliance wired in from the
-            first commit — because a platform that can't charge isn't a product yet.
+            {s("hero_subtitle", "Multi-tenant architecture, subscription billing, and compliance wired in from the first commit — because a platform that can't charge isn't a product yet.")}
           </p>
           <div className="mt-10" data-reveal>
             <Link

@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { BentoShowcase } from "@/components/bento-features";
@@ -13,35 +15,47 @@ import {
 import { ArrowUpRight, ArrowRight, Search, PenTool, Layout, Boxes, MousePointerClick, Accessibility } from "lucide-react";
 
 export const Route = createFileRoute("/ui-ux-design")({
-  head: () => ({
-    meta: [
-      { title: "UI/UX Design — Northline Studio" },
-      { name: "description", content: "Research-driven product design measured in conversion, activation, and support tickets — not dribbble likes. Design systems your engineers actually adopt." },
-      { property: "og:title", content: "UI/UX Design — Northline Studio" },
-      { property: "og:description", content: "Product design measured in conversion and activation, not portfolio likes." },
-    ],
-  }),
+  loader: async (): Promise<{ doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "ui-ux-design");
+    return { doc };
+  },
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", 'UI/UX Design — Northline Studio');
+    const description = pageStr(d, "meta_description", 'Research-driven interfaces judged by the numbers they move.');
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: Page,
 });
 
 function Page() {
+  const { doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell theme={pageThemes["ui-ux-design"]}>
       {/* ---- Hero (bold rose color-block — energetic, ink on saturation) ---- */}
       <section className="block-bold">
         <div className="container-page py-28 md:py-36">
           <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
-            UI/UX Design
+            {s("hero_eyebrow", "UI/UX Design")}
           </p>
           <h1
             className="mt-6 max-w-[14ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
             data-split
           >
-            Design measured in outcomes
+            {s("hero_title", "Design measured in outcomes")}
           </h1>
           <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-            Research-driven interfaces judged by the numbers they move — conversion, activation,
-            support volume — not by how they look in a portfolio shot.
+            {s("hero_subtitle", "Research-driven interfaces judged by the numbers they move — conversion, activation, support volume — not by how they look in a portfolio shot.")}
           </p>
           <div className="mt-10" data-reveal>
             <Link

@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { BentoShowcase } from "@/components/bento-features";
@@ -13,14 +15,23 @@ import {
 import { ArrowUpRight, Apple, Smartphone, Layers, Zap, Rocket, Activity } from "lucide-react";
 
 export const Route = createFileRoute("/mobile-apps")({
-  head: () => ({
-    meta: [
-      { title: "Mobile App Development — Northline Studio" },
-      { name: "description", content: "iOS, Android, Flutter, and React Native apps engineered for retention — a working prototype on your phone in 14 days, store-ready builds from week one." },
-      { property: "og:title", content: "Mobile App Development — Northline Studio" },
-      { property: "og:description", content: "Apps engineered for retention. A working prototype on your phone in 14 days." },
-    ],
-  }),
+  loader: async (): Promise<{ doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "mobile-apps");
+    return { doc };
+  },
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", 'Mobile Apps — Northline Studio');
+    const description = pageStr(d, "meta_description", 'Native and cross-platform builds engineered for retention.');
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: Page,
 });
 
@@ -47,24 +58,27 @@ const beyondBuild = [
 ];
 
 function Page() {
+  const { doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell theme={pageThemes["mobile-apps"]}>
       {/* ---- Hero (bold blue color-block — energetic, ink on saturation) ---- */}
       <section className="block-bold">
         <div className="container-page py-28 md:py-36">
           <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
-            Mobile Apps
+            {s("hero_eyebrow", "Mobile Apps")}
           </p>
           <h1
             className="mt-6 max-w-[16ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
             data-split
           >
-            Apps people keep on the home screen
+            {s("hero_title", "Apps people keep on the home screen")}
           </h1>
           <div className="mt-8 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
             <p className="max-w-xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-              Native and cross-platform builds engineered for retention, not just launch day.
-              A working prototype on your phone by day 14.
+              {s("hero_subtitle", "Native and cross-platform builds engineered for retention, not just launch day. A working prototype on your phone by day 14.")}
             </p>
             <div data-reveal>
               <Link

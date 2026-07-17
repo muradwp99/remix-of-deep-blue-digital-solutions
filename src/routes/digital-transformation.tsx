@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { BentoShowcase } from "@/components/bento-features";
@@ -12,14 +14,23 @@ import {
 import { ArrowUpRight, RefreshCw, Cloud, Workflow, BrainCircuit, Check } from "lucide-react";
 
 export const Route = createFileRoute("/digital-transformation")({
-  head: () => ({
-    meta: [
-      { title: "Digital Transformation — Northline Studio" },
-      { name: "description", content: "Strangler-pattern modernization: legacy to cloud-native with zero-downtime cutovers, 40% average infra cost reduction, and releases that ship 3× faster." },
-      { property: "og:title", content: "Digital Transformation — Northline Studio" },
-      { property: "og:description", content: "Legacy to cloud-native with zero-downtime cutovers and releases that ship 3× faster." },
-    ],
-  }),
+  loader: async (): Promise<{ doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "digital-transformation");
+    return { doc };
+  },
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", 'Digital Transformation — Northline Studio');
+    const description = pageStr(d, "meta_description", 'Strangler-pattern re-platforms, zero-downtime cutovers, and a rollback plan for every phase.');
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: Page,
 });
 
@@ -37,24 +48,27 @@ const modernizeChips = [
 ];
 
 function Page() {
+  const { doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell theme={pageThemes["digital-transformation"]}>
       {/* ---- Hero (deep magenta color-block — premium, editorial split) ---- */}
       <section className="block-deep">
         <div className="container-page py-28 md:py-36">
           <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-            Digital Transformation
+            {s("hero_eyebrow", "Digital Transformation")}
           </p>
           <div className="mt-6 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
             <h1
               className="max-w-[15ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
               data-reveal
             >
-              Modernize without the <span className="text-gold">meltdown</span>
+              {s("hero_title", "Modernize without the")} <span className="text-gold">{s("hero_title_em", "meltdown")}</span>
             </h1>
             <p className="max-w-sm text-lg leading-relaxed text-muted-foreground" data-reveal>
-              Legacy systems carry your revenue — we migrate them like it. Strangler-pattern
-              re-platforms, zero-downtime cutovers, and a rollback plan for every phase.
+              {s("hero_subtitle", "Legacy systems carry your revenue — we migrate them like it. Strangler-pattern re-platforms, zero-downtime cutovers, and a rollback plan for every phase.")}
             </p>
           </div>
           <div className="mt-10" data-reveal>

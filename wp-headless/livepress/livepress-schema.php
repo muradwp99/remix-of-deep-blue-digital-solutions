@@ -508,6 +508,116 @@ return array(
 			) ),
 		),
 	),
+	'solutions' => array(
+		'title'        => 'Solutions Hub',
+		'frontendPath' => '/solutions',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'cta', 'label' => 'CTA', 'fields' => array(
+				$t( 'cta_eyebrow', 'Eyebrow', 'cta_eyebrow' ),
+				$t( 'cta_title', 'Title', 'cta_title' ),
+				$ta( 'cta_subtitle', 'Subtitle', 'cta_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'services' => array(
+		'title'        => 'Services Hub',
+		'frontendPath' => '/services',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_badge', 'Badge line', 'hero_badge' ),
+				$t( 'hero_title', 'Title (before italic word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Italic word', 'hero_title_em' ),
+				$t( 'hero_title_after', 'Title after', 'hero_title_after' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'custom-software' => array(
+		'title' => 'Custom Software', 'frontendPath' => '/custom-software',
+		'sections' => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'mobile-apps' => array(
+		'title' => 'Mobile Apps', 'frontendPath' => '/mobile-apps',
+		'sections' => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title', 'hero_title' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'ui-ux-design' => array(
+		'title' => 'UI/UX Design', 'frontendPath' => '/ui-ux-design',
+		'sections' => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title', 'hero_title' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'saas' => array(
+		'title' => 'SaaS Development', 'frontendPath' => '/saas',
+		'sections' => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title', 'hero_title' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'digital-transformation' => array(
+		'title' => 'Digital Transformation', 'frontendPath' => '/digital-transformation',
+		'sections' => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
 	'home' => array(
 		'title'        => 'Home',
 		'frontendPath' => '/',

@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { EclipseScene } from "@/components/eclipse-scene";
@@ -20,14 +22,23 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/services")({
-  head: () => ({
-    meta: [
-      { title: "Services — Northline Studio" },
-      { name: "description", content: "Design, engineering and ongoing services for modern software teams." },
-      { property: "og:title", content: "Services — Northline Studio" },
-      { property: "og:description", content: "Design, engineering and ongoing services for modern software teams." },
-    ],
-  }),
+  loader: async (): Promise<{ doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "services");
+    return { doc };
+  },
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", 'Services — Northline Studio');
+    const description = pageStr(d, "meta_description", 'Design, engineering and growth — every capability under one roof.');
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: ServicesPage,
 });
 
@@ -399,6 +410,10 @@ function StatCardSteps() {
 /* ------------------------------------------------------------------ */
 
 function ServicesPage() {
+  const { doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   useServicesMotion();
   return (
     <SiteShell>
@@ -417,17 +432,17 @@ function ServicesPage() {
               <span className="grid h-6 w-6 place-items-center rounded-full bg-gold/15">
                 <Sparkles className="h-3.5 w-3.5 text-gold" />
               </span>
-              The full stack, under one roof.
+              {s("hero_badge", "The full stack, under one roof.")}
             </span>
           </div>
           <h1
             data-hero-item
             className="mx-auto mt-8 max-w-4xl font-display text-5xl md:text-7xl leading-[0.98] font-semibold"
           >
-            Every capability you need to <em className="italic text-gradient">ship</em> and scale.
+            {s("hero_title", "Every capability you need to")} <em className="italic text-gradient">{s("hero_title_em", "ship")}</em> {s("hero_title_after", "and scale.")}
           </h1>
           <p data-hero-item className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-            From first sketch to long-term partnership — design, engineering and growth under one roof.
+            {s("hero_subtitle", "From first sketch to long-term partnership — design, engineering and growth under one roof.")}
           </p>
           <div data-hero-item className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link
