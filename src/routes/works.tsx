@@ -4,7 +4,16 @@ import { pageThemes } from "@/lib/themes";
 import { CTABand } from "@/components/sections";
 import { BannerCTA } from "@/components/banner-cta";
 import { caseStudies } from "@/lib/case-studies";
-import { cmsFind, cmsMedia, type CmsProject, projectPlaceholder } from "@/lib/cms";
+import {
+  cmsFind,
+  cmsFindOne,
+  cmsMedia,
+  pageStr,
+  projectPlaceholder,
+  type CmsProject,
+  type SitePageDoc,
+} from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { ArrowUpRight } from "lucide-react";
 
 type WorkCard = {
@@ -19,20 +28,33 @@ type WorkCard = {
 };
 
 export const Route = createFileRoute("/works")({
-  head: () => ({
-    meta: [
-      { title: "Works — Northline Studio" },
-      { name: "description", content: "Case studies with the numbers attached — the metrics clients report to their boards." },
-      { property: "og:title", content: "Works — Northline Studio" },
-      { property: "og:description", content: "Case studies with the numbers attached — the metrics clients report to their boards." },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", "Works — Northline Studio");
+    const description = pageStr(
+      d,
+      "meta_description",
+      "Case studies with the numbers attached — the metrics clients report to their boards.",
+    );
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   // Content-managed: pull projects from the CMS, fall back to the built-in
   // studies if the CMS is unreachable so the page never hard-fails.
-  loader: async (): Promise<{ items: WorkCard[] }> => {
-    const docs = await cmsFind<CmsProject>("projects", { sort: "-featured", depth: 1, limit: 12 });
+  loader: async (): Promise<{ items: WorkCard[]; doc: SitePageDoc }> => {
+    const [docs, doc] = await Promise.all([
+      cmsFind<CmsProject>("projects", { sort: "-featured", depth: 1, limit: 12 }),
+      cmsFindOne<Record<string, unknown>>("sitepages", "works"),
+    ]);
     if (docs.length) {
       return {
+        doc,
         items: docs.map((p) => ({
           slug: p.slug,
           name: p.title,
@@ -46,6 +68,7 @@ export const Route = createFileRoute("/works")({
       };
     }
     return {
+      doc,
       items: caseStudies.map((c) => ({
         slug: c.slug,
         name: c.name,
@@ -79,24 +102,27 @@ const aggregate = [
 ];
 
 function WorksPage() {
-  const { items } = Route.useLoaderData();
+  const { items, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell theme={pageThemes["works"]}>
       {/* ---- Hero (light editorial) ---- */}
       <section className="block-light">
         <div className="container-page py-24 md:py-32">
           <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-            Works
+            {s("hero_eyebrow", "Works")}
           </p>
           <h1
             className="mt-6 max-w-[16ch] font-display text-5xl font-semibold leading-[0.98] md:text-7xl"
             data-reveal
           >
-            Six projects. Every number <span className="text-gold">audited</span>.
+            {s("hero_title", "Six projects. Every number")}{" "}
+            <span className="text-gold">{s("hero_title_em", "audited")}</span>.
           </h1>
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-            We publish fewer, better case studies — each with the metric the client actually
-            pays for.
+            {s("hero_subtitle", "We publish fewer, better case studies — each with the metric the client actually pays for.")}
           </p>
         </div>
       </section>
@@ -160,15 +186,18 @@ function WorksPage() {
       </section>
 
       <BannerCTA
-        message={["A short brief from you,", "the heavy lifting from us."]}
+        message={[
+          s("banner_message_line1", "A short brief from you,"),
+          s("banner_message_line2", "the heavy lifting from us."),
+        ]}
         title={
           <>
-            You've seen the work.
+            {s("banner_title", "You've seen the work.")}
             <br />
-            Now imagine <span className="text-gold">yours</span>.
+            Now imagine <span className="text-gold">{s("banner_title_em", "yours")}</span>.
           </>
         }
-        cta={{ label: "Start a Project", to: "/contact" }}
+        cta={{ label: s("banner_label", "Start a Project"), to: "/contact" }}
       />
 
       {/* ---- Results band (tint) ---- */}
@@ -176,17 +205,17 @@ function WorksPage() {
         <div className="container-page py-24" data-reveal-group>
           <div className="max-w-3xl">
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal-child>
-              The scoreboard
+              {s("score_eyebrow", "The scoreboard")}
             </p>
             <h2
               className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl"
               data-reveal-child
             >
-              Twenty-four months, <span className="text-gold">measured</span>.
+              {s("score_title", "Twenty-four months,")}{" "}
+              <span className="text-gold">{s("score_title_em", "measured")}</span>.
             </h2>
             <p className="mt-6 text-lg text-muted-foreground" data-reveal-child>
-              Highlights across the six studies above — the numbers clients report to their boards,
-              not vanity metrics.
+              {s("score_text", "Highlights across the six studies above — the numbers clients report to their boards, not vanity metrics.")}
             </p>
           </div>
           <div className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-4" data-cards>
@@ -206,9 +235,9 @@ function WorksPage() {
       </section>
 
       <CTABand
-        eyebrow="Your turn"
-        title="What should your case study say?"
-        subtitle="Tell us the number you need to move. We reply within one business day with a plan, a timeline, and a fair budget."
+        eyebrow={s("cta_eyebrow", "Your turn")}
+        title={s("cta_title", "What should your case study say?")}
+        subtitle={s("cta_subtitle", "Tell us the number you need to move. We reply within one business day with a plan, a timeline, and a fair budget.")}
       />
     </SiteShell>
   );

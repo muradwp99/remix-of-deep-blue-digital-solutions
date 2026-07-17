@@ -1,27 +1,42 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { CTABand } from "@/components/sections";
-import { cmsFind, cmsMedia, type CmsTeam } from "@/lib/cms";
+import {
+  cmsFind,
+  cmsFindOne,
+  cmsMedia,
+  pageStr,
+  type CmsTeam,
+  type SitePageDoc,
+} from "@/lib/cms";
 
 type Leader = { name: string; role: string; bio: string; img: string };
 
 export const Route = createFileRoute("/leadership")({
-  head: () => ({
-    meta: [
-      { title: "Leadership — Northline Studio" },
-      { name: "description", content: "Meet the senior team leading Northline's engineering, design, and strategy." },
-      { property: "og:title", content: "Leadership — Northline Studio" },
-      { property: "og:description", content: "Deep expertise in software engineering, product design, and business strategy." },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", 'Leadership — Northline Studio');
+    const description = pageStr(d, "meta_description", 'The senior team behind Northline Studio.');
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   // Content-managed from the CMS `team` collection; falls back to the
   // built-in list if the CMS is unreachable. Photos fall back to the
   // matching built-in portrait (by name) when a team member has none.
-  loader: async (): Promise<{ leaders: Leader[] }> => {
+  loader: async (): Promise<{ leaders: Leader[]; doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "leadership");
     const team = await cmsFind<CmsTeam>("team", { sort: "order", depth: 1, limit: 12 });
     if (team.length) {
       return {
+        doc,
         leaders: team.map((t) => ({
           name: t.name,
           role: t.role || "",
@@ -33,7 +48,7 @@ export const Route = createFileRoute("/leadership")({
         })),
       };
     }
-    return { leaders: fallbackLeaders };
+    return { doc, leaders: fallbackLeaders };
   },
   component: Page,
 });
@@ -100,7 +115,10 @@ const values = [
 ];
 
 function Page() {
-  const { leaders } = Route.useLoaderData();
+  const { leaders, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell theme={pageThemes["leadership"]}>
       {/* ---- Hero (light editorial, asymmetric split) ---- */}
@@ -108,17 +126,16 @@ function Page() {
         <div className="container-page grid items-end gap-12 py-24 md:grid-cols-[1.15fr_0.85fr] md:py-32">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              Leadership
+              {s("hero_eyebrow", "Leadership")}
             </p>
             <h1
               className="mt-6 max-w-[15ch] font-display text-5xl font-semibold leading-[0.98] md:text-7xl"
               data-reveal
             >
-              The senior team behind the <span className="text-gold">work</span>.
+              {s("hero_title", "The senior team behind the")} <span className="text-gold">{s("hero_title_em", "work")}</span>.
             </h1>
             <p className="mt-7 max-w-md text-lg leading-relaxed text-muted-foreground" data-reveal>
-              Deep expertise across engineering, design, and business strategy — still
-              hands-on, every week.
+              {s("hero_subtitle", "Deep expertise across engineering, design, and business strategy — still hands-on, every week.")}
             </p>
           </div>
           <figure className="relative" data-reveal>

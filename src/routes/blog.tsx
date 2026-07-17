@@ -1,10 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { BannerCTA } from "@/components/banner-cta";
 import { posts, postCategories, formatPostDate, type PostCategory } from "@/lib/posts";
-import { cmsFind, cmsMedia, lexicalToPlainText, type CmsPost } from "@/lib/cms";
+import {
+  cmsFind,
+  cmsFindOne,
+  cmsMedia,
+  lexicalToPlainText,
+  pageStr,
+  type CmsPost,
+  type SitePageDoc,
+} from "@/lib/cms";
 
 type BlogSearch = { cat?: PostCategory };
 
@@ -49,27 +58,27 @@ export const Route = createFileRoute("/blog")({
     const cat = search.cat;
     return CATEGORY_KEYS.includes(cat as PostCategory) ? { cat: cat as PostCategory } : {};
   },
-  head: () => ({
-    meta: [
-      { title: "Blog — Northline Studio" },
-      {
-        name: "description",
-        content:
-          "Engineering, design, and company writing from the Northline team — what we learned shipping 120+ products.",
-      },
-      { property: "og:title", content: "Blog — Northline Studio" },
-      {
-        property: "og:description",
-        content: "Engineering, design, and company writing from the Northline team.",
-      },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", 'Blog — Northline Studio');
+    const description = pageStr(d, "meta_description", 'Essays, engineering notes, and studio updates from the Northline team.');
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   // Content-managed: pull posts from the CMS (newest first), map each to the
   // card shape the list renders, and fall back to the built-in posts when empty.
-  loader: async (): Promise<{ items: BlogListItem[] }> => {
+  loader: async (): Promise<{ items: BlogListItem[]; doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "blog");
     const docs = await cmsFind<CmsPost>("posts", { sort: "-publishedAt", depth: 1, limit: 100 });
     if (docs.length) {
       return {
+        doc,
         items: docs.map((p) => {
           const slug = p.slug || slugify(p.title);
           return {
@@ -85,6 +94,7 @@ export const Route = createFileRoute("/blog")({
       };
     }
     return {
+      doc,
       items: posts.map((p) => ({
         slug: p.slug,
         title: p.title,
@@ -101,7 +111,10 @@ export const Route = createFileRoute("/blog")({
 
 function Page() {
   const { cat } = Route.useSearch();
-  const { items } = Route.useLoaderData();
+  const { items, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   const visible = cat ? items.filter((p) => p.category === cat) : items;
   const [featured, ...rest] = visible;
 
@@ -111,17 +124,16 @@ function Page() {
       <section className="block-light">
         <div className="container-page py-24 md:py-28">
           <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-            Writing
+            {s("hero_eyebrow", "Writing")}
           </p>
           <h1
             className="mt-6 max-w-[16ch] font-display text-5xl font-semibold leading-[1.0] md:text-7xl"
             data-reveal
           >
-            Notes from the <span className="text-gold">workshop</span>
+            {s("hero_title", "Notes from the")} <span className="text-gold">{s("hero_title_em", "workshop")}</span>
           </h1>
           <p className="mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-            What we learned shipping 120+ products — written down while the scars are fresh. No
-            thought leadership, no AI-generated filler.
+            {s("hero_subtitle", "What we learned shipping 120+ products — written down while the scars are fresh. No thought leadership, no AI-generated filler.")}
           </p>
 
           <div className="mt-10 flex flex-wrap gap-2.5" data-reveal>

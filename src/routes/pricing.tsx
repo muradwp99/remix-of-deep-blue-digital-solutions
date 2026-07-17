@@ -1,9 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { CTABand } from "@/components/sections";
 import { BannerCTA } from "@/components/banner-cta";
-import { cmsFind, type CmsPlan } from "@/lib/cms";
+import {
+  cmsFind,
+  cmsFindOne,
+  pageStr,
+  type CmsPlan,
+  type SitePageDoc,
+} from "@/lib/cms";
 import { ArrowUpRight, Check, ShieldCheck } from "lucide-react";
 
 type PricingTier = {
@@ -17,20 +24,27 @@ type PricingTier = {
 };
 
 export const Route = createFileRoute("/pricing")({
-  head: () => ({
-    meta: [
-      { title: "Pricing — Northline Studio" },
-      { name: "description", content: "Transparent pricing for websites, apps, ecommerce, SaaS and monthly care." },
-      { property: "og:title", content: "Pricing — Northline Studio" },
-      { property: "og:description", content: "Transparent pricing for websites, apps, and monthly care." },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", 'Pricing — Northline Studio');
+    const description = pageStr(d, "meta_description", 'Fixed-scope engagements, monthly care plans and per-service pricing.');
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   // Content-managed: pull pricing tiers from the CMS `plans` collection, fall
   // back to the built-in tiers if the CMS is unreachable or empty.
-  loader: async (): Promise<{ tiers: PricingTier[] }> => {
+  loader: async (): Promise<{ tiers: PricingTier[]; doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "pricing");
     const docs = await cmsFind<CmsPlan>("plans", { sort: "order", limit: 20 });
     if (docs.length) {
       return {
+        doc,
         tiers: docs.map((p) => ({
           name: p.name,
           tagline: p.description || "",
@@ -42,7 +56,7 @@ export const Route = createFileRoute("/pricing")({
         })),
       };
     }
-    return { tiers };
+    return { doc, tiers };
   },
   component: PricingPage,
 });
@@ -154,7 +168,10 @@ const pricingFaqs = [
 ];
 
 function PricingPage() {
-  const { tiers } = Route.useLoaderData();
+  const { tiers, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell theme={pageThemes["pricing"]}>
       {/* ---- Hero (light editorial, asymmetric split) ---- */}
@@ -162,17 +179,16 @@ function PricingPage() {
         <div className="container-page grid items-end gap-12 py-24 md:grid-cols-[1.15fr_0.85fr] md:py-32">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              Pricing
+              {s("hero_eyebrow", "Pricing")}
             </p>
             <h1
               className="mt-6 max-w-[16ch] font-display text-5xl font-semibold leading-[0.98] md:text-7xl"
               data-reveal
             >
-              Numbers you can take to the <span className="text-gold">board</span>.
+              {s("hero_title", "Numbers you can take to the")} <span className="text-gold">{s("hero_title_em", "board")}</span>.
             </h1>
             <p className="mt-7 max-w-md text-lg leading-relaxed text-muted-foreground" data-reveal>
-              Fixed-scope engagements, monthly care plans and per-service pricing. A number in
-              writing before we start — and no surprise invoices after.
+              {s("hero_subtitle", "Fixed-scope engagements, monthly care plans and per-service pricing. A number in writing before we start — and no surprise invoices after.")}
             </p>
           </div>
           <figure className="relative" data-reveal>

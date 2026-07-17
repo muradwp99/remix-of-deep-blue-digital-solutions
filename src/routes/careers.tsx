@@ -1,8 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { StatsRow } from "@/components/sections";
-import { cmsFind } from "@/lib/cms";
+import {
+  cmsFind,
+  cmsFindOne,
+  pageStr,
+  type SitePageDoc,
+} from "@/lib/cms";
 import { MapPin, ArrowUpRight, ArrowDown } from "lucide-react";
 
 type JobCard = {
@@ -24,17 +30,23 @@ type CmsJob = {
 };
 
 export const Route = createFileRoute("/careers")({
-  head: () => ({
-    meta: [
-      { title: "Careers — Northline Studio" },
-      { name: "description", content: "Build the future with a remote-first team working on cutting-edge enterprise projects." },
-      { property: "og:title", content: "Careers — Northline Studio" },
-      { property: "og:description", content: "Remote-first culture, real ownership, and zero bureaucracy." },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", 'Careers — Northline Studio');
+    const description = pageStr(d, "meta_description", 'Join a senior-only, remote-first studio. Open roles across design and engineering.');
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   // Content-managed: pull open roles from the CMS, fall back to the built-in
   // list if the CMS is unreachable so the page never hard-fails.
-  loader: async (): Promise<{ jobs: JobCard[] }> => {
+  loader: async (): Promise<{ jobs: JobCard[]; doc: SitePageDoc }> => {
+    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "careers");
     const docs = await cmsFind<CmsJob>("jobs", {
       where: { open: { equals: true } },
       sort: "createdAt",
@@ -42,6 +54,7 @@ export const Route = createFileRoute("/careers")({
     });
     if (docs.length) {
       return {
+        doc,
         jobs: docs.map((j) => ({
           role: j.title,
           dept: j.department || "",
@@ -51,7 +64,7 @@ export const Route = createFileRoute("/careers")({
         })),
       };
     }
-    return { jobs };
+    return { doc, jobs };
   },
   component: Page,
 });
@@ -81,24 +94,26 @@ const weekOne = [
 ];
 
 function Page() {
-  const { jobs } = Route.useLoaderData();
+  const { jobs, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell theme={pageThemes["careers"]}>
       {/* ---- Hero (bold coral color-block, poster-style) ---- */}
       <section className="block-bold">
         <div className="container-page py-28 md:py-36">
           <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
-            Careers at Northline
+            {s("hero_eyebrow", "Careers at Northline")}
           </p>
           <h1
             className="mt-6 max-w-[16ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
             data-reveal
           >
-            Do the best work of your career.
+            {s("hero_title", "Do the best work of your career.")}
           </h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-            Join 50+ senior designers and engineers, remote-first across 15 countries.
-            Senior-only. No juniors, no handoffs, no red tape.
+            {s("hero_subtitle", "Join 50+ senior designers and engineers, remote-first across 15 countries. Senior-only. No juniors, no handoffs, no red tape.")}
           </p>
           <div className="mt-10" data-reveal>
             <a

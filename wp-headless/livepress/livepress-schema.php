@@ -370,6 +370,144 @@ return array(
 			) ),
 		),
 	),
+	'cookies' => array(
+		'title'        => 'Cookie Policy',
+		'frontendPath' => '/cookies',
+		'sections'     => array(
+			array( 'key' => 'legal', 'label' => 'Document', 'fields' => array(
+				$t( 'legal_title', 'Title', 'legal_title' ),
+				$ta( 'legal_intro', 'Intro', 'legal_intro' ),
+				$t( 'legal_updated', 'Last updated', 'legal_updated' ),
+				$rp( 'legal_sections', 'Sections', 'legal_sections', array(
+					$s( 'h', 'Heading' ), $s( 'body', 'Paragraphs (one per line)', 'textarea' ) ) ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'faq' => array(
+		'title'        => 'FAQ',
+		'frontendPath' => '/faq',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+				$t( 'hero_img', 'Hero image', 'hero_img' ),
+			) ),
+			array( 'key' => 'cta', 'label' => 'CTA', 'fields' => array(
+				$t( 'cta_eyebrow', 'Eyebrow', 'cta_eyebrow' ),
+				$t( 'cta_title', 'Title', 'cta_title' ),
+				$ta( 'cta_subtitle', 'Subtitle', 'cta_subtitle' ),
+				$t( 'cta_primary_label', 'Primary button', 'cta_primary_label' ),
+				$t( 'cta_secondary_label', 'Secondary button', 'cta_secondary_label' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'works' => array(
+		'title'        => 'Works',
+		'frontendPath' => '/works',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'banner', 'label' => 'Banner CTA', 'fields' => array(
+				$t( 'banner_message_line1', 'Message line 1', 'banner_message_line1' ),
+				$t( 'banner_message_line2', 'Message line 2', 'banner_message_line2' ),
+				$t( 'banner_title', 'Title (before gold word)', 'banner_title' ),
+				$t( 'banner_title_em', 'Title gold word', 'banner_title_em' ),
+				$t( 'banner_label', 'CTA label', 'banner_label' ),
+			) ),
+			array( 'key' => 'score', 'label' => 'Scoreboard', 'fields' => array(
+				$t( 'score_eyebrow', 'Eyebrow', 'score_eyebrow' ),
+				$t( 'score_title', 'Title (before gold word)', 'score_title' ),
+				$t( 'score_title_em', 'Title gold word', 'score_title_em' ),
+				$ta( 'score_text', 'Text', 'score_text' ),
+			) ),
+			array( 'key' => 'cta', 'label' => 'CTA', 'fields' => array(
+				$t( 'cta_eyebrow', 'Eyebrow', 'cta_eyebrow' ),
+				$t( 'cta_title', 'Title', 'cta_title' ),
+				$ta( 'cta_subtitle', 'Subtitle', 'cta_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'blog' => array(
+		'title'        => 'Blog',
+		'frontendPath' => '/blog',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'careers' => array(
+		'title'        => 'Careers',
+		'frontendPath' => '/careers',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title', 'hero_title' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'leadership' => array(
+		'title'        => 'Leadership',
+		'frontendPath' => '/leadership',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
+	'pricing' => array(
+		'title'        => 'Pricing',
+		'frontendPath' => '/pricing',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'hero_eyebrow', 'Eyebrow', 'hero_eyebrow' ),
+				$t( 'hero_title', 'Title (before gold word)', 'hero_title' ),
+				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
+				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta_title' ),
+				$ta( 'meta_description', 'SEO description', 'meta_description' ),
+			) ),
+		),
+	),
 	'home' => array(
 		'title'        => 'Home',
 		'frontendPath' => '/',

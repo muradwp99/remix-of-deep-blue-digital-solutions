@@ -1,7 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { CTABand } from "@/components/sections";
-import { cmsFind, lexicalToPlainText, type CmsFaq } from "@/lib/cms";
+import {
+  cmsFind,
+  cmsFindOne,
+  lexicalToPlainText,
+  pageStr,
+  type CmsFaq,
+  type SitePageDoc,
+} from "@/lib/cms";
+import { useLiveEdits } from "@/lib/edit-bridge";
 
 type FaqGroup = {
   kicker: string;
@@ -21,19 +29,14 @@ const CATEGORY_TO_GROUP: Record<NonNullable<CmsFaq["category"]>, number> = {
 };
 
 export const Route = createFileRoute("/faq")({
-  head: () => ({
-    meta: [
-      { title: "FAQ — Northline Studio" },
-      { name: "description", content: "Answers about engagement models, process, timelines, IP ownership, and support." },
-      { property: "og:title", content: "FAQ — Northline Studio" },
-      { property: "og:description", content: "Common questions about working with Northline." },
-    ],
-  }),
   // Content-managed: pull FAQs from the CMS, distribute them into the existing
   // editorial groups by category, and keep the group scaffold (kicker/title/note)
-  // from the built-in data. Falls back to the built-in groups when empty.
-  loader: async (): Promise<{ groups: FaqGroup[] }> => {
-    const docs = await cmsFind<CmsFaq>("faqs", { sort: "order", limit: 100 });
+  // from the built-in data. Page chrome comes from the `faq` Site Page doc.
+  loader: async (): Promise<{ groups: FaqGroup[]; doc: SitePageDoc }> => {
+    const [docs, doc] = await Promise.all([
+      cmsFind<CmsFaq>("faqs", { sort: "order", limit: 100 }),
+      cmsFindOne<Record<string, unknown>>("sitepages", "faq"),
+    ]);
     if (docs.length) {
       const scaffold: FaqGroup[] = groups.map((g) => ({ ...g, faqs: [] }));
       for (const d of docs) {
@@ -41,9 +44,26 @@ export const Route = createFileRoute("/faq")({
         scaffold[gi].faqs.push({ q: d.question, a: lexicalToPlainText(d.answer) });
       }
       const filled = scaffold.filter((g) => g.faqs.length > 0);
-      if (filled.length) return { groups: filled };
+      if (filled.length) return { groups: filled, doc };
     }
-    return { groups };
+    return { groups, doc };
+  },
+  head: ({ loaderData }) => {
+    const d = loaderData?.doc ?? null;
+    const title = pageStr(d, "meta_title", "FAQ — Northline Studio");
+    const description = pageStr(
+      d,
+      "meta_description",
+      "Answers about engagement models, process, timelines, IP ownership, and support.",
+    );
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
   },
   component: Page,
 });
@@ -129,7 +149,10 @@ const groups = [
 ];
 
 function Page() {
-  const { groups } = Route.useLoaderData();
+  const { groups, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
+  const d = useLiveEdits(doc);
+  const s = (key: string, fallback: string) => pageStr(d, key, fallback);
   return (
     <SiteShell>
       {/* ---- Hero (light editorial, asymmetric) ---- */}
@@ -137,22 +160,25 @@ function Page() {
         <div className="container-page grid items-end gap-12 py-24 md:grid-cols-[1.1fr_0.9fr] md:py-32">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              Questions
+              {s("hero_eyebrow", "Questions")}
             </p>
             <h1
               className="mt-6 max-w-[15ch] font-display text-5xl font-semibold leading-[0.98] md:text-7xl"
               data-reveal
             >
-              Hard answers to <span className="text-gold">soft</span> questions.
+              {s("hero_title", "Hard answers to")}{" "}
+              <span className="text-gold">{s("hero_title_em", "soft")}</span> questions.
             </h1>
             <p className="mt-7 max-w-md text-lg leading-relaxed text-muted-foreground" data-reveal>
-              We build for founders and executives who don't have time for spin. The truth
-              about timelines, code ownership, and how we actually ship.
+              {s(
+                "hero_subtitle",
+                "We build for founders and executives who don't have time for spin. The truth about timelines, code ownership, and how we actually ship.",
+              )}
             </p>
           </div>
           <figure className="relative" data-reveal>
             <img
-              src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200&q=75"
+              src={s("hero_img", "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200&q=75")}
               alt="The Northline team answering questions"
               className="aspect-[4/5] w-full rounded-3xl border border-black/10 object-cover shadow-elegant"
               data-parallax-img
@@ -193,11 +219,14 @@ function Page() {
       ))}
 
       <CTABand
-        eyebrow="Still have questions?"
-        title="Ask a person, not a page."
-        subtitle="Send the question that isn't answered here. A senior replies within one business day — usually with more detail than you asked for."
-        primary={{ label: "Ask Us Directly", to: "/contact" }}
-        secondary={{ label: "See Pricing", to: "/pricing" }}
+        eyebrow={s("cta_eyebrow", "Still have questions?")}
+        title={s("cta_title", "Ask a person, not a page.")}
+        subtitle={s(
+          "cta_subtitle",
+          "Send the question that isn't answered here. A senior replies within one business day — usually with more detail than you asked for.",
+        )}
+        primary={{ label: s("cta_primary_label", "Ask Us Directly"), to: "/contact" }}
+        secondary={{ label: s("cta_secondary_label", "See Pricing"), to: "/pricing" }}
       />
     </SiteShell>
   );
