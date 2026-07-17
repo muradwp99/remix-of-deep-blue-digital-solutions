@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { FeatureGrid, BenefitList, FAQAccordion } from "@/components/sections";
 import { PricingMeter } from "@/components/signature/meters";
@@ -11,9 +12,9 @@ import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } fro
 const SLUG = "startup-mvp";
 
 export const Route = createFileRoute("/solutions_/startup-mvp")({
-  loader: async (): Promise<{ dto: SubpageDTO | null }> => {
+  loader: async (): Promise<{ dto: SubpageDTO | null; doc: CmsSubpage | null }> => {
     const doc = await cmsFindOne<CmsSubpage>("solutions", SLUG, { depth: 1 });
-    return { dto: doc ? cmsToSubpageDTO(doc, "solutions") : null };
+    return { dto: doc ? cmsToSubpageDTO(doc, "solutions") : null, doc };
   },
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
@@ -39,8 +40,11 @@ const PIECES = [
 ];
 
 function Page() {
-  const { dto } = Route.useLoaderData();
-  const page = dto ? hydrateSubpage(dto, getSubpage("solutions", SLUG)!) : getSubpage("solutions", SLUG)!;
+  const { dto, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes on the raw doc, then re-map.
+  const liveDoc = useLiveEdits(doc);
+  const liveDto = liveDoc ? cmsToSubpageDTO(liveDoc, "solutions") : dto;
+  const page = liveDto ? hydrateSubpage(liveDto, getSubpage("solutions", SLUG)!) : getSubpage("solutions", SLUG)!;
   return (
     <SiteShell theme={pageThemes["solutions/startup-mvp"]}>
       {/* ── BOLD · yellow scatter hero: the product pieces fly into place ── */}

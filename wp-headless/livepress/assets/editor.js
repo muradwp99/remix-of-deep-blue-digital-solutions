@@ -414,22 +414,32 @@
 	}
 
 	/* ---------- sections panel ---------- */
+	var MODE = B.mode || "page";
 	function buildPanel() {
 		var panel = el( "div", { class: "lp-sections" } );
 
-		// Pinned global panels (site-wide, shown on every page).
-		[
-			[ "≡ Section order", orderSection ],
-			[ "🎨 Design", designSection ],
-			[ "☰ Main menu", menuSection ],
-			[ "▤ Footer menu", footerSection ],
-		].forEach( function ( g ) {
+		// Which pinned panels this mode shows. Menus/Design live in their own
+		// sidebar screens now; page editors carry only page concerns.
+		var pinned = [];
+		if ( MODE === "page" && ( B.schema.blocks || [] ).length ) {
+			pinned.push( [ "≡ Section order", orderSection ] );
+		}
+		if ( MODE === "design" ) {
+			pinned.push( [ "🎨 Design", designSection ] );
+		}
+		if ( MODE === "menus" ) {
+			pinned.push( [ "☰ Main menu", menuSection ] );
+			pinned.push( [ "▤ Footer menu", footerSection ] );
+		}
+		pinned.forEach( function ( g, gi ) {
 			var body = g[ 1 ]();
 			var head = el( "button", { class: "lp-sec-head", type: "button" }, [
 				el( "span", { text: g[ 0 ] } ),
 				el( "span", { class: "lp-caret", text: "▾" } ),
 			] );
-			var sec = el( "div", { class: "lp-section lp-global" }, [ head, body ] );
+			// Standalone screens open their panels immediately.
+			var open = MODE !== "page" || gi === -1 ? " open" : "";
+			var sec = el( "div", { class: "lp-section lp-global" + open }, [ head, body ] );
 			head.addEventListener( "click", function () { sec.classList.toggle( "open" ); } );
 			panel.appendChild( sec );
 		} );
@@ -464,9 +474,10 @@
 					: String( values[ f.key ] == null ? "" : values[ f.key ] );
 			} );
 		} );
-		var jobs = [
-			wp.apiFetch( { path: "/wp/v2/" + B.restBase + "/" + B.postId, method: "POST", data: { meta: meta } } ),
-		];
+		var jobs = [];
+		if ( B.postId ) {
+			jobs.push( wp.apiFetch( { path: "/wp/v2/" + B.restBase + "/" + B.postId, method: "POST", data: { meta: meta } } ) );
+		}
 		Object.keys( globalsDirty ).forEach( function ( key ) {
 			jobs.push( wp.apiFetch( {
 				path: "/auxtech/v1/option/" + key,

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { Flag } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { FAQAccordion } from "@/components/sections";
@@ -13,9 +14,9 @@ import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } fro
 const SLUG = "mvp-development";
 
 export const Route = createFileRoute("/services_/mvp-development")({
-  loader: async (): Promise<{ dto: SubpageDTO | null }> => {
+  loader: async (): Promise<{ dto: SubpageDTO | null; doc: CmsSubpage | null }> => {
     const doc = await cmsFindOne<CmsSubpage>("services", SLUG, { depth: 1 });
-    return { dto: doc ? cmsToSubpageDTO(doc, "services") : null };
+    return { dto: doc ? cmsToSubpageDTO(doc, "services") : null, doc };
   },
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
@@ -61,8 +62,11 @@ const MILESTONE_FLAGS = [
 ];
 
 function Page() {
-  const { dto } = Route.useLoaderData();
-  const page = dto ? hydrateSubpage(dto, getSubpage("services", SLUG)!) : getSubpage("services", SLUG)!;
+  const { dto, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes on the raw doc, then re-map.
+  const liveDoc = useLiveEdits(doc);
+  const liveDto = liveDoc ? cmsToSubpageDTO(liveDoc, "services") : dto;
+  const page = liveDto ? hydrateSubpage(liveDto, getSubpage("services", SLUG)!) : getSubpage("services", SLUG)!;
   return (
     <SiteShell theme={pageThemes["services/mvp-development"]}>
       {/* ══ DARK · terminal hero — the project scaffolds itself ══ */}

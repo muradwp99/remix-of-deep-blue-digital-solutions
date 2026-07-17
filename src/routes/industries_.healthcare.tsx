@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { StatsRow } from "@/components/sections";
@@ -13,9 +14,9 @@ import { cmsToIndustryDTO, hydrateIndustry, type IndustryDTO, type CmsIndustry }
 const SLUG = "healthcare";
 
 export const Route = createFileRoute("/industries_/healthcare")({
-  loader: async (): Promise<{ dto: IndustryDTO | null }> => {
+  loader: async (): Promise<{ dto: IndustryDTO | null; doc: CmsIndustry | null }> => {
     const doc = await cmsFindOne<CmsIndustry>("industries", SLUG, { depth: 1 });
-    return { dto: doc ? cmsToIndustryDTO(doc) : null };
+    return { dto: doc ? cmsToIndustryDTO(doc) : null, doc };
   },
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
@@ -57,8 +58,11 @@ function PanelNote({ k, t, d }: { k: string; t: string; d: string }) {
 }
 
 function Page() {
-  const { dto } = Route.useLoaderData();
-  const ind = dto ? hydrateIndustry(dto, getIndustry(SLUG)!) : getIndustry(SLUG)!;
+  const { dto, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes on the raw doc, then re-map.
+  const liveDoc = useLiveEdits(doc);
+  const liveDto = liveDoc ? cmsToIndustryDTO(liveDoc) : dto;
+  const ind = liveDto ? hydrateIndustry(liveDto, getIndustry(SLUG)!) : getIndustry(SLUG)!;
   const studies = caseStudies.filter((c) => ind.matches.includes(c.industry));
   return (
     <SiteShell theme={pageThemes["industries/healthcare"]}>

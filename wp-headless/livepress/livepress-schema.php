@@ -12,7 +12,95 @@ $ln = fn( $key, $label, $path ) => array( 'key' => $key, 'label' => $label, 'kin
 $rp = fn( $key, $label, $path, $subs ) => array( 'key' => $key, 'label' => $label, 'kind' => 'repeater', 'path' => $path, 'subs' => $subs );
 $s  = fn( $key, $label, $kind = 'text' ) => array( 'key' => $key, 'label' => $label, 'kind' => $kind );
 
+/* Catalog collection schemas — paths mirror the CMS doc shape the frontend
+ * re-maps (cms.ts), so live edits re-render the real detail page. */
+$catalog_sections = function ( $with_after = true ) use ( $t, $ta, $ln, $rp, $s ) {
+	return array(
+		array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array_values( array_filter( array(
+			$t( 'eyebrow', 'Eyebrow', 'eyebrow' ),
+			$t( 'heading', 'Heading', 'heading' ),
+			$t( 'heading_em', 'Heading emphasis', 'headingEm' ),
+			$with_after ? $t( 'heading_after', 'Heading after', 'headingAfter' ) : null,
+			$ta( 'subtitle', 'Subtitle', 'subtitle' ),
+			$ta( 'summary', 'Card summary', 'summary' ),
+		) ) ) ),
+		array( 'key' => 'features', 'label' => 'Features', 'fields' => array(
+			$rp( 'features', 'Feature cards', 'features', array(
+				$s( 'icon', 'Icon name' ), $s( 'title', 'Title' ), $s( 'desc', 'Description', 'textarea' ) ) ),
+		) ),
+		array( 'key' => 'steps', 'label' => 'Process steps', 'fields' => array(
+			$rp( 'steps', 'Steps', 'steps', array(
+				$s( 'title', 'Title' ), $s( 'desc', 'Description', 'textarea' ) ) ),
+		) ),
+		array( 'key' => 'benefits', 'label' => 'Benefits', 'fields' => array(
+			$rp( 'benefits', 'Benefits', 'benefits', array(
+				$s( 'title', 'Title' ), $s( 'desc', 'Description', 'textarea' ) ) ),
+		) ),
+		array( 'key' => 'faqs', 'label' => 'FAQs', 'fields' => array(
+			$rp( 'faqs', 'Questions', 'faqs', array(
+				$s( 'question', 'Question' ), $s( 'answer', 'Answer', 'textarea' ) ) ),
+		) ),
+		array( 'key' => 'banner', 'label' => 'Banner', 'fields' => array_values( array_filter( array(
+			$t( 'banner_message_line1', 'Message line 1', 'banner.messageLine1' ),
+			$t( 'banner_message_line2', 'Message line 2', 'banner.messageLine2' ),
+			$t( 'banner_title', 'Title', 'banner.title' ),
+			$t( 'banner_title_em', 'Title emphasis', 'banner.titleEm' ),
+			$with_after ? $t( 'banner_title_after', 'Title after', 'banner.titleAfter' ) : null,
+			$t( 'banner_label', 'CTA label', 'banner.label' ),
+		) ) ) ),
+		array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+			$t( 'meta_title', 'SEO title', 'meta.title' ),
+			$ta( 'meta_description', 'SEO description', 'meta.description' ),
+		) ),
+	);
+};
+
 return array(
+	'collection:service'  => array(
+		'title'        => 'Service',
+		'frontendPath' => '/services/{slug}',
+		'sections'     => $catalog_sections( true ),
+	),
+	'collection:solution' => array(
+		'title'        => 'Solution',
+		'frontendPath' => '/solutions/{slug}',
+		'sections'     => $catalog_sections( true ),
+	),
+	'collection:industry' => array(
+		'title'        => 'Industry',
+		'frontendPath' => '/industries/{slug}',
+		'sections'     => array(
+			array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array(
+				$t( 'eyebrow', 'Eyebrow', 'eyebrow' ),
+				$t( 'heading', 'Heading', 'heading' ),
+				$t( 'heading_em', 'Heading emphasis', 'headingEm' ),
+				$ta( 'subtitle', 'Subtitle', 'subtitle' ),
+				$ta( 'summary', 'Card summary', 'summary' ),
+			) ),
+			array( 'key' => 'matches', 'label' => 'Best fit for', 'fields' => array(
+				$ln( 'matches', 'Matches (one per line)', 'matches' ),
+			) ),
+			array( 'key' => 'points', 'label' => 'Points', 'fields' => array(
+				$rp( 'points', 'Point cards', 'points', array(
+					$s( 'icon', 'Icon name' ), $s( 'title', 'Title' ), $s( 'desc', 'Description', 'textarea' ) ) ),
+			) ),
+			array( 'key' => 'stats', 'label' => 'Stats', 'fields' => array(
+				$rp( 'stats', 'Stats', 'stats', array(
+					$s( 'value', 'Value' ), $s( 'label', 'Label' ) ) ),
+			) ),
+			array( 'key' => 'banner', 'label' => 'Banner', 'fields' => array(
+				$t( 'banner_message_line1', 'Message line 1', 'banner.messageLine1' ),
+				$t( 'banner_message_line2', 'Message line 2', 'banner.messageLine2' ),
+				$t( 'banner_title', 'Title', 'banner.title' ),
+				$t( 'banner_title_em', 'Title emphasis', 'banner.titleEm' ),
+				$t( 'banner_label', 'CTA label', 'banner.label' ),
+			) ),
+			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
+				$t( 'meta_title', 'SEO title', 'meta.title' ),
+				$ta( 'meta_description', 'SEO description', 'meta.description' ),
+			) ),
+		),
+	),
 	'home' => array(
 		'title'        => 'Home',
 		'frontendPath' => '/',

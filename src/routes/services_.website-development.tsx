@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useLiveEdits } from "@/lib/edit-bridge";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { FeatureGrid, BenefitList, FAQAccordion } from "@/components/sections";
@@ -20,9 +21,9 @@ export const Route = createFileRoute("/services_/website-development")({
   // Content-managed: the loader returns a serializable DTO (icon names as
   // strings); the component hydrates it into the render shape (icon components)
   // and fills any gaps from the built-in subpage data.
-  loader: async (): Promise<{ dto: SubpageDTO | null }> => {
+  loader: async (): Promise<{ dto: SubpageDTO | null; doc: CmsSubpage | null }> => {
     const doc = await cmsFindOne<CmsSubpage>("services", SLUG, { depth: 1 });
-    return { dto: doc ? cmsToSubpageDTO(doc, "services") : null };
+    return { dto: doc ? cmsToSubpageDTO(doc, "services") : null, doc };
   },
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
@@ -42,8 +43,11 @@ const u = (id: string, w = 1200) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=70`;
 
 function Page() {
-  const { dto } = Route.useLoaderData();
-  const page = dto ? hydrateSubpage(dto, getSubpage("services", SLUG)!) : getSubpage("services", SLUG)!;
+  const { dto, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes on the raw doc, then re-map.
+  const liveDoc = useLiveEdits(doc);
+  const liveDto = liveDoc ? cmsToSubpageDTO(liveDoc, "services") : dto;
+  const page = liveDto ? hydrateSubpage(liveDto, getSubpage("services", SLUG)!) : getSubpage("services", SLUG)!;
   return (
     <SiteShell theme={pageThemes["services/website-development"]}>
       {/* ── DARK · hero: full-bleed workspace image, split copy/report ── */}
