@@ -146,17 +146,30 @@ function initMagnetic(): () => void {
  * Perf rules: scrubbed tweens animate transform/opacity only (no filter),
  * one-shot entrances may blur. Everything respects prefers-reduced-motion.
  */
+/**
+ * SiteShell and many pages both call useScrollReveal(); a module refcount
+ * makes exactly ONE instance own the GSAP context. Without this, counters
+ * get processed twice (the second pass reads the already-zeroed text as the
+ * target and animates everything to 0) and StrictMode remounts killed all
+ * animations permanently.
+ */
+let scrollRevealInstances = 0;
+
 export function useScrollReveal() {
-  const ready = useRef(false);
   useEffect(() => {
-    if (ready.current) return;
-    ready.current = true;
+    scrollRevealInstances++;
+    if (scrollRevealInstances > 1) {
+      return () => {
+        scrollRevealInstances--;
+      };
+    }
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const disposeGlare = initGlare();
     const disposeMagnetic = initMagnetic();
     if (reduceMotion) {
       return () => {
+        scrollRevealInstances--;
         disposeGlare();
         disposeMagnetic();
       };
@@ -372,11 +385,14 @@ export function useScrollReveal() {
         });
       });
 
-      // Count-up numbers — parses "3.1×", "+48%", "120", keeps affixes
+      // Count-up numbers — parses "3.1×", "+48%", "120", keeps affixes.
+      // The true value is stashed in data-counter-value so re-inits (client
+      // nav, StrictMode) never mistake an in-flight "0" for the target.
       gsap.utils.toArray<HTMLElement>("[data-counter]").forEach((el) => {
-        const raw = (el.textContent ?? "").trim();
+        const raw = (el.dataset.counterValue ?? el.textContent ?? "").trim();
         const m = raw.match(/^([^0-9]*)([0-9]+(?:\.[0-9]+)?)(.*)$/);
         if (!m) return;
+        el.dataset.counterValue = raw;
         const [, prefix, num, suffix] = m;
         const target = parseFloat(num);
         const decimals = num.includes(".") ? num.split(".")[1].length : 0;
@@ -388,8 +404,8 @@ export function useScrollReveal() {
           ease: "power3.out",
           scrollTrigger: {
             trigger: el,
-            start: "top 88%",
-            toggleActions: "play none none none",
+            start: "top 92%",
+            once: true,
           },
           onUpdate() {
             el.textContent = `${prefix}${state.v.toFixed(decimals)}${suffix}`;
@@ -547,13 +563,21 @@ export function useScrollReveal() {
       });
     });
 
-    // Refresh once fonts/images load
+    // Refresh once fonts/images load, and once more after hydration settles
+    // (the preloader + late images shift trigger positions).
     const refresh = () => ScrollTrigger.refresh();
     window.addEventListener("load", refresh);
+    const settle = window.setTimeout(refresh, 1200);
 
     return () => {
+      scrollRevealInstances--;
+      window.clearTimeout(settle);
       window.removeEventListener("load", refresh);
       ctx.revert();
+      // Restore counter originals so the next init reads true targets.
+      document.querySelectorAll<HTMLElement>("[data-counter]").forEach((el) => {
+        if (el.dataset.counterValue) el.textContent = el.dataset.counterValue;
+      });
       disposeGlare();
       disposeMagnetic();
     };

@@ -1,13 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useLiveEdits } from "@/lib/edit-bridge";
-import { ArrowDown } from "lucide-react";
+import { useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
-import { BrandGrader } from "@/components/tool-widgets";
 import { getTool, type Tool } from "@/lib/tools";
 import { pageThemes } from "@/lib/themes";
 import { cmsFindOne } from "@/lib/cms";
 import { cmsToTool, type CmsTool } from "@/lib/cms-catalog";
+import { useLiveEdits } from "@/lib/edit-bridge";
+import { runBrandGrader, type BrandResult } from "@/lib/tools-api";
+import {
+  FixList,
+  ResultPanel,
+  ScoreRing,
+  ToolError,
+  ToolSkeleton,
+} from "@/components/tool-shell";
 
 const SLUG = "brand-grader";
 
@@ -31,79 +38,135 @@ export const Route = createFileRoute("/tools_/brand-grader")({
   component: Page,
 });
 
-const GRADES = [
-  { g: "A", note: "coherent" },
-  { g: "B", note: "drifting" },
-  { g: "C", note: "leaking" },
-  { g: "D", note: "logos only" },
-];
+const inputCls =
+  "w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-base text-white placeholder:text-white/35 outline-none transition-colors focus:border-gold/60 focus:ring-2 focus:ring-gold/20";
 
 function Page() {
   const { tool, doc } = Route.useLoaderData();
   // LivePress: overlay admin keystrokes on the raw doc, then re-map.
   const liveDoc = useLiveEdits(doc);
   const liveTool = liveDoc ? cmsToTool(liveDoc, tool) : tool;
+
+  const [name, setName] = useState("");
+  const [tagline, setTagline] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [audience, setAudience] = useState("");
+  const [running, setRunning] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<BrandResult | null>(null);
+
+  const run = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+    setRunning(true);
+    setError(null);
+    setResult(null);
+    try {
+      const res = await runBrandGrader({ data: { name, tagline, industry, audience } });
+      if ("error" in res) setError(res.error);
+      else setResult(res);
+    } catch {
+      setError("The grader hit a snag on our side. Try again in a moment.");
+    } finally {
+      setRunning(false);
+    }
+  };
+
   return (
     <SiteShell theme={pageThemes["tools/brand-grader"]}>
-      {/* BOLD · vivid magenta hero, grade tiles scatter in */}
-      <section className="block-bold" data-scatter>
-        <div className="container-page grid items-center gap-14 py-24 md:py-32 lg:grid-cols-[1.15fr_1fr]">
-          <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
+      <section className="block-deep">
+        <div className="container-page py-20 md:py-24">
+          <div className="max-w-3xl">
+            <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
               {liveTool.eyebrow}
             </p>
-            <h1
-              className="mt-5 font-display text-5xl md:text-6xl xl:text-7xl leading-[0.98] font-semibold"
-              data-split
-            >
-              How coherent is your brand?
+            <h1 className="mt-5 font-display text-5xl font-semibold leading-[0.98] md:text-6xl" data-reveal>
+              {liveTool.title} <span className="text-gold">{liveTool.titleEm}</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground" data-reveal>
               {liveTool.subtitle}
             </p>
-            <div className="mt-9" data-reveal>
-              <a
-                href="#grader"
-                data-magnetic
-                className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold"
-              >
-                Grade my brand
-                <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
-              </a>
-            </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            {GRADES.map((t, i) => (
-              <div
-                key={t.g}
-                data-scatter-item
-                className={`rounded-2xl p-6 text-center ${i === 0 ? "gradient-card-gold" : "glass opacity-75"}`}
-              >
-                <p
-                  className={`font-display text-6xl font-semibold ${i === 0 ? "text-gradient-lime" : "text-foreground/60"}`}
-                >
-                  {t.g}
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">{t.note}</p>
+
+          <div className="mt-12 grid max-w-5xl gap-8 lg:grid-cols-[1fr_1.2fr]" data-reveal>
+            <form onSubmit={run} className="space-y-5 rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <label className="block">
+                <span className="text-xs uppercase tracking-[0.16em] text-white/60">Brand name</span>
+                <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Auxtech" className={`mt-2 ${inputCls}`} />
+              </label>
+              <label className="block">
+                <span className="text-xs uppercase tracking-[0.16em] text-white/60">Tagline</span>
+                <input value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="Software worth being proud of." className={`mt-2 ${inputCls}`} />
+              </label>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <label className="block">
+                  <span className="text-xs uppercase tracking-[0.16em] text-white/60">Industry</span>
+                  <input value={industry} onChange={(e) => setIndustry(e.target.value)} placeholder="SaaS" className={`mt-2 ${inputCls}`} />
+                </label>
+                <label className="block">
+                  <span className="text-xs uppercase tracking-[0.16em] text-white/60">Audience</span>
+                  <input value={audience} onChange={(e) => setAudience(e.target.value)} placeholder="Founders" className={`mt-2 ${inputCls}`} />
+                </label>
               </div>
-            ))}
+              <button
+                type="submit"
+                disabled={running || !name.trim()}
+                className="w-full rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-[#10142b] transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {running ? "Grading…" : "Grade the brand"}
+              </button>
+              <p className="text-xs leading-relaxed text-white/40">
+                Graded by AI on clarity, distinctiveness, consistency and memorability. Honest scores; 90+ is rare.
+              </p>
+            </form>
+
+            <div aria-live="polite">
+              {error && <ToolError message={error} />}
+              {running && (
+                <ResultPanel>
+                  <ToolSkeleton />
+                </ResultPanel>
+              )}
+              {result && (
+                <ResultPanel footnote={result.ai ? "Graded by AI with a strategist rubric." : "Graded with our strategist rubric."}>
+                  <div className="flex flex-wrap items-center gap-6">
+                    <ScoreRing value={result.overall} label="Overall" size={128} />
+                    <p className="max-w-sm flex-1 text-base leading-relaxed text-white/80">{result.verdict}</p>
+                  </div>
+                  <div className="mt-8 grid grid-cols-2 gap-8 sm:grid-cols-4">
+                    <ScoreRing value={result.scores.clarity} label="Clarity" size={92} />
+                    <ScoreRing value={result.scores.distinctiveness} label="Distinct" size={92} />
+                    <ScoreRing value={result.scores.consistency} label="Consistent" size={92} />
+                    <ScoreRing value={result.scores.memorability} label="Memorable" size={92} />
+                  </div>
+                  <h3 className="mt-10 font-display text-2xl font-semibold">Level it up</h3>
+                  <div className="mt-5">
+                    <FixList fixes={result.suggestions} />
+                  </div>
+                </ResultPanel>
+              )}
+              {!running && !result && !error && (
+                <div className="grid h-full min-h-64 place-items-center rounded-3xl border border-dashed border-white/15 p-8 text-center">
+                  <p className="max-w-xs text-sm leading-relaxed text-white/45">
+                    Fill in the brand and hit grade. You'll get four scores, a straight verdict, and the moves that raise them.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* LIGHT · the eight-question grader on a clean, legible surface */}
-      <div id="grader" className="block-light scroll-mt-24">
-        <BrandGrader />
-      </div>
-
       <BannerCTA
-        message={["An honest score from us,", "no email required."]}
+        message={["Grades are free,", "great brands are built."]}
         title={
           <>
-            Scored below an A? We fix <span className="text-gold">that</span>.
+            Want the scores in the
+            <br />
+            <span className="text-gold">90s</span>?
           </>
         }
-        cta={{ label: "Fix the Gaps", to: "/contact" }}
+        cta={{ label: "Book a Brand Session", to: "/contact" }}
       />
     </SiteShell>
   );

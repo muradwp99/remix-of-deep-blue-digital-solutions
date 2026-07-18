@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { runChat } from "@/lib/tools-api";
 import { Calculator, X, MessageCircle, Send, Sparkles } from "lucide-react";
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
@@ -207,23 +208,49 @@ export function Chatbot() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const reply = (t: string) => {
+  const [typing, setTyping] = useState(false);
+
+  // Keyword KB answers instantly; everything else goes to the AI on the server.
+  const kbReply = (t: string) => {
     const low = t.toLowerCase();
-    const hit = BOT_KB.find((r) => r.k.some((k) => low.includes(k)));
-    return (
-      hit?.a ??
-      "Good question — the team can answer in detail. Try /contact, or check our /services and /pricing pages."
-    );
+    return BOT_KB.find((r) => r.k.some((k) => low.includes(k)))?.a ?? null;
   };
 
-  const send = () => {
-    if (!input.trim()) return;
+  const send = async () => {
+    if (!input.trim() || typing) return;
     const user = input.trim();
     setInput("");
-    setMessages((m) => [...m, { role: "user", text: user }]);
-    setTimeout(() => {
-      setMessages((m) => [...m, { role: "bot", text: reply(user) }]);
-    }, 400);
+    const nextMsgs: Msg[] = [...messages, { role: "user", text: user }];
+    setMessages(nextMsgs);
+
+    const kb = kbReply(user);
+    if (kb) {
+      setTimeout(() => setMessages((m) => [...m, { role: "bot", text: kb }]), 350);
+      return;
+    }
+
+    setTyping(true);
+    try {
+      const res = await runChat({
+        data: {
+          messages: nextMsgs.map((m) => ({
+            role: m.role === "user" ? ("user" as const) : ("assistant" as const),
+            text: m.text,
+          })),
+        },
+      });
+      setMessages((m) => [...m, { role: "bot", text: res.reply }]);
+    } catch {
+      setMessages((m) => [
+        ...m,
+        {
+          role: "bot",
+          text: "I lost my train of thought. Ask again, or reach the team via the contact page.",
+        },
+      ]);
+    } finally {
+      setTyping(false);
+    }
   };
 
   return (
@@ -271,6 +298,17 @@ export function Chatbot() {
                 </div>
               </div>
             ))}
+            {typing && (
+              <div className="flex justify-start">
+                <div className="gradient-card rounded-2xl rounded-bl-sm px-3.5 py-2 text-sm text-foreground/70">
+                  <span className="inline-flex gap-1">
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-lime [animation-delay:0ms]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-lime [animation-delay:120ms]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-lime [animation-delay:240ms]" />
+                  </span>
+                </div>
+              </div>
+            )}
             <div ref={bottomRef} />
           </div>
 

@@ -1,14 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useLiveEdits } from "@/lib/edit-bridge";
-import { ArrowDown } from "lucide-react";
+import { useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
-import { TerminalWindow } from "@/components/signature/terminal";
-import { AuditRequest } from "@/components/tool-widgets";
 import { getTool, type Tool } from "@/lib/tools";
 import { pageThemes } from "@/lib/themes";
 import { cmsFindOne } from "@/lib/cms";
 import { cmsToTool, type CmsTool } from "@/lib/cms-catalog";
+import { useLiveEdits } from "@/lib/edit-bridge";
+import { runWebsiteAudit, type AuditResult } from "@/lib/tools-api";
+import {
+  FixList,
+  ResultPanel,
+  ScoreRing,
+  ToolError,
+  ToolSkeleton,
+  UrlForm,
+} from "@/components/tool-shell";
 
 const SLUG = "website-audit";
 
@@ -37,64 +44,107 @@ function Page() {
   // LivePress: overlay admin keystrokes on the raw doc, then re-map.
   const liveDoc = useLiveEdits(doc);
   const liveTool = liveDoc ? cmsToTool(liveDoc, tool) : tool;
+
+  const [running, setRunning] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<AuditResult | null>(null);
+
+  const run = async (url: string) => {
+    setRunning(true);
+    setError(null);
+    setResult(null);
+    try {
+      const res = await runWebsiteAudit({ data: { url } });
+      if ("error" in res) setError(res.error);
+      else setResult(res);
+    } catch {
+      setError("The audit hit a snag on our side. Try again in a moment.");
+    } finally {
+      setRunning(false);
+    }
+  };
+
   return (
     <SiteShell theme={pageThemes["tools/website-audit"]}>
-      {/* DEEP · deep-blue color hero — the audit runs live in the terminal */}
+      {/* Deep-navy console: hero + the live tool in one surface */}
       <section className="block-deep">
-        <div className="container-page grid items-center gap-14 py-24 md:py-32 lg:grid-cols-[1.05fr_1fr]">
-          <div>
+        <div className="container-page py-20 md:py-24">
+          <div className="max-w-3xl">
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
               {liveTool.eyebrow}
             </p>
-            <h1
-              className="mt-5 font-display text-5xl md:text-6xl xl:text-7xl leading-[0.98] font-semibold"
-              data-split
-            >
-              Twelve points, zero spin
+            <h1 className="mt-5 font-display text-5xl font-semibold leading-[0.98] md:text-6xl" data-reveal>
+              {liveTool.title} <span className="text-gold">{liveTool.titleEm}</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground" data-reveal>
               {liveTool.subtitle}
             </p>
-            <div className="mt-9" data-reveal>
-              <a
-                href="#request"
-                data-magnetic
-                className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold"
-              >
-                Request the audit
-                <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
-              </a>
-            </div>
           </div>
-          <div data-slide="right">
-            <TerminalWindow
-              title="audit — auxtech"
-              lines={[
-                { prompt: "$", text: "auxtech audit https://yoursite.com" },
-                { text: "crawling 214 pages…", dim: true },
-                { text: "core web vitals: field data pulled", ok: true, dim: true },
-                { text: "a11y: 3 contrast issues found", dim: true },
-                { text: "seo: canonical drift on /blog/*", dim: true },
-                { prompt: "→", text: "12-point report drafted by a human" },
-              ]}
-            />
+
+          <div className="mt-12 max-w-3xl" data-reveal>
+            <UrlForm onRun={run} running={running} cta="Run the audit" />
+            <p className="mt-3 text-xs text-white/40">
+              We fetch your homepage, check 9 real signals, and score it with AI analysis. Nothing is stored.
+            </p>
+          </div>
+
+          <div className="mt-12 max-w-4xl" aria-live="polite">
+            {error && <ToolError message={error} />}
+            {running && (
+              <ResultPanel>
+                <ToolSkeleton />
+              </ResultPanel>
+            )}
+            {result && (
+              <ResultPanel
+                footnote={
+                  result.ai
+                    ? "Scored from live measurements with AI analysis."
+                    : "Scored from live measurements."
+                }
+              >
+                <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+                  <ScoreRing value={result.scores.performance} label="Performance" />
+                  <ScoreRing value={result.scores.seo} label="SEO" />
+                  <ScoreRing value={result.scores.accessibility} label="Accessibility" />
+                  <ScoreRing value={result.scores.conversion} label="Conversion" />
+                </div>
+                <p className="mt-8 max-w-2xl text-base leading-relaxed text-white/80">{result.summary}</p>
+
+                <div className="mt-8 grid gap-2 sm:grid-cols-3">
+                  {result.signals.map((sig) => (
+                    <div
+                      key={sig.label}
+                      className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3"
+                    >
+                      <span className="text-xs uppercase tracking-[0.12em] text-white/55">{sig.label}</span>
+                      <span className={`text-sm font-medium ${sig.ok ? "text-lime" : "text-red-300"}`}>
+                        {sig.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <h3 className="mt-10 font-display text-2xl font-semibold">Where to start</h3>
+                <div className="mt-5">
+                  <FixList fixes={result.fixes} />
+                </div>
+              </ResultPanel>
+            )}
           </div>
         </div>
       </section>
 
-      {/* LIGHT · the request widget on a clean, legible surface */}
-      <div id="request" className="block-light scroll-mt-24">
-        <AuditRequest checks={liveTool.checks} ctaLabel="Request the Audit" />
-      </div>
-
       <BannerCTA
-        message={["A free tool from us,", "no strings attached."]}
+        message={["Want these fixes shipped,", "not just listed?"]}
         title={
           <>
-            Useful? The paid version is called <span className="text-gold">us</span>.
+            A senior applies this to
+            <br />
+            your <span className="text-gold">whole site</span>.
           </>
         }
-        cta={{ label: "Work With Us", to: "/contact" }}
+        cta={{ label: "Book the Free Audit Call", to: "/contact" }}
       />
     </SiteShell>
   );
