@@ -1,39 +1,96 @@
-# Northline — session handoff
+# Auxtech — session handoff
 
-Snapshot of the work so far so a new session can continue without re-discovery.
-(Claude also keeps auto-loading memory at `~/.claude/projects/.../memory/` — this
-file is the human-readable mirror.)
+Human-readable mirror of the project state. Claude's auto-memory at
+`~/.claude/projects/F--Auxtech-Website-V2/memory/` carries the same facts in
+more detail — trust memory for recipes, this file for orientation.
 
-## Two apps in this repo
-- **Live site** — `src/` — TanStack Start (Vite) SSR, Tailwind v4. This is the redesigned marketing site. Dev: `npm run dev` → **http://localhost:8080**.
-- **CMS** — `northline-payload/` — Payload CMS 3.85 (Next 16, Postgres). Dev: `cd northline-payload && pnpm dev` → **http://localhost:3000/admin**. Untracked in the main repo (only hand-edited files committed surgically); **should become its own git repo** for GitHub→Hostinger deploy.
+## What this project is
+**Auxtech** (rebranded from Northline): premium software-studio marketing site
++ a self-invented realtime visual-editing framework (**LivePress**) on headless
+WordPress. Frontend = TanStack Start (Vite SSR) + Tailwind v4 + GSAP. The
+Payload CMS in `northline-payload/` is RETIRED (kept only as history).
 
-## Design system (site) — DONE
-- Per-page **mode** system, not one dark template: **flagship-dark** (home, contact, faq hubs), **white/editorial** (about, our-story, leadership, blog, resources, learning, works, legal, pricing, faq, contact), **colorful/bold** (careers, solutions, industries, tools, standalone services). Modes via CSS classes `.block-light/.block-tint/.block-bold/.block-deep` in `src/styles.css` (wrap a full-width `<section class="block-X">` around an inner `container-page`; tokens auto-adapt; dark header/footer are brand bookends).
-- **Palette**: 6 semantic brand colours in `src/lib/themes.ts` (BUILD/GROWTH/CREATIVE/ENERGY/CARE/EDITORIAL), assigned by content category. Never override `--background` in a theme.
-- **Section variants**: `FeatureGrid` (cards|rows|spotlight), `ProcessSteps` (cards|rail|ladder), `BenefitList` (list|grid), `FAQAccordion` (split|wide) in `src/components/sections.tsx` — assigned per page so no two pages share one skeleton; 6 flagship pages open with different shapes.
-- **Chrome**: header is `fixed` and overlays the hero (solid dark pill, readable over any hero); Cost Calculator + Chat widgets are solid dark, mobile-safe. Responsive verified 320/375/768/1280/2560.
-- Gotcha: `data-parallax-img` frames are force-clipped in `src/lib/animations.ts`; `data-split` strips nested spans (use `data-reveal` for headings with a `text-gold` accent word); BentoShowcase only works on dark/block-deep.
+## Live URLs
+- **Frontend (prod demo):** https://auxtech-website.vercel.app — Vercel
+  project `auxtech-website`, CLI authed as muradwp99. Deploy:
+  `npx vercel deploy --prod --yes`. Env there: `VITE_CMS_URL=https://aux.rsautomartllc.com`,
+  `GEMINI_API_KEY` (also in local `.env`, gitignored).
+- **CMS (prod):** https://aux.rsautomartllc.com (Hostinger WP, migrated via
+  All-in-One WP Migration). `wp-content/mu-plugins/prod-config.php` must point
+  `auxtech_frontend_url` + CORS at the Vercel URL. **Prod DB may still contain
+  "Northline" strings** until the user runs Better Search Replace there.
+- **CMS (staging/dev):** LocalWP `auxtech-v2.local`
+  (`C:\Users\murad\Local Sites\auxtech-v2\app\public`). WP-CLI recipe =
+  `scratchpad/wpx.sh` pattern: Local's PHP + `-d extension=mysqli` + phar
+  (DB_HOST 127.0.0.1:10016). Local dev frontend: `npm run dev` → :8080.
+- **GitHub:** site = muradwp99/remix-of-deep-blue-digital-solutions (main);
+  LivePress kit = **github.com/muradwp99/livepress** (plugin + npm bridge pkg,
+  MIT, pushed).
 
-## CMS admin — DONE (Phase 1)
-- Runs on Postgres `127.0.0.1:5432` db `northline-payload` (local, already running). Admin user: `muradujjaman05@gmail.com` (reset pw via `payload.forgotPassword({..., disableEmail:true})` → `/admin/reset/<token>`).
-- Premium admin: branded `beforeDashboard` Welcome hero, class-driven icon nav with gold active accent (`src/components/admin/Nav.tsx`), Logo/Icon graphics, refined cards/inputs/buttons — all styled in `src/app/(payload)/custom.scss`.
-- 18 collections/globals polished for editorial UX (descriptions, list columns, search, sidebar meta, grouping via UNNAMED collapsibles/rows/tabs — a NAMED tab/group nests data paths and breaks the frontend contract).
-- Added the missing collections: **Industries, Tools, Learning** (empty — need seeding).
-- Deploy decision: Payload + free **Neon** Postgres (Hostinger Business runs Node but only offers MySQL; Payload has no MySQL adapter). Build is memory-hungry (`--max-old-space-size=8000`) — build in CI or host CMS on Railway/Render.
-- Gotchas: component paths use `@/` alias; after adding admin components run `pnpm payload generate:importmap`; after field changes run `pnpm payload generate:types`; Turbopack HMR can throw a fatal `Cannot assign to read only property 'i18n'` after hot-swapping admin components — fix = `rm -rf .next` + restart.
+## LivePress (the invention) — ALL SHIPPED
+One "Site Pages" list (25 docs) + 32 collection detail editors. Fullscreen
+editor (WP chrome hidden): schema-driven fields left, live iframe right,
+keystrokes stream via postMessage (`aux-edit` protocol; also aux-design /
+aux-menu / aux-footer / aux-focus). Drag repeaters, media pickers, section
+drag-reorder, click-to-edit, device-width preview, Menus + Design standalone
+screens. Frontend runtime = `src/lib/edit-bridge.ts` (`useLiveEdits`), page
+helpers `pageStr/pageRows/pageLines` in `src/lib/cms.ts` (generic `sitepages`
+collection). Plugin: `wp-headless/livepress/` (schema registry =
+`livepress-schema.php`; plugin self-registers REST meta for every schema
+field). WP contract + gotchas: `WP-MIGRATION.md`; deploy guide: `DEPLOY.md`;
+kit README: `LIVEPRESS.md`. Key rule learned: sentinel-edit to verify (fail-
+soft masks dead wiring); repeaters = JSON strings; one sitepage CPT, never
+CPT-per-page.
 
-## CMS integration (Phase 2) — IN PROGRESS
-Client: `src/lib/cms.ts` (`cmsFind`/`cmsFindOne`/`cmsGlobal`/`cmsMedia`, types `CmsProject`/`CmsTeam`, `VITE_CMS_URL` default `:3000`, fails soft). Payload `cors` open to `:8080`.
+## Free tools (all REAL, server-function backed)
+`src/lib/tools-api.ts` (createServerFn + `.validator`) + `src/lib/gemini.server.ts`
+(Gemini 2.0-flash REST; x-goog-api-key then Bearer fallback; ALWAYS heuristic
+fallback so tools never break). Shared UI `src/components/tool-shell.tsx`
+(ScoreRing/StatTile/FixList/CopyBlock/skeletons). Routes under `/tools/`:
+website-audit (verified live w/ AI), speed-test, roi-calculator, brand-grader,
+**project-estimator** (verified), **stack-recommender**, **headline-analyzer**,
+**meta-generator**. Nova chat (floating-widgets) answers via `runChat`.
+Mega menu lists the 6 strongest.
 
-**Pattern** (proven): TanStack route `loader` fetches from CMS → maps docs to the page's existing prop shape → falls back to hardcoded arrays; component reads `Route.useLoaderData()`.
-
-**Done + verified:** `works` list + `works/$slug` detail (enriched `projects` schema for full case-study parity; backfilled 6 projects); `leadership → team`.
-
-**NEXT (blocker first):** catalog collections don't match the site's slugs — `services` 6 vs 13 pages, `solutions` 5 vs 10, `industries`/`tools`/`learning` empty. **Seed them from `src/lib/subpages.ts` / `industries.ts` / `tools.ts` / `learning.ts` before wiring their detail pages.** Wire-ready now (collections already match): **pricing→plans, faq→faqs, blog→posts, header/footer globals**. Then services/solutions/industries/tools/learning; then about/home via the `Pages` block content.
+## Design state
+- **Brand navy = #00022D** (user-final; revised from #0B0B45). styles.css
+  :root dark tokens all hue-268 family (bg oklch(0.14 0.07 268)); hardcoded
+  hexes in tools/favicon swapped too. Gold/lime accents unchanged.
+- Logo: `src/components/auxtech-logo.tsx` (AuxtechMark, currentColor
+  approximation of user's angular-A wordmark) + `public/favicon.svg`. User's
+  real SVG can replace both (swap path data only).
+- Counter bug FIXED at root: `useScrollReveal` module refcount (SiteShell +
+  pages double-called it → second pass zeroed counters; StrictMode killed
+  anims) + `data-counter-value` stash. Verified sitewide.
+- Shipped redesigns: stats = ledger composition (home + StatsRow); FeatureGrid
+  spotlight lead filled (sibling chips); FeatureGrid default cards = tinted-
+  cell diversity + ghost icons; shared editorial hero figure = offset gold
+  frame (8 pages).
+- **Remaining design list:** deeper hero rebuilds on flagships (port services
+  eclipse-hero ideas), the sparse blue pinned process section (steps data in
+  subpages.ts ~1989 — find exact route), further per-page section variety,
+  full animation audit. Design skills to reload when resuming:
+  design-taste-frontend, gpt-taste, meta-skills:modern-web-design (rules held:
+  zero em-dashes, eyebrow rationing, gapless grids, hero discipline).
 
 ## Verify before every commit
-Site: `npx tsc --noEmit` + `node scripts/check-pages.mjs`. CMS: `pnpm payload generate:types`.
+`npx tsc --noEmit` + `node scripts/check-pages.mjs` (35 slugs) + sentinel test
+against WP when CMS wiring changed. Never trust bodyLen alone.
 
-## Recent commits (site + CMS interleaved on `main`)
-`af9cec6` leadership→team · `aab4953` projects schema enrichment · `66d9c3d` works wiring proof · `f6db3a8` Phase 2 foundation · `fb30e87` premium admin + missing collections · `04eeb38` editorial-UX · `69e03b9` admin nav+branding · plus the full design redesign (phases 1–4, chrome, palette, variants) before that.
+## Open items (in priority order)
+1. Prod WP: Better Search Replace Northline→Auxtech + prod-config.php check.
+2. Design round 3 (list above).
+3. Hostinger frontend (auxfront.rsautomartllc.com) per DEPLOY.md — Vercel is
+   the demo host meanwhile.
+4. Optional: npm publish of `livepress-bridge` (user's npm account);
+   `@lovable.dev/vite-tanstack-config` build-dep swap (risky, needs care).
+5. LocalWP → prod content sync flow when the user wants parity.
+
+## Gotchas that bite
+- Vite env vars are BUILD-time (change → redeploy, not restart).
+- `.env*` gitignored; Gemini key never in code.
+- `wp-headless/` copies deploy to LocalWP via `cp` (plugins dir) — prod WP gets
+  them via AIO migration or manual upload.
+- Heredocs with JS template literals break in Git Bash — append files via
+  python instead.
+- TanStack loaders: serializable data only (icons stay component-side).
