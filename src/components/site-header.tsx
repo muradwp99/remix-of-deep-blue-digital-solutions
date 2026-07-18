@@ -210,10 +210,12 @@ const NAV: NavItem[] = [
         {
           kicker: "Free Tools",
           items: [
-            { label: "Website Audit Tool", href: "/tools/website-audit", desc: "Score speed & SEO" },
+            { label: "Project Estimator", href: "/tools/project-estimator", desc: "Budget, timeline & phases" },
+            { label: "Stack Recommender", href: "/tools/stack-recommender", desc: "Your production stack, reasoned" },
+            { label: "Headline Analyzer", href: "/tools/headline-analyzer", desc: "Scores + 5 rewrites" },
+            { label: "SEO Meta Generator", href: "/tools/meta-generator", desc: "Copy-paste head tags" },
+            { label: "Website Audit Tool", href: "/tools/website-audit", desc: "9 signals, AI fix list" },
             { label: "ROI Calculator", href: "/tools/roi-calculator", desc: "Estimate your return" },
-            { label: "Speed Test", href: "/tools/speed-test", desc: "Core Web Vitals check" },
-            { label: "Brand Grader", href: "/tools/brand-grader", desc: "Rate your identity" },
           ],
         },
         {

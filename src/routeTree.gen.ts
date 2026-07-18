@@ -36,8 +36,12 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorksSlugRouteImport } from './routes/works_.$slug'
 import { Route as ToolsWebsiteAuditRouteImport } from './routes/tools_.website-audit'
+import { Route as ToolsStackRecommenderRouteImport } from './routes/tools_.stack-recommender'
 import { Route as ToolsSpeedTestRouteImport } from './routes/tools_.speed-test'
 import { Route as ToolsRoiCalculatorRouteImport } from './routes/tools_.roi-calculator'
+import { Route as ToolsProjectEstimatorRouteImport } from './routes/tools_.project-estimator'
+import { Route as ToolsMetaGeneratorRouteImport } from './routes/tools_.meta-generator'
+import { Route as ToolsHeadlineAnalyzerRouteImport } from './routes/tools_.headline-analyzer'
 import { Route as ToolsBrandGraderRouteImport } from './routes/tools_.brand-grader'
 import { Route as ToolsSlugRouteImport } from './routes/tools_.$slug'
 import { Route as SolutionsStartupMvpRouteImport } from './routes/solutions_.startup-mvp'
@@ -213,6 +217,11 @@ const ToolsWebsiteAuditRoute = ToolsWebsiteAuditRouteImport.update({
   path: '/tools/website-audit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsStackRecommenderRoute = ToolsStackRecommenderRouteImport.update({
+  id: '/tools_/stack-recommender',
+  path: '/tools/stack-recommender',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsSpeedTestRoute = ToolsSpeedTestRouteImport.update({
   id: '/tools_/speed-test',
   path: '/tools/speed-test',
@@ -221,6 +230,21 @@ const ToolsSpeedTestRoute = ToolsSpeedTestRouteImport.update({
 const ToolsRoiCalculatorRoute = ToolsRoiCalculatorRouteImport.update({
   id: '/tools_/roi-calculator',
   path: '/tools/roi-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsProjectEstimatorRoute = ToolsProjectEstimatorRouteImport.update({
+  id: '/tools_/project-estimator',
+  path: '/tools/project-estimator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsMetaGeneratorRoute = ToolsMetaGeneratorRouteImport.update({
+  id: '/tools_/meta-generator',
+  path: '/tools/meta-generator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsHeadlineAnalyzerRoute = ToolsHeadlineAnalyzerRouteImport.update({
+  id: '/tools_/headline-analyzer',
+  path: '/tools/headline-analyzer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsBrandGraderRoute = ToolsBrandGraderRouteImport.update({
@@ -489,8 +513,12 @@ export interface FileRoutesByFullPath {
   '/solutions/startup-mvp': typeof SolutionsStartupMvpRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/tools/brand-grader': typeof ToolsBrandGraderRoute
+  '/tools/headline-analyzer': typeof ToolsHeadlineAnalyzerRoute
+  '/tools/meta-generator': typeof ToolsMetaGeneratorRoute
+  '/tools/project-estimator': typeof ToolsProjectEstimatorRoute
   '/tools/roi-calculator': typeof ToolsRoiCalculatorRoute
   '/tools/speed-test': typeof ToolsSpeedTestRoute
+  '/tools/stack-recommender': typeof ToolsStackRecommenderRoute
   '/tools/website-audit': typeof ToolsWebsiteAuditRoute
   '/works/$slug': typeof WorksSlugRoute
 }
@@ -559,8 +587,12 @@ export interface FileRoutesByTo {
   '/solutions/startup-mvp': typeof SolutionsStartupMvpRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/tools/brand-grader': typeof ToolsBrandGraderRoute
+  '/tools/headline-analyzer': typeof ToolsHeadlineAnalyzerRoute
+  '/tools/meta-generator': typeof ToolsMetaGeneratorRoute
+  '/tools/project-estimator': typeof ToolsProjectEstimatorRoute
   '/tools/roi-calculator': typeof ToolsRoiCalculatorRoute
   '/tools/speed-test': typeof ToolsSpeedTestRoute
+  '/tools/stack-recommender': typeof ToolsStackRecommenderRoute
   '/tools/website-audit': typeof ToolsWebsiteAuditRoute
   '/works/$slug': typeof WorksSlugRoute
 }
@@ -630,8 +662,12 @@ export interface FileRoutesById {
   '/solutions_/startup-mvp': typeof SolutionsStartupMvpRoute
   '/tools_/$slug': typeof ToolsSlugRoute
   '/tools_/brand-grader': typeof ToolsBrandGraderRoute
+  '/tools_/headline-analyzer': typeof ToolsHeadlineAnalyzerRoute
+  '/tools_/meta-generator': typeof ToolsMetaGeneratorRoute
+  '/tools_/project-estimator': typeof ToolsProjectEstimatorRoute
   '/tools_/roi-calculator': typeof ToolsRoiCalculatorRoute
   '/tools_/speed-test': typeof ToolsSpeedTestRoute
+  '/tools_/stack-recommender': typeof ToolsStackRecommenderRoute
   '/tools_/website-audit': typeof ToolsWebsiteAuditRoute
   '/works_/$slug': typeof WorksSlugRoute
 }
@@ -702,8 +738,12 @@ export interface FileRouteTypes {
     | '/solutions/startup-mvp'
     | '/tools/$slug'
     | '/tools/brand-grader'
+    | '/tools/headline-analyzer'
+    | '/tools/meta-generator'
+    | '/tools/project-estimator'
     | '/tools/roi-calculator'
     | '/tools/speed-test'
+    | '/tools/stack-recommender'
     | '/tools/website-audit'
     | '/works/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -772,8 +812,12 @@ export interface FileRouteTypes {
     | '/solutions/startup-mvp'
     | '/tools/$slug'
     | '/tools/brand-grader'
+    | '/tools/headline-analyzer'
+    | '/tools/meta-generator'
+    | '/tools/project-estimator'
     | '/tools/roi-calculator'
     | '/tools/speed-test'
+    | '/tools/stack-recommender'
     | '/tools/website-audit'
     | '/works/$slug'
   id:
@@ -842,8 +886,12 @@ export interface FileRouteTypes {
     | '/solutions_/startup-mvp'
     | '/tools_/$slug'
     | '/tools_/brand-grader'
+    | '/tools_/headline-analyzer'
+    | '/tools_/meta-generator'
+    | '/tools_/project-estimator'
     | '/tools_/roi-calculator'
     | '/tools_/speed-test'
+    | '/tools_/stack-recommender'
     | '/tools_/website-audit'
     | '/works_/$slug'
   fileRoutesById: FileRoutesById
@@ -913,8 +961,12 @@ export interface RootRouteChildren {
   SolutionsStartupMvpRoute: typeof SolutionsStartupMvpRoute
   ToolsSlugRoute: typeof ToolsSlugRoute
   ToolsBrandGraderRoute: typeof ToolsBrandGraderRoute
+  ToolsHeadlineAnalyzerRoute: typeof ToolsHeadlineAnalyzerRoute
+  ToolsMetaGeneratorRoute: typeof ToolsMetaGeneratorRoute
+  ToolsProjectEstimatorRoute: typeof ToolsProjectEstimatorRoute
   ToolsRoiCalculatorRoute: typeof ToolsRoiCalculatorRoute
   ToolsSpeedTestRoute: typeof ToolsSpeedTestRoute
+  ToolsStackRecommenderRoute: typeof ToolsStackRecommenderRoute
   ToolsWebsiteAuditRoute: typeof ToolsWebsiteAuditRoute
   WorksSlugRoute: typeof WorksSlugRoute
 }
@@ -1110,6 +1162,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsWebsiteAuditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools_/stack-recommender': {
+      id: '/tools_/stack-recommender'
+      path: '/tools/stack-recommender'
+      fullPath: '/tools/stack-recommender'
+      preLoaderRoute: typeof ToolsStackRecommenderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools_/speed-test': {
       id: '/tools_/speed-test'
       path: '/tools/speed-test'
@@ -1122,6 +1181,27 @@ declare module '@tanstack/react-router' {
       path: '/tools/roi-calculator'
       fullPath: '/tools/roi-calculator'
       preLoaderRoute: typeof ToolsRoiCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools_/project-estimator': {
+      id: '/tools_/project-estimator'
+      path: '/tools/project-estimator'
+      fullPath: '/tools/project-estimator'
+      preLoaderRoute: typeof ToolsProjectEstimatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools_/meta-generator': {
+      id: '/tools_/meta-generator'
+      path: '/tools/meta-generator'
+      fullPath: '/tools/meta-generator'
+      preLoaderRoute: typeof ToolsMetaGeneratorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools_/headline-analyzer': {
+      id: '/tools_/headline-analyzer'
+      path: '/tools/headline-analyzer'
+      fullPath: '/tools/headline-analyzer'
+      preLoaderRoute: typeof ToolsHeadlineAnalyzerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools_/brand-grader': {
@@ -1465,8 +1545,12 @@ const rootRouteChildren: RootRouteChildren = {
   SolutionsStartupMvpRoute: SolutionsStartupMvpRoute,
   ToolsSlugRoute: ToolsSlugRoute,
   ToolsBrandGraderRoute: ToolsBrandGraderRoute,
+  ToolsHeadlineAnalyzerRoute: ToolsHeadlineAnalyzerRoute,
+  ToolsMetaGeneratorRoute: ToolsMetaGeneratorRoute,
+  ToolsProjectEstimatorRoute: ToolsProjectEstimatorRoute,
   ToolsRoiCalculatorRoute: ToolsRoiCalculatorRoute,
   ToolsSpeedTestRoute: ToolsSpeedTestRoute,
+  ToolsStackRecommenderRoute: ToolsStackRecommenderRoute,
   ToolsWebsiteAuditRoute: ToolsWebsiteAuditRoute,
   WorksSlugRoute: WorksSlugRoute,
 }

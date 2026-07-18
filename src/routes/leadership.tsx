@@ -139,10 +139,11 @@ function Page() {
             </p>
           </div>
           <figure className="relative" data-reveal>
+            <div className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border border-gold/30" aria-hidden />
             <img
               src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=75"
               alt="Auxtech's leadership team"
-              className="aspect-[4/5] w-full rounded-3xl border border-black/10 object-cover shadow-elegant"
+              className="aspect-[4/5] w-full rounded-[2rem] border border-black/10 object-cover shadow-elegant transition-transform duration-700 hover:scale-[1.015]"
               data-parallax-img
             />
             <figcaption className="absolute bottom-4 left-4 rounded-full bg-background/90 px-4 py-2 text-xs font-medium tracking-wide backdrop-blur">

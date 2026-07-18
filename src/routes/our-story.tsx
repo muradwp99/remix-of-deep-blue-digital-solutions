@@ -91,13 +91,14 @@ function Page() {
             </p>
           </div>
           <figure className="relative" data-reveal>
+            <div className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border border-gold/30" aria-hidden />
             <img
               src={s(
                 "hero_img",
                 "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=75",
               )}
               alt="The Auxtech studio over the years"
-              className="aspect-[4/5] w-full rounded-3xl border border-black/10 object-cover shadow-elegant"
+              className="aspect-[4/5] w-full rounded-[2rem] border border-black/10 object-cover shadow-elegant transition-transform duration-700 hover:scale-[1.015]"
               data-parallax-img
             />
           </figure>

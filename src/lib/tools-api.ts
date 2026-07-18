@@ -325,3 +325,234 @@ export const runChat = createServerFn({ method: "POST" })
     };
   },
 );
+
+/* ------------------------------------------------------------------ */
+/* Project Estimator                                                   */
+/* ------------------------------------------------------------------ */
+
+export type EstimateResult = {
+  low: number;
+  high: number;
+  weeks: number;
+  phases: { name: string; weeks: number; detail: string }[];
+  brief: string;
+  ai: boolean;
+};
+
+const PROJECT_BASE: Record<string, { low: number; high: number; weeks: number }> = {
+  "marketing-site": { low: 6500, high: 18000, weeks: 5 },
+  "web-app": { low: 22000, high: 60000, weeks: 10 },
+  "mobile-app": { low: 28000, high: 90000, weeks: 12 },
+  ecommerce: { low: 15000, high: 45000, weeks: 8 },
+  "saas-mvp": { low: 22000, high: 70000, weeks: 9 },
+};
+
+const FEATURE_COST: Record<string, { cost: number; weeks: number; label: string }> = {
+  auth: { cost: 3500, weeks: 1, label: "Accounts & auth" },
+  payments: { cost: 4500, weeks: 1, label: "Payments & billing" },
+  cms: { cost: 3000, weeks: 1, label: "CMS editing" },
+  ai: { cost: 6000, weeks: 1.5, label: "AI features" },
+  integrations: { cost: 4000, weeks: 1, label: "3rd-party integrations" },
+  dashboard: { cost: 5000, weeks: 1.5, label: "Dashboards & reporting" },
+};
+
+export const runProjectEstimate = createServerFn({ method: "POST" })
+  .validator(
+    (d: { type: string; size: number; features: string[]; urgency: "standard" | "fast" }) => d,
+  )
+  .handler(async ({ data }): Promise<EstimateResult> => {
+    const base = PROJECT_BASE[data.type] ?? PROJECT_BASE["marketing-site"];
+    const sizeFactor = 1 + Math.max(0, data.size - 8) * 0.035;
+    const feats = data.features.map((f) => FEATURE_COST[f]).filter(Boolean);
+    const featCost = feats.reduce((s, f) => s + f.cost, 0);
+    const featWeeks = feats.reduce((s, f) => s + f.weeks, 0);
+    const rush = data.urgency === "fast" ? 1.2 : 1;
+
+    const low = Math.round(((base.low + featCost * 0.8) * sizeFactor * rush) / 500) * 500;
+    const high = Math.round(((base.high + featCost * 1.2) * sizeFactor * rush) / 500) * 500;
+    const weeks = Math.round((base.weeks + featWeeks) * (data.urgency === "fast" ? 0.8 : 1));
+
+    const discovery = Math.max(1, Math.round(weeks * 0.15));
+    const design = Math.max(1, Math.round(weeks * 0.25));
+    const build = Math.max(2, Math.round(weeks * 0.45));
+    const launch = Math.max(1, weeks - discovery - design - build);
+    const phases = [
+      { name: "Discovery", weeks: discovery, detail: "Workshops, scope lock, success metrics. Your number goes in writing here." },
+      { name: "Design", weeks: design, detail: "Flows, prototype, and the design system. Clickable by the end of week one." },
+      { name: "Build", weeks: build, detail: "Weekly demos in staging. First live demo by day 7 of this phase." },
+      { name: "Launch & handover", weeks: launch, detail: "QA, performance pass, analytics wiring, docs, and full IP transfer." },
+    ];
+
+    const brief = await geminiText(
+      "Write a 3-sentence project brief for a prospect who estimated: " +
+        data.type.replace("-", " ") +
+        ", ~" + data.size + " pages/screens, features [" +
+        (feats.map((f) => f.label).join(", ") || "core only") +
+        "], " + data.urgency + " timeline, budget range $" + low.toLocaleString() +
+        "-$" + high.toLocaleString() + ", ~" + weeks +
+        " weeks. Consultative, direct, second person, no greetings, no exclamation marks. End by noting the number becomes fixed after one scoping call.",
+    );
+
+    return {
+      low,
+      high,
+      weeks,
+      phases,
+      brief:
+        brief ??
+        "A " + data.type.replace("-", " ") + " at this scope typically lands between $" +
+          low.toLocaleString() + " and $" + high.toLocaleString() + " over about " + weeks +
+          " weeks. The range narrows to a fixed number after one scoping call, and that number is the one we put in writing.",
+      ai: !!brief,
+    };
+  });
+
+/* ------------------------------------------------------------------ */
+/* Stack Recommender                                                   */
+/* ------------------------------------------------------------------ */
+
+export type StackResult = {
+  stack: { layer: string; pick: string; why: string }[];
+  alternatives: string;
+  hiring: string;
+  ai: boolean;
+};
+
+export const runStackRecommend = createServerFn({ method: "POST" })
+  .validator(
+    (d: { product: string; scale: string; team: string; priorities: string }) => d,
+  )
+  .handler(async ({ data }): Promise<StackResult> => {
+    const ai = await geminiJson<StackResult>(
+      "You are a principal engineer at Auxtech advising a founder. Recommend a pragmatic 2026 production stack.\n" +
+        "Product: " + data.product + "\nExpected scale: " + data.scale +
+        "\nTeam background: " + (data.team || "unspecified") +
+        "\nPriorities: " + (data.priorities || "speed to market") +
+        '\nReturn JSON exactly: {"stack": [{"layer": "Frontend"|"Backend"|"Database"|"Hosting"|"Extras", "pick": string, "why": "one concrete sentence"}], "alternatives": "one sentence naming the strongest alternative stack and when to prefer it", "hiring": "one sentence on how easy it is to hire for this stack"} with exactly 5 stack rows. Prefer boring, proven tech; no exotic picks without reason.',
+    );
+    if (ai?.stack?.length) return { ...ai, ai: true };
+    return {
+      stack: [
+        { layer: "Frontend", pick: "React + Next.js + Tailwind", why: "Largest talent pool, mature tooling, and SSR out of the box." },
+        { layer: "Backend", pick: "Node.js (TypeScript)", why: "One language across the stack keeps a small team fast." },
+        { layer: "Database", pick: "PostgreSQL", why: "Handles relational and JSON workloads; boring in the best way." },
+        { layer: "Hosting", pick: "Vercel + managed Postgres", why: "Zero-ops deploys until real scale demands more control." },
+        { layer: "Extras", pick: "Stripe, Resend, Sentry", why: "Payments, email, and error tracking solved with vendor-grade reliability." },
+      ],
+      alternatives: "If your team is Python-first, Django + HTMX ships CRUD products faster; prefer it when the UI is forms-heavy.",
+      hiring: "React plus TypeScript plus Postgres is the easiest senior hiring market in the industry.",
+      ai: false,
+    };
+  });
+
+/* ------------------------------------------------------------------ */
+/* Headline Analyzer                                                   */
+/* ------------------------------------------------------------------ */
+
+export type HeadlineResult = {
+  scores: { clarity: number; specificity: number; outcome: number; energy: number };
+  overall: number;
+  verdict: string;
+  rewrites: string[];
+  ai: boolean;
+};
+
+export const runHeadlineAnalyze = createServerFn({ method: "POST" })
+  .validator((d: { headline: string; audience?: string }) => d)
+  .handler(async ({ data }): Promise<HeadlineResult | { error: string }> => {
+    const headline = data.headline.trim();
+    if (!headline) return { error: "Paste the headline first." };
+    if (headline.length > 200) return { error: "That's a paragraph, not a headline. Trim it under 200 characters." };
+
+    const ai = await geminiJson<HeadlineResult>(
+      "You are a conversion copywriter at Auxtech. Analyze this website headline" +
+        (data.audience ? " (audience: " + data.audience + ")" : "") + ':\n"' + headline + '"\n' +
+        'Return JSON exactly: {"scores": {"clarity": 0-100, "specificity": 0-100, "outcome": 0-100, "energy": 0-100}, "overall": 0-100, "verdict": "2 direct sentences on what works and what fails", "rewrites": [5 stronger rewrites, each under 10 words, varied angles: outcome-led, number-led, pain-led, contrast-led, plain-spoken]}. Grade hard; generic verbs like elevate/unleash/empower lose points.',
+    );
+    if (ai?.scores) return { ...ai, rewrites: ai.rewrites?.slice(0, 5) ?? [], ai: true };
+
+    const words = headline.split(/\s+/).length;
+    const hasNumber = /\d/.test(headline);
+    const vague = /(elevate|unleash|empower|seamless|next-gen|revolutioniz|innovative|solutions)/i.test(headline);
+    const clarity = clamp(80 - Math.max(0, words - 10) * 5 - (vague ? 20 : 0));
+    const specificity = clamp(40 + (hasNumber ? 30 : 0) - (vague ? 15 : 0) + Math.min(20, headline.length / 6));
+    const outcome = clamp(/(get|grow|save|ship|double|cut|win|faster|more)/i.test(headline) ? 72 : 45);
+    const energy = clamp(60 - (words > 14 ? 15 : 0) + (hasNumber ? 8 : 0));
+    const overall = clamp((clarity + specificity + outcome + energy) / 4);
+    return {
+      scores: { clarity, specificity, outcome, energy },
+      overall,
+      verdict:
+        (vague ? "It leans on filler verbs that every competitor also uses." : "It reads clean.") +
+        " " +
+        (hasNumber
+          ? "The number helps it feel concrete."
+          : "Without a number or named outcome, it asks the visitor to take craft on faith."),
+      rewrites: [
+        "Ship your product in 14 days",
+        "The site your revenue deserves",
+        "Stop losing sales to slow pages",
+        "98 Lighthouse. Every launch.",
+        "Software that pays for itself",
+      ],
+      ai: false,
+    };
+  });
+
+/* ------------------------------------------------------------------ */
+/* SEO Meta Generator                                                  */
+/* ------------------------------------------------------------------ */
+
+export type MetaResult = {
+  title: string;
+  description: string;
+  og: { property: string; content: string }[];
+  jsonLd: string;
+  ai: boolean;
+};
+
+export const runMetaGenerate = createServerFn({ method: "POST" })
+  .validator(
+    (d: { business: string; offering: string; audience?: string; location?: string }) => d,
+  )
+  .handler(async ({ data }): Promise<MetaResult | { error: string }> => {
+    const business = data.business.trim();
+    const offering = data.offering.trim();
+    if (!business || !offering) return { error: "Business name and what you offer are both needed." };
+
+    const ai = await geminiJson<{ title: string; description: string }>(
+      "Write SEO meta for a homepage.\nBusiness: " + business + ". Offering: " + offering +
+        ". Audience: " + (data.audience || "general") + ". Location: " + (data.location || "none") +
+        '.\nReturn JSON: {"title": "max 60 chars, brand at end after a hyphen, benefit-led", "description": "max 155 chars, one concrete benefit + one differentiator + soft call to action, no exclamation marks"}.',
+    );
+
+    const title = (ai?.title ?? offering.slice(0, 40) + " - " + business).slice(0, 60);
+    const description = (
+      ai?.description ??
+      business + " delivers " + offering.toLowerCase() +
+        (data.location ? " in " + data.location : "") +
+        ". Built for " + (data.audience || "teams that care about results") + ". See how we can help."
+    ).slice(0, 158);
+
+    const og = [
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: business },
+      { property: "twitter:card", content: "summary_large_image" },
+    ];
+
+    const jsonLd = JSON.stringify(
+      {
+        "@context": "https://schema.org",
+        "@type": data.location ? "LocalBusiness" : "Organization",
+        name: business,
+        description,
+        ...(data.location ? { address: { "@type": "PostalAddress", addressLocality: data.location } } : {}),
+      },
+      null,
+      2,
+    );
+
+    return { title, description, og, jsonLd, ai: !!ai };
+  });

@@ -136,21 +136,36 @@ export function FeatureGrid({
         </div>
       ) : (
         <div className={`grid gap-4 ${colClass}`} data-cards>
-          {items.map((it) => (
-            <div
-              key={it.title}
-              className={`group glare-card lift shine rounded-2xl p-7 ${
-                gold ? "gradient-card-gold" : "gradient-card"
-              } hover:border-lime/30`}
-              data-card
-            >
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-lime/25 to-transparent border border-lime/20 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110">
-                <it.icon className="h-5 w-5 text-lime" />
+          {items.map((it, ci) => {
+            // Background diversity: every third cell carries a tinted panel so
+            // grids stop reading as identical white-noise cards.
+            const tinted = ci % 3 === 1;
+            return (
+              <div
+                key={it.title}
+                className={`group glare-card lift relative overflow-hidden rounded-2xl p-7 ${
+                  tinted
+                    ? gold
+                      ? "border border-gold/25 bg-gradient-to-br from-gold/15 via-transparent to-transparent"
+                      : "border border-lime/20 bg-gradient-to-br from-lime/12 via-transparent to-transparent"
+                    : gold
+                      ? "gradient-card-gold"
+                      : "gradient-card"
+                } hover:border-lime/30`}
+                data-card
+              >
+                <it.icon
+                  className={`pointer-events-none absolute -bottom-6 -right-5 h-28 w-28 opacity-[0.06] transition-transform duration-700 group-hover:scale-110 ${gold ? "text-gold" : "text-lime"}`}
+                  aria-hidden
+                />
+                <div className="relative grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-lime/25 to-transparent border border-lime/20 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110">
+                  <it.icon className="h-5 w-5 text-lime" />
+                </div>
+                <h3 className="relative mt-7 font-display text-xl font-semibold">{it.title}</h3>
+                <p className="relative mt-2 text-sm text-muted-foreground">{it.desc}</p>
               </div>
-              <h3 className="mt-7 font-display text-xl font-semibold">{it.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{it.desc}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </section>
