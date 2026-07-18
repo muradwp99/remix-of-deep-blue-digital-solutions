@@ -129,7 +129,7 @@ function Page() {
                 type="button"
                 onClick={run}
                 disabled={running}
-                className="w-full rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-[#10142b] transition-transform hover:brightness-105 active:scale-[0.98] disabled:opacity-40"
+                className="w-full rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-[#00022D] transition-transform hover:brightness-105 active:scale-[0.98] disabled:opacity-40"
               >
                 {running ? "Estimating…" : "Estimate my project"}
               </button>

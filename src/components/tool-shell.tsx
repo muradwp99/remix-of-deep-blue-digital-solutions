@@ -158,7 +158,7 @@ export function UrlForm({
       <button
         type="submit"
         disabled={running || !url.trim()}
-        className="rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-[#10142b] transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+        className="rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-[#00022D] transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
       >
         {running ? "Running…" : cta}
       </button>
@@ -200,7 +200,7 @@ export function ToolError({ message }: { message: string }) {
 
 export function ResultPanel({ children, footnote }: { children: ReactNode; footnote?: string }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-[#0B0B45]/40 p-6 backdrop-blur-sm md:p-9">
+    <div className="rounded-3xl border border-white/10 bg-[#00022D]/40 p-6 backdrop-blur-sm md:p-9">
       {children}
       {footnote ? <p className="mt-6 text-xs text-white/40">{footnote}</p> : null}
     </div>
