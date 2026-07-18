@@ -237,20 +237,25 @@ function HomePage() {
     ),
     stats: (
       <>
-      {/* Proof in numbers — bold gold color band */}
+      {/* Proof in numbers — bold gold color band, ledger composition */}
       <section className="block-bold" data-reveal-group>
-        <div className="container-page py-24">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-          {hc.stats.map((s) => (
-            <div key={s.label} data-reveal-child>
-              <div className="font-display text-6xl md:text-7xl font-semibold tracking-tight" data-counter>
-                {s.value}
+        <div className="container-page py-16 md:py-20">
+          <div className="grid divide-y divide-black/15 sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-4 lg:divide-x">
+            {hc.stats.map((s, i) => (
+              <div
+                key={s.label}
+                data-reveal-child
+                className={`flex flex-col justify-between gap-8 py-8 sm:py-4 lg:px-10 ${i === 0 ? "lg:pl-0" : ""} ${i === hc.stats.length - 1 ? "lg:pr-0" : ""}`}
+              >
+                <div className="font-display text-7xl font-semibold leading-none tracking-tight md:text-8xl" data-counter>
+                  {s.value}
+                </div>
+                <p className="max-w-[22ch] text-sm font-medium leading-snug text-black/70">
+                  {s.label}
+                </p>
               </div>
-              <div className="mt-3 h-px w-10 bg-lime/60" />
-              <p className="mt-3 text-sm text-muted-foreground max-w-[24ch]">{s.label}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         </div>
       </section>
 

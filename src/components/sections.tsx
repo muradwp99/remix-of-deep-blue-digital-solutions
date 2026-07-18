@@ -108,12 +108,29 @@ export function FeatureGrid({
               >
                 <it.icon className={i === 0 ? "h-6 w-6 text-lime" : "h-5 w-5 text-lime"} />
               </div>
-              <h3 className={`relative mt-7 font-display font-semibold ${i === 0 ? "text-3xl" : "text-xl"}`}>
+              <h3 className={`relative mt-7 font-display font-semibold ${i === 0 ? "text-3xl md:text-4xl" : "text-xl"}`}>
                 {it.title}
               </h3>
-              <p className={`relative mt-2 text-muted-foreground ${i === 0 ? "text-base" : "text-sm"}`}>
+              <p className={`relative mt-3 text-muted-foreground ${i === 0 ? "max-w-md text-lg leading-relaxed" : "mt-2 text-sm"}`}>
                 {it.desc}
               </p>
+              {i === 0 && (
+                <div className="relative mt-auto pt-10">
+                  <div className="flex flex-wrap gap-2.5 border-t border-white/10 pt-6">
+                    {items.slice(1).map((rest) => (
+                      <span
+                        key={rest.title}
+                        className="rounded-full border border-white/12 bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-foreground/75"
+                      >
+                        {rest.title}
+                      </span>
+                    ))}
+                    <span className="rounded-full border border-lime/30 bg-lime/10 px-3.5 py-1.5 text-xs font-semibold text-lime">
+                      Scoped in one call
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -248,21 +265,23 @@ export function ProcessSteps({
 
 export function StatsRow({ stats }: { stats: { value: string; label: string }[] }) {
   return (
-    <section className="container-page py-20 border-t border-border/60" data-reveal-group>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4" data-cards>
-        {stats.map((s) => (
+    <section className="container-page py-16 md:py-20" data-reveal-group>
+      <div className="grid divide-y divide-border/70 sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-4 lg:divide-x">
+        {stats.map((s, i) => (
           <div
             key={s.label}
-            className="glare-card gradient-card lift rounded-2xl p-8 text-center"
-            data-card
+            data-reveal-child
+            className={`flex flex-col justify-between gap-7 py-7 sm:py-3 lg:px-10 ${i === 0 ? "lg:pl-0" : ""} ${i === stats.length - 1 ? "lg:pr-0" : ""}`}
           >
             <div
-              className="font-display text-4xl md:text-5xl font-semibold text-gradient-lime"
+              className="font-display text-6xl font-semibold leading-none tracking-tight md:text-7xl"
               data-counter
             >
               {s.value}
             </div>
-            <div className="mt-2 text-sm text-muted-foreground">{s.label}</div>
+            <div className="max-w-[22ch] text-sm font-medium leading-snug text-muted-foreground">
+              {s.label}
+            </div>
           </div>
         ))}
       </div>
