@@ -1,16 +1,25 @@
+import type { CSSProperties } from "react";
+
 /**
  * Auxtech brand mark — the angular "A" from the wordmark.
  * Renders in `currentColor` so it inherits text color (white on dark chrome).
  * To swap in the exact production asset, replace the <path> data here and
  * `public/favicon.svg` — everything else picks it up.
  */
-export function AuxtechMark({ className }: { className?: string }) {
+export function AuxtechMark({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: CSSProperties;
+}) {
   return (
     <svg
       viewBox="0 0 48 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      style={style}
       aria-hidden="true"
     >
       {/* Outer A silhouette with a folded left leg, matching the wordmark */}

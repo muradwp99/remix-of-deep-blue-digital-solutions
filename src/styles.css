@@ -90,23 +90,23 @@
   --muted: oklch(0.205 0.075 268);
   --muted-foreground: oklch(0.72 0.025 265);
 
-  --accent: oklch(0.42 0.10 266);
+  --accent: oklch(0.42 0.10 268);
   --accent-foreground: oklch(0.98 0.005 250);
 
   /* Dark yellow accent (replaces green/orange) */
   --gold: oklch(0.80 0.13 88);
-  --gold-foreground: oklch(0.15 0.028 265);
+  --gold-foreground: oklch(0.14 0.07 268);
 
   /* "lime" token repurposed as dark yellow so legacy classes stay on-brand */
   --lime: oklch(0.82 0.14 90);
-  --lime-foreground: oklch(0.15 0.028 265);
+  --lime-foreground: oklch(0.14 0.07 268);
 
   --destructive: oklch(0.62 0.22 25);
   --destructive-foreground: oklch(0.98 0.005 250);
 
   --border: oklch(0.30 0.075 268 / 60%);
   --input: oklch(0.30 0.075 268);
-  --ring: oklch(0.55 0.07 90);
+  --ring: oklch(0.55 0.07 88);
 
   --gradient-hero: radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.28 0.10 268 / 0.65), transparent 70%);
   --gradient-glow: linear-gradient(135deg, oklch(0.32 0.09 268), oklch(0.80 0.14 88));
@@ -119,7 +119,7 @@
   /* Accent-derived tokens for per-page themes (src/lib/themes.ts overrides
      these). Defaults match the historical hard-coded gold values, so pages
      without a theme render pixel-identical to before. */
-  --wash-accent: oklch(0.35 0.1 85 / 0.15);
+  --wash-accent: oklch(0.35 0.071 85 / 0.15);
   --sheen-soft: oklch(0.85 0.12 90 / 0.09);
   --sheen-ring: oklch(0.85 0.13 90 / 0.6);
   --sheen-ring-dim: oklch(0.65 0.09 90 / 0.14);
@@ -134,10 +134,10 @@
   --glow-cool-2: oklch(0.68 0.09 230);
 
   /* Section-block tokens (themes.ts overrides per page; gold defaults) */
-  --accent-strong: oklch(0.5 0.1 88);
+  --accent-strong: oklch(0.42 0.084 88);
   --accent-soft-bg: oklch(0.96 0.03 88);
   --block-bold-bg: oklch(0.82 0.14 90);
-  --block-bold-deep: oklch(0.3 0.09 88);
+  --block-bold-deep: oklch(0.3 0.062 88);
 }
 
 /* ---- Section blocks ----------------------------------------------------
@@ -151,7 +151,7 @@
   --foreground: oklch(0.17 0.03 265);
   --card-foreground: oklch(0.17 0.03 265);
   --popover-foreground: oklch(0.17 0.03 265);
-  --muted-foreground: oklch(0.42 0.02 260);
+  --muted-foreground: oklch(0.42 0.02 265);
   --border: oklch(0.2 0.03 265 / 14%);
   --input: oklch(0.2 0.03 265 / 18%);
   --lime: var(--accent-strong);
@@ -161,9 +161,13 @@
   --primary: oklch(0.17 0.03 265);
   --primary-foreground: oklch(0.98 0.005 250);
   --ring: var(--accent-strong);
+  --destructive: oklch(0.50 0.20 25);
   --shadow-panel: 0 30px 70px -30px oklch(0.3 0.05 265 / 0.3);
   --shadow-elegant: 0 24px 60px -28px oklch(0.3 0.05 265 / 0.25);
   --gradient-hero: none;
+  --sheen-soft: color-mix(in oklab, var(--accent-strong) 16%, transparent);
+  --sheen-ring: color-mix(in oklab, var(--accent-strong) 55%, transparent);
+  --sheen-ring-dim: color-mix(in oklab, var(--accent-strong) 20%, transparent);
   color: var(--foreground);
   background: var(--background);
 }
@@ -249,8 +253,11 @@
     border-color 0.4s ease;
 }
 .block-light .gradient-card:hover,
+.block-light .gradient-card:focus-visible,
 .block-tint .gradient-card:hover,
-.block-bold .gradient-card:hover {
+.block-tint .gradient-card:focus-visible,
+.block-bold .gradient-card:hover,
+.block-bold .gradient-card:focus-visible {
   transform: translateY(-4px);
   border-color: color-mix(in oklab, var(--accent-strong) 42%, transparent);
   box-shadow:
@@ -338,6 +345,15 @@
   ::-webkit-scrollbar-track { background: var(--background); }
   ::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 10px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* Keyboard-focus fallback — the component-level :focus-visible rules
+     (.btn-gold, .btn-navy, .lift, .gradient-card, .link-underline) mirror
+     their own :hover payload and win on specificity; this covers everything
+     else (nav links, footer links, form inputs, bare interactive elements). */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
 }
 
 @utility container-page {
@@ -366,12 +382,14 @@
   background: linear-gradient(135deg, oklch(1 0 0 / 0.06), oklch(1 0 0 / 0.02));
   backdrop-filter: blur(20px) saturate(140%);
   border: 1px solid oklch(1 0 0 / 0.08);
+  transition: background-color 0.3s ease;
 }
 
 @utility glass-strong {
   background: linear-gradient(135deg, oklch(1 0 0 / 0.1), oklch(1 0 0 / 0.03));
   backdrop-filter: blur(24px) saturate(160%);
   border: 1px solid oklch(1 0 0 / 0.12);
+  transition: background-color 0.3s ease;
 }
 
 @utility gradient-card {
@@ -403,17 +421,40 @@
   -webkit-text-stroke: 1.5px var(--lime);
 }
 
-/* Active step in a data-pin-steps narrative */
-[data-pin-step] {
-  opacity: 0.45;
+/* Active step in a data-pin-steps narrative — only the numeral and title
+   dim; the description and mobile inline panel stay fully legible at every
+   step, active or not. */
+[data-pin-step] > span:first-child,
+[data-pin-step] > h3 {
+  opacity: 0.6;
   transition: opacity 0.4s ease;
 }
-[data-pin-step].pin-step-active {
+[data-pin-step].pin-step-active > span:first-child,
+[data-pin-step].pin-step-active > h3 {
   opacity: 1;
 }
+[data-pin-step].pin-step-active > span:first-child {
+  /* active-numeral glow */
+  text-shadow: 0 0 24px var(--sheen-ring-dim);
+  transition: opacity 0.4s ease, text-shadow 0.4s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-pin-step] > span:first-child,
+  [data-pin-step] > h3 {
+    opacity: 1;
+  }
+}
+
+/* Pinned visual panel — stacked one per step, cross-faded by the
+   [data-pin-steps] GSAP hook. Static fallback prevents a pre-hydration
+   flash and gives reduced-motion users a single, correctly-positioned
+   panel instead of every panel stacked and fully opaque. */
+[data-pin-panel] { opacity: 0; }
+[data-pin-panel]:first-child { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-pin-step] { opacity: 1; }
+  [data-pin-panel] { opacity: 1; }
+  [data-pin-panel]:not(:first-child) { display: none; }
 }
 
 @keyframes heroReveal { 0%{opacity:0;transform:translateY(28px);filter:blur(12px)} 100%{opacity:1;transform:translateY(0);filter:blur(0)} }
@@ -440,6 +481,11 @@
   transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease, border-color 0.4s ease;
 }
 .lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px -24px oklch(0 0 0 / 0.7);
+}
+.lift:focus-visible {
+  outline: none;
   transform: translateY(-6px);
   box-shadow: 0 24px 60px -24px oklch(0 0 0 / 0.7);
 }
@@ -470,6 +516,13 @@
   transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
 }
 .link-underline:hover::after { transform: scaleX(1); transform-origin: left; }
+.link-underline:focus-visible {
+  outline: none;
+}
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
 
 /* Primary navy button */
 @utility btn-navy {
@@ -477,6 +530,18 @@
   color: var(--foreground);
   border: 1px solid oklch(1 0 0 / 0.1);
   transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease, border-color 0.3s ease;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+.btn-navy:focus-visible {
+  outline: none;
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--lime) 40%, transparent);
+  box-shadow: 0 0 0 3px oklch(1 0 0 / 0.12);
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -897,6 +962,18 @@ details.faq-item > *:not(summary) {
   border: 1px solid var(--btn-accent-border);
   box-shadow: var(--btn-accent-shadow);
   transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease, filter 0.3s ease;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+.btn-gold:focus-visible {
+  outline: none;
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: var(--btn-accent-shadow), 0 0 0 3px var(--btn-accent-border);
 }
 
 /* Second toolbox marquee row drifts the opposite way */

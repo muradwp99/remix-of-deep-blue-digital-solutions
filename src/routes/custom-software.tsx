@@ -4,6 +4,7 @@ import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { BentoShowcase } from "@/components/bento-features";
+import { TerminalWindow } from "@/components/signature/terminal";
 import {
   FeatureGrid,
   ProcessSteps,
@@ -44,28 +45,41 @@ function Page() {
     <SiteShell theme={pageThemes["custom-software"]}>
       {/* ---- Hero (deep violet color-block — premium, light ink) ---- */}
       <section className="block-deep">
-        <div className="container-page py-28 md:py-36">
-          <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-            {s("hero_eyebrow", "Custom Software")}
-          </p>
-          <h1
-            className="mt-6 max-w-[18ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
-            data-reveal
-          >
-            {s("hero_title", "Software built like it has to")} <span className="text-gold">{s("hero_title_em", "last")}</span>
-          </h1>
-          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-            {s("hero_subtitle", "Platforms, portals, and internal tools — architected and shipped by one senior team. You see it running on day 7, not in a deck on week 6.")}
-          </p>
-          <div className="mt-10" data-reveal>
-            <Link
-              to="/contact"
-              data-magnetic
-              className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold"
+        <div className="container-page grid items-center gap-14 py-28 md:py-36 lg:grid-cols-[1.1fr_1fr]">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
+              {s("hero_eyebrow", "Custom Software")}
+            </p>
+            <h1
+              className="mt-6 max-w-[18ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
+              data-reveal
             >
-              Book a Scoping Call
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
+              {s("hero_title", "Software built like it has to")} <span className="text-gold">{s("hero_title_em", "last")}</span>
+            </h1>
+            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground" data-reveal>
+              {s("hero_subtitle", "Platforms, portals, and internal tools — architected and shipped by one senior team. You see it running on day 7, not in a deck on week 6.")}
+            </p>
+            <div className="mt-10" data-reveal>
+              <Link
+                to="/contact"
+                data-magnetic
+                className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold"
+              >
+                Book a Scoping Call
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+            </div>
+          </div>
+          <div data-slide="right">
+            <TerminalWindow
+              title="day-7 — zsh"
+              lines={[
+                { prompt: "$", text: "git log --oneline -1" },
+                { text: "day 7 · feat: checkout flow shipped", ok: true, dim: true },
+                { prompt: "$", text: "curl -I https://staging.yourapp.dev" },
+                { text: "HTTP/2 200 · live, not mocked", ok: true },
+              ]}
+            />
           </div>
         </div>
       </section>
@@ -233,7 +247,7 @@ function Page() {
         </section>
 
         <BenefitList
-          variant="grid"
+          variant="list"
           eyebrow="Why our engineers"
           title="Senior only. Your repo, your rules."
           items={[

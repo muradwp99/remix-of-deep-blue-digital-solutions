@@ -13,6 +13,7 @@ import {
   type HomeContent,
 } from "@/lib/home-content";
 import { SiteShell } from "@/components/site-shell";
+import { CTABand } from "@/components/sections";
 import { BentoShowcase } from "@/components/bento-features";
 import { useScrollReveal } from "@/lib/animations";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -106,8 +107,11 @@ const capabilityIcons = [Code2, Palette, Smartphone, Brain];
 const solutionIcons = [ShoppingCart, Layers, Building2, Stethoscope];
 const whyIcons = [Zap, Layers, ShieldCheck, Coins];
 
-/** Hero marquee card chrome (backgrounds/avatars stay design-owned, by index). */
-const heroCardBg = ["#0c0f18", "#1a0b2e", "#0b1626", "#18181b", "#0a1f16", "#1f1012"];
+/** Hero marquee card chrome (backgrounds/avatars stay design-owned, by index).
+ * Hue-ordered around the wheel (ENERGY→GROWTH→CARE→EDITORIAL→BUILD→CREATIVE,
+ * each a ·950 ramp step) so consecutive marquee cards drift hue instead of
+ * jumping — identity-spec §4#3. */
+const heroCardBg = ["#180804", "#031108", "#02110f", "#021014", "#040e18", "#150812"];
 const heroCardAvatars = [
   "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&q=80",
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80",
@@ -841,52 +845,25 @@ function HomePage() {
     cta: (
       <>
       {/* CTA */}
-      <section className="container-page py-28" data-reveal>
-        <div className="relative overflow-hidden rounded-3xl gradient-card p-12 md:p-20 border border-lime/20">
-          <div className="absolute inset-0 grain-bg pointer-events-none" />
-          <div
-            className="absolute -top-40 -right-40 w-96 h-96 rounded-full opacity-40 pointer-events-none"
-            style={{ background: "var(--gradient-lime)", filter: "blur(80px)" }}
-          />
-          <div className="relative max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.28em] text-lime">{hc.cta.eyebrow}</p>
-            <h2 className="mt-4 font-display text-5xl md:text-7xl leading-[0.95] font-semibold" data-split>
-              {hc.cta.heading}
-            </h2>
-            <p className="mt-6 text-lg text-muted-foreground">
-              {hc.cta.text}
-            </p>
-            <div className="mt-10 flex flex-wrap gap-3">
-              <Link
-                to="/contact"
-                data-magnetic
-                className="group inline-flex items-center gap-2 rounded-full btn-navy shine px-6 py-3.5 text-sm font-semibold hover:border-lime/40"
-              >
-                {hc.cta.primaryLabel}
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
-              <Link
-                to="/contact"
-                data-magnetic="0.25"
-                className="inline-flex items-center gap-2 rounded-full glass px-6 py-3.5 text-sm font-medium hover:bg-white/5"
-              >
-                {hc.cta.secondaryLabel}
-              </Link>
-            </div>
-            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-lime" /> You own all IP and code
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <Zap className="h-4 w-4 text-lime" /> Reply within one business day
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <BadgeCheck className="h-4 w-4 text-lime" /> Free technical audit included
-              </span>
-            </div>
-          </div>
+      <CTABand
+        eyebrow={hc.cta.eyebrow}
+        title={hc.cta.heading}
+        subtitle={hc.cta.text}
+        primary={{ label: hc.cta.primaryLabel, to: "/contact" }}
+        secondary={{ label: hc.cta.secondaryLabel, to: "/contact" }}
+      >
+        <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground">
+          <span className="inline-flex items-center gap-2">
+            <ShieldCheck className="h-4 w-4 text-lime" /> You own all IP and code
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <Zap className="h-4 w-4 text-lime" /> Reply within one business day
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <BadgeCheck className="h-4 w-4 text-lime" /> Free technical audit included
+          </span>
         </div>
-      </section>
+      </CTABand>
       </>
     ),
   };
@@ -989,9 +966,9 @@ function HomePage() {
                         </div>
                         <div className="flex items-center justify-between pt-4 border-t border-white/10">
                           {[
-                            { icon: Flame, cls: "w-5 h-5 text-orange-500 fill-orange-500", v: card.s1v, l: card.s1l },
+                            { icon: Flame, cls: "w-5 h-5 text-[#f28b67] fill-[#f28b67]", v: card.s1v, l: card.s1l },
                             { icon: Clock, cls: "w-5 h-5 text-white fill-white", v: card.s2v, l: card.s2l },
-                            { icon: Plus, cls: "w-5 h-5 text-purple-400 fill-purple-400 bg-purple-400/20 rounded-md p-0.5", v: card.s3v, l: card.s3l },
+                            { icon: Plus, cls: "w-5 h-5 text-[#df89cc] fill-[#df89cc] bg-[#df89cc]/20 rounded-md p-0.5", v: card.s3v, l: card.s3l },
                           ].map((stat) => (
                             <div key={stat.l + stat.v} className="flex flex-col">
                               <div className="flex items-center gap-2 text-white font-bold text-xl mb-1">

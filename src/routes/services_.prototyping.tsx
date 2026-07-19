@@ -79,7 +79,7 @@ const findings = [
   {
     note: "“I’d expect the price before the sign-up.”",
     tag: "6 of 8 users · pricing moved up a screen",
-    color: "bg-amber-200",
+    color: "bg-[oklch(0.86_0.075_40)]",
     rotate: "-rotate-2",
     fling: "-140,70,-12",
     offset: "",
@@ -87,7 +87,7 @@ const findings = [
   {
     note: "Nobody found the compare tab.",
     tag: "Nav relabelled · fix queued for build",
-    color: "bg-lime-200",
+    color: "bg-[oklch(0.86_0.128_158)]",
     rotate: "rotate-1",
     fling: "120,90,9",
     offset: "lg:mt-10",
@@ -95,7 +95,7 @@ const findings = [
   {
     note: "“Wait — is this already live?”",
     tag: "Asked twice, unprompted",
-    color: "bg-sky-200",
+    color: "bg-[oklch(0.86_0.070_245)]",
     rotate: "rotate-2",
     fling: "-90,-80,7",
     offset: "lg:mt-4",
@@ -103,7 +103,7 @@ const findings = [
   {
     note: "Checkout step 3: four fields too many.",
     tag: "Cut to two · completion up in retest",
-    color: "bg-rose-200",
+    color: "bg-[oklch(0.86_0.106_335)]",
     rotate: "-rotate-1",
     fling: "150,-60,-8",
     offset: "lg:-mt-2",
@@ -111,7 +111,7 @@ const findings = [
   {
     note: "The “smart feed” got zero taps.",
     tag: "Descoped from v1 — three weeks saved",
-    color: "bg-amber-100",
+    color: "bg-[oklch(0.91_0.046_40)]",
     rotate: "rotate-3",
     fling: "90,130,11",
     offset: "lg:mt-8",
@@ -293,16 +293,16 @@ function Page() {
             {findings.map((f) => (
               <div key={f.note} className={f.offset} data-scatter-item={f.fling}>
                 <div
-                  className={`relative flex min-h-[190px] flex-col p-6 ${f.color} ${f.rotate} shadow-[0_18px_32px_-18px_rgba(15,23,42,0.4)] transition-transform duration-300 hover:rotate-0 hover:-translate-y-1`}
+                  className={`relative flex min-h-[190px] flex-col p-6 ${f.color} ${f.rotate} shadow-[var(--shadow-panel)] transition-transform duration-300 hover:rotate-0 hover:-translate-y-1`}
                 >
                   <span
                     aria-hidden
                     className="absolute -top-2.5 left-1/2 h-5 w-16 -translate-x-1/2 -rotate-3 bg-black/10"
                   />
-                  <p className="font-display text-lg font-semibold leading-snug text-neutral-900">
+                  <p className="font-display text-lg font-semibold leading-snug text-[oklch(0.14_0.07_268)]">
                     {f.note}
                   </p>
-                  <p className="mt-auto pt-5 text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-600">
+                  <p className="mt-auto pt-5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[oklch(0.225_0.08_268)]">
                     {f.tag}
                   </p>
                 </div>
@@ -310,7 +310,7 @@ function Page() {
             ))}
             {/* pinned polaroid among the notes */}
             <div className="lg:mt-6" data-scatter-item="-70,140,-6">
-              <div className="relative -rotate-2 bg-card p-2.5 pb-8 shadow-[0_18px_32px_-18px_rgba(15,23,42,0.4)] transition-transform duration-300 hover:rotate-0 hover:-translate-y-1">
+              <div className="relative -rotate-2 bg-card p-2.5 pb-8 shadow-[var(--shadow-panel)] transition-transform duration-300 hover:rotate-0 hover:-translate-y-1">
                 <span
                   aria-hidden
                   className="absolute -top-2.5 left-1/2 h-5 w-16 -translate-x-1/2 rotate-2 bg-black/10"

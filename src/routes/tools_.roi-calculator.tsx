@@ -205,7 +205,7 @@ function Page() {
                 type="button"
                 onClick={analyse}
                 disabled={thinking}
-                className="mt-8 rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-[#00022D] transition-transform hover:brightness-105 active:scale-[0.98] disabled:opacity-40"
+                className="mt-8 rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-gold-foreground transition-transform hover:brightness-105 active:scale-[0.98] disabled:opacity-40"
               >
                 {thinking ? "Analysing…" : "Get the verdict"}
               </button>

@@ -23,6 +23,10 @@ export function ScoreRing({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShown(value);
+      return;
+    }
     let raf = 0;
     const io = new IntersectionObserver(
       (entries) => {
@@ -47,7 +51,7 @@ export function ScoreRing({
 
   const r = (size - 12) / 2;
   const c = 2 * Math.PI * r;
-  const tone = value >= 80 ? "text-lime" : value >= 55 ? "text-gold" : "text-red-400";
+  const tone = value >= 80 ? "text-lime" : value >= 55 ? "text-gold" : "text-destructive";
 
   return (
     <div ref={ref} className="flex flex-col items-center gap-3">
@@ -87,7 +91,7 @@ export function StatTile({
   status: "good" | "warn" | "poor";
 }) {
   const tone =
-    status === "good" ? "border-lime/30 text-lime" : status === "warn" ? "border-gold/30 text-gold" : "border-red-400/30 text-red-400";
+    status === "good" ? "border-lime/30 text-lime" : status === "warn" ? "border-gold/30 text-gold" : "border-destructive/30 text-destructive";
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
       <p className="text-xs uppercase tracking-[0.16em] text-white/55">{label}</p>
@@ -102,7 +106,7 @@ export function StatTile({
 /* ---------------- Fix list ---------------- */
 
 const impactTone: Record<Fix["impact"], string> = {
-  high: "bg-red-400/10 text-red-300 border-red-400/25",
+  high: "bg-destructive/10 text-destructive border-destructive/25",
   medium: "bg-gold/10 text-gold border-gold/25",
   low: "bg-white/5 text-white/70 border-white/15",
 };
@@ -158,7 +162,7 @@ export function UrlForm({
       <button
         type="submit"
         disabled={running || !url.trim()}
-        className="rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-[#00022D] transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+        className="rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-gold-foreground transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
       >
         {running ? "Running…" : cta}
       </button>
@@ -190,7 +194,7 @@ export function ToolSkeleton() {
 
 export function ToolError({ message }: { message: string }) {
   return (
-    <div className="rounded-2xl border border-red-400/30 bg-red-400/10 px-5 py-4 text-sm text-red-200">
+    <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-5 py-4 text-sm text-destructive">
       {message}
     </div>
   );
@@ -200,7 +204,7 @@ export function ToolError({ message }: { message: string }) {
 
 export function ResultPanel({ children, footnote }: { children: ReactNode; footnote?: string }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-[#00022D]/40 p-6 backdrop-blur-sm md:p-9">
+    <div className="rounded-3xl border border-white/10 bg-background/40 p-6 backdrop-blur-sm md:p-9">
       {children}
       {footnote ? <p className="mt-6 text-xs text-white/40">{footnote}</p> : null}
     </div>

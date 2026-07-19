@@ -51,7 +51,7 @@ const gradeCopy: Record<SpeedResult["grade"], { label: string; tone: string; blu
   },
   slow: {
     label: "Slow",
-    tone: "text-red-300 border-red-400/40 bg-red-400/10",
+    tone: "text-destructive border-destructive/40 bg-destructive/10",
     blurb: "Speed is costing this site conversions every day. Start with the first fix below.",
   },
 };
@@ -136,7 +136,7 @@ function Page() {
 
                 <div className="mt-8 grid gap-2 text-sm text-white/60 sm:grid-cols-2">
                   <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
-                    Compression: <span className={result.compressed ? "text-lime" : "text-red-300"}>{result.compressed ? "enabled" : "missing"}</span>
+                    Compression: <span className={result.compressed ? "text-lime" : "text-destructive"}>{result.compressed ? "enabled" : "missing"}</span>
                   </div>
                   <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
                     Server: <span className="text-white/85">{result.server}</span>

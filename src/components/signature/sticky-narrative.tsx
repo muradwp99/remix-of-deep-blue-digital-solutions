@@ -10,11 +10,13 @@ export function StickyPinSteps({
   title,
   steps,
   panels,
+  stepGap = 38, // vh — existing gap preserved as the default for every current call site
 }: {
   eyebrow: string;
   title: ReactNode;
   steps: { t: string; d: string }[];
   panels: ReactNode[];
+  stepGap?: number;
 }) {
   return (
     <section className="container-page py-24 border-t border-border/60" data-pin-steps>
@@ -41,9 +43,16 @@ export function StickyPinSteps({
           </div>
         </div>
         {/* scrolling steps */}
-        <div className="space-y-10 lg:space-y-[38vh] lg:py-[12vh]">
+        <div
+          className="space-y-10 lg:space-y-0 lg:py-[12vh]"
+          style={{ ["--step-gap" as string]: `${stepGap}vh` }}
+        >
           {steps.map((s, i) => (
-            <div key={s.t} data-pin-step>
+            <div
+              key={s.t}
+              data-pin-step
+              className={i === 0 ? "" : "lg:mt-[var(--step-gap)]"}
+            >
               <span className="font-display text-3xl font-semibold text-gradient-lime">
                 {String(i + 1).padStart(2, "0")}
               </span>

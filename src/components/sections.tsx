@@ -396,12 +396,14 @@ export function CTABand({
   subtitle = "Tell us about it. We reply within one business day with a plan, a timeline, and a fair budget.",
   primary = { label: "Start a Project", to: "/contact" },
   secondary = { label: "Book Discovery Call", to: "/contact" },
+  children,
 }: {
   eyebrow?: string;
   title?: string;
   subtitle?: string;
   primary?: { label: string; to: string };
   secondary?: { label: string; to: string };
+  children?: ReactNode;
 }) {
   return (
     <section className="container-page py-24" data-reveal>
@@ -421,7 +423,7 @@ export function CTABand({
             <Link
               to={primary.to}
               data-magnetic
-              className="group inline-flex items-center gap-2 rounded-full btn-navy shine px-6 py-3.5 text-sm font-semibold hover:border-lime/40"
+              className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold hover:-translate-y-0.5 hover:brightness-105"
             >
               {primary.label}
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -434,6 +436,7 @@ export function CTABand({
               {secondary.label}
             </Link>
           </div>
+          {children}
         </div>
       </div>
     </section>

@@ -4,6 +4,7 @@ import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { BentoShowcase } from "@/components/bento-features";
+import { PhoneFrame } from "@/components/signature/device-frames";
 import {
   FeatureGrid,
   ProcessSteps,
@@ -57,6 +58,32 @@ const beyondBuild = [
   { icon: Zap, title: "Wearable & IoT", desc: "watchOS, Wear OS, and BLE device integration when the phone is only half the product." },
 ];
 
+/** Hero device mock — icon chip + name row, then generic content rows (the
+ * phone represents the product itself, not an App Store listing). */
+function AppShellMock() {
+  return (
+    <div className="flex h-full flex-col p-4 pt-10 text-left">
+      <div className="flex items-center gap-3">
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-primary">
+          <Smartphone className="h-6 w-6 text-primary-foreground" aria-hidden />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold leading-tight text-foreground">Your App</p>
+          <p className="text-[10px] text-muted-foreground">Home</p>
+        </div>
+      </div>
+      <div className="mt-5 flex-1 space-y-3" aria-hidden>
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="rounded-xl border border-border bg-card p-3">
+            <div className="h-2 w-3/5 rounded bg-black/10" />
+            <div className="mt-2 h-2 w-2/5 rounded bg-black/10" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Page() {
   const { doc } = Route.useLoaderData();
   // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
@@ -66,29 +93,38 @@ function Page() {
     <SiteShell theme={pageThemes["mobile-apps"]}>
       {/* ---- Hero (bold blue color-block — energetic, ink on saturation) ---- */}
       <section className="block-bold">
-        <div className="container-page py-28 md:py-36">
-          <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
-            {s("hero_eyebrow", "Mobile Apps")}
-          </p>
-          <h1
-            className="mt-6 max-w-[16ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
-            data-split
-          >
-            {s("hero_title", "Apps people keep on the home screen")}
-          </h1>
-          <div className="mt-8 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-            <p className="max-w-xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-              {s("hero_subtitle", "Native and cross-platform builds engineered for retention, not just launch day. A working prototype on your phone by day 14.")}
+        <div className="container-page grid items-center gap-14 py-28 md:py-36 lg:grid-cols-[1.05fr_1fr]">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
+              {s("hero_eyebrow", "Mobile Apps")}
             </p>
-            <div data-reveal>
-              <Link
-                to="/contact"
-                data-magnetic
-                className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold"
-              >
-                Book a Call
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
+            <h1
+              className="mt-6 max-w-[16ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
+              data-split
+            >
+              {s("hero_title", "Apps people keep on the home screen")}
+            </h1>
+            <div className="mt-8 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+              <p className="max-w-xl text-lg leading-relaxed text-muted-foreground" data-reveal>
+                {s("hero_subtitle", "Native and cross-platform builds engineered for retention, not just launch day. A working prototype on your phone by day 14.")}
+              </p>
+              <div className="shrink-0" data-reveal>
+                <Link
+                  to="/contact"
+                  data-magnetic
+                  className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold whitespace-nowrap"
+                >
+                  Book a Call
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-center lg:justify-end" data-slide="right">
+            <div className="animate-float" style={{ transform: "rotate(-4deg)" }}>
+              <PhoneFrame>
+                <AppShellMock />
+              </PhoneFrame>
             </div>
           </div>
         </div>

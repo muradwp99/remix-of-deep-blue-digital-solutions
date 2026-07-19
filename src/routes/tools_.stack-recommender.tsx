@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
+import { pageThemes } from "@/lib/themes";
 import { runStackRecommend, type StackResult } from "@/lib/tools-api";
 import { ResultPanel, ToolSkeleton } from "@/components/tool-shell";
 
@@ -43,7 +44,7 @@ function Page() {
   };
 
   return (
-    <SiteShell>
+    <SiteShell theme={pageThemes["tools/stack-recommender"]}>
       <section className="block-deep">
         <div className="container-page py-20 md:py-24">
           <div className="max-w-3xl">
@@ -75,7 +76,7 @@ function Page() {
                 <span className="text-xs uppercase tracking-[0.16em] text-white/60">Expected scale, year one</span>
                 <select value={scale} onChange={(e) => setScale(e.target.value)} className={`mt-2 ${inputCls}`}>
                   {SCALES.map((s) => (
-                    <option key={s} value={s} className="bg-[#00022D]">
+                    <option key={s} value={s} className="bg-background">
                       {s}
                     </option>
                   ))}
@@ -92,7 +93,7 @@ function Page() {
               <button
                 type="submit"
                 disabled={running || !product.trim()}
-                className="w-full rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-[#00022D] transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+                className="w-full rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-gold-foreground transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {running ? "Thinking…" : "Recommend my stack"}
               </button>

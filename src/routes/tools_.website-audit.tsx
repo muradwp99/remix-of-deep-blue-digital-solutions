@@ -118,7 +118,7 @@ function Page() {
                       className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3"
                     >
                       <span className="text-xs uppercase tracking-[0.12em] text-white/55">{sig.label}</span>
-                      <span className={`text-sm font-medium ${sig.ok ? "text-lime" : "text-red-300"}`}>
+                      <span className={`text-sm font-medium ${sig.ok ? "text-lime" : "text-destructive"}`}>
                         {sig.value}
                       </span>
                     </div>

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import type { CSSProperties } from "react";
 import { cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
 import { useLiveEdits } from "@/lib/edit-bridge";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -45,6 +46,14 @@ export const Route = createFileRoute("/services")({
 /* ------------------------------------------------------------------ */
 /* Data                                                                */
 /* ------------------------------------------------------------------ */
+
+// services.tsx is themeless (flagship gold) — a plain .block-deep wrapper
+// would resolve --block-bold-deep to the gold-hued deep, not navy. Scoped
+// local override, same pattern themes.ts uses per-page; never touches
+// styles.css :root.
+const NAVY_DEEP_OVERRIDE = {
+  "--block-bold-deep": "oklch(0.16 0.073 268)", // navy·900
+} as CSSProperties;
 
 const groups = [
   {
@@ -439,7 +448,7 @@ function ServicesPage() {
             data-hero-item
             className="mx-auto mt-8 max-w-4xl font-display text-5xl md:text-7xl leading-[0.98] font-semibold"
           >
-            {s("hero_title", "Every capability you need to")} <em className="italic text-gradient">{s("hero_title_em", "ship")}</em> {s("hero_title_after", "and scale.")}
+            {s("hero_title", "Every capability you need to")} <em className="not-italic text-gradient">{s("hero_title_em", "ship")}</em> {s("hero_title_after", "and scale.")}
           </h1>
           <p data-hero-item className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
             {s("hero_subtitle", "From first sketch to long-term partnership — design, engineering and growth under one roof.")}
@@ -557,7 +566,7 @@ function ServicesPage() {
       </section>
 
       {/* ---- New section 1: Process ---- */}
-      <section className="border-t border-border/60">
+      <section className="block-deep border-t border-border/60" style={NAVY_DEEP_OVERRIDE}>
         <div className="container-page py-24 md:py-32 grid md:grid-cols-12 gap-12">
           <div className="md:col-span-4">
             <div className="md:sticky md:top-32">
@@ -658,63 +667,65 @@ function ServicesPage() {
       </section>
 
       {/* ---- Delivery infrastructure: illustrated bento ---- */}
-      <BentoShowcase
-        eyebrow="Delivery infrastructure"
-        title={
-          <>
-            Every engagement ships with an <em className="font-playfair font-medium text-gold">operating system</em>.
-          </>
-        }
-        subtitle="The pipelines, gates, and rituals below aren't add-ons — they're standing infrastructure on every project we take."
-        cards={[
-          {
-            title: "Performance, budgeted",
-            desc: "A 98 median Lighthouse score at launch — enforced in CI, not chased after the retro.",
-            tone: "warm",
-            visual: { kind: "gauge", stat: "98", statLabel: "median Lighthouse at launch", value: 0.98 },
-          },
-          {
-            title: "Quality gates on every merge",
-            desc: "Peer review, end-to-end tests, and accessibility audits run before code reaches your staging URL.",
-            tone: "cool",
-            visual: {
-              kind: "checklist",
-              rows: ["Peer review approved", "E2E tests passed", "A11y audit clean"],
+      <div className="block-deep" style={NAVY_DEEP_OVERRIDE}>
+        <BentoShowcase
+          eyebrow="Delivery infrastructure"
+          title={
+            <>
+              Every engagement ships with an <em className="not-italic font-medium text-gold">operating system</em>.
+            </>
+          }
+          subtitle="The pipelines, gates, and rituals below aren't add-ons — they're standing infrastructure on every project we take."
+          cards={[
+            {
+              title: "Performance, budgeted",
+              desc: "A 98 median Lighthouse score at launch — enforced in CI, not chased after the retro.",
+              tone: "warm",
+              visual: { kind: "gauge", stat: "98", statLabel: "median Lighthouse at launch", value: 0.98 },
             },
-          },
-          {
-            title: "Radical transparency",
-            desc: "You're in the room where it happens: every push, demo, and sprint report lands in your inbox as it happens.",
-            tone: "cool",
-            visual: {
-              kind: "inbox",
-              tabs: [
-                { label: "All", count: 4 },
-                { label: "Deploys", count: 2, active: true },
-                { label: "Reports", count: 1 },
-              ],
-              rows: [
-                "Nadia pushed to staging",
-                "Friday demo scheduled",
-                "Sprint 6 report ready",
-              ],
+            {
+              title: "Quality gates on every merge",
+              desc: "Peer review, end-to-end tests, and accessibility audits run before code reaches your staging URL.",
+              tone: "cool",
+              visual: {
+                kind: "checklist",
+                rows: ["Peer review approved", "E2E tests passed", "A11y audit clean"],
+              },
             },
-          },
-          {
-            title: "Ops on demand",
-            desc: "Preview environments, load tests, and secret rotation — one command away for your team as much as ours.",
-            tone: "warm",
-            visual: {
-              kind: "command",
-              actions: [
-                { label: "Spin Up Preview Env", kbd: "P" },
-                { label: "Run Load Test", kbd: "L" },
-                { label: "Rotate Secrets", kbd: "R" },
-              ],
+            {
+              title: "Radical transparency",
+              desc: "You're in the room where it happens: every push, demo, and sprint report lands in your inbox as it happens.",
+              tone: "cool",
+              visual: {
+                kind: "inbox",
+                tabs: [
+                  { label: "All", count: 4 },
+                  { label: "Deploys", count: 2, active: true },
+                  { label: "Reports", count: 1 },
+                ],
+                rows: [
+                  "Nadia pushed to staging",
+                  "Friday demo scheduled",
+                  "Sprint 6 report ready",
+                ],
+              },
             },
-          },
-        ]}
-      />
+            {
+              title: "Ops on demand",
+              desc: "Preview environments, load tests, and secret rotation — one command away for your team as much as ours.",
+              tone: "warm",
+              visual: {
+                kind: "command",
+                actions: [
+                  { label: "Spin Up Preview Env", kbd: "P" },
+                  { label: "Run Load Test", kbd: "L" },
+                  { label: "Rotate Secrets", kbd: "R" },
+                ],
+              },
+            },
+          ]}
+        />
+      </div>
 
       {/* ---- New section 3: Engagement models ---- */}
       <section className="border-t border-border/60">
@@ -734,7 +745,7 @@ function ServicesPage() {
                 key={m.name}
                 data-reveal-child
                 className={`relative flex flex-col rounded-3xl p-8 lift ${
-                  m.featured ? "gradient-card-gold glare-card" : "glass glare-card"
+                  m.featured ? "block-bold glare-card shadow-panel lg:-my-5 lg:p-10" : "glass glare-card"
                 }`}
               >
                 {m.featured && (
@@ -780,8 +791,8 @@ function ServicesPage() {
         </div>
       </section>
 
-      {/* ---- New section 4: Outcomes + CTA ---- */}
-      <section className="border-t border-border/60">
+      {/* ---- New section 4a: Outcomes stats ---- */}
+      <section className="block-bold border-t border-border/60">
         <div className="container-page py-24 md:py-32">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12" data-reveal-group>
             {outcomes.map((o) => (
@@ -796,8 +807,13 @@ function ServicesPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="relative mt-20 md:mt-28 overflow-hidden rounded-4xl glass-strong p-10 md:p-16 text-center" data-reveal>
+      {/* ---- New section 4b: Closing CTA ---- */}
+      <section className="block-deep border-t border-border/60" style={NAVY_DEEP_OVERRIDE}>
+        <div className="container-page py-24 md:py-32">
+          <div className="relative overflow-hidden rounded-4xl glass-strong p-10 md:p-16 text-center" data-reveal>
             <div
               aria-hidden="true"
               className="absolute -top-32 left-1/2 -translate-x-1/2 h-80 w-160 rounded-full blur-3xl opacity-40 pointer-events-none"

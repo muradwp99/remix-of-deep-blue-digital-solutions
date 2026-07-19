@@ -461,8 +461,8 @@ export function useScrollReveal() {
         const panels = el.querySelectorAll<HTMLElement>("[data-pin-panel]");
         const steps = el.querySelectorAll<HTMLElement>("[data-pin-step]");
         if (!panels.length || panels.length !== steps.length) return;
-        gsap.set(panels, { opacity: 0, y: 24 });
-        gsap.set(panels[0], { opacity: 1, y: 0 });
+        gsap.set(panels, { opacity: 0, y: 24, scale: 0.98 });
+        gsap.set(panels[0], { opacity: 1, y: 0, scale: 1 });
         steps.forEach((step, i) => {
           ScrollTrigger.create({
             trigger: step,
@@ -474,6 +474,7 @@ export function useScrollReveal() {
                 gsap.to(p, {
                   opacity: j === i ? 1 : 0,
                   y: j === i ? 0 : 24,
+                  scale: j === i ? 1 : 0.98,
                   duration: 0.45,
                   ease: "power3.out",
                   overwrite: "auto",

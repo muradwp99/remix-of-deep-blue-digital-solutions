@@ -266,7 +266,7 @@ function FeatureCard({
     <Link
       to={feature.href}
       onClick={onNavigate}
-      className={`mega-item group flex flex-col rounded-2xl p-6 ${
+      className={`mega-item group lift glare-card flex flex-col rounded-2xl p-6 ${
         feature.variant === "gold" ? "gradient-card-gold" : "gradient-card"
       }`}
       style={{ animationDelay: `${delay}ms` }}
@@ -459,7 +459,7 @@ export function SiteHeader() {
             <div className="flex items-center gap-2">
               <Link
                 to="/contact"
-                className="hidden sm:inline-flex group items-center gap-2 rounded-full btn-navy shine px-5 py-2.5 text-sm font-semibold hover:-translate-y-0.5 hover:border-lime/40"
+                className="hidden sm:inline-flex group items-center gap-2 rounded-full btn-gold shine px-5 py-2.5 text-sm font-semibold hover:-translate-y-0.5 hover:brightness-105"
               >
                 Start a Project
               </Link>
@@ -591,7 +591,7 @@ export function SiteHeader() {
               <Link
                 to="/contact"
                 onClick={() => setMobileOpen(false)}
-                className="mt-2 flex items-center justify-center gap-2 rounded-xl btn-navy px-4 py-3 text-sm font-semibold"
+                className="mt-2 flex items-center justify-center gap-2 rounded-xl btn-gold px-4 py-3 text-sm font-semibold"
               >
                 Start a Project <ArrowUpRight className="h-4 w-4" />
               </Link>

@@ -336,7 +336,7 @@ function Page() {
             <Link
               to="/contact"
               data-magnetic
-              className="btn-navy inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold"
+              className="btn-navy inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold hover:-translate-y-0.5 hover:border-lime/40"
             >
               Plan your system audit
               <ArrowUpRight className="h-4 w-4" />

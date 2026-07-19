@@ -4,6 +4,7 @@ import { SiteShell } from "@/components/site-shell";
 import { FeatureGrid, BenefitList, FAQAccordion } from "@/components/sections";
 import { StatTicker } from "@/components/signature/ticker";
 import { StickyPinSteps } from "@/components/signature/sticky-narrative";
+import { TerminalWindow } from "@/components/signature/terminal";
 import { BackToParent, SubpageBanner, RelatedPages, HeroCtas } from "@/components/subpage-bits";
 import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
@@ -140,34 +141,29 @@ function Page() {
           eyebrow="How it runs"
           title="One node becomes a system."
           steps={page.steps}
+          stepGap={24}
           panels={[
             <Cluster key="mono" nodes={1} />,
-            <div key="observe" className="glass-strong rounded-2xl p-8">
-              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Observability first
-              </p>
-              <div className="mt-4 space-y-3">
-                {[
-                  ["p95 latency", "212ms", true],
-                  ["error rate", "0.4%", true],
-                  ["queue depth", "1.2k — the bottleneck", false],
-                ].map(([l, v, ok]) => (
-                  <div
-                    key={l as string}
-                    className="flex items-center justify-between rounded-xl bg-white/4 px-4 py-3 text-sm"
-                  >
-                    <span className="text-muted-foreground">{l}</span>
-                    <span
-                      className={ok ? "font-semibold text-lime" : "font-semibold text-destructive"}
-                    >
-                      {v}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>,
+            <TerminalWindow
+              key="observe"
+              title="observability — zsh"
+              lines={[
+                { prompt: "$", text: "auxctl metrics --window 7d" },
+                { text: "p95 latency   212ms", ok: true, dim: true },
+                { text: "error rate    0.4%", ok: true, dim: true },
+                { text: "queue depth   1.2k, bottleneck" },
+              ]}
+            />,
             <Cluster key="partial" nodes={5} />,
-            <Cluster key="full" nodes={9} />,
+            <div key="full" className="rounded-2xl bg-card p-8 shadow-panel">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Release cadence</p>
+              <p className="mt-3 font-display text-6xl font-semibold text-lime" data-counter>
+                3×
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                The median outcome across our transformation work within two quarters.
+              </p>
+            </div>,
           ]}
         />
       </div>

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
+import { pageThemes } from "@/lib/themes";
 import { runProjectEstimate, type EstimateResult } from "@/lib/tools-api";
 import { ResultPanel, ToolSkeleton } from "@/components/tool-shell";
 
@@ -36,7 +37,7 @@ const FEATURES = [
 
 const chip = (on: boolean) =>
   `cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-    on ? "border-gold bg-gold/15 text-gold" : "border-white/15 bg-white/[0.03] text-white/70 hover:border-white/30"
+    on ? "border-gold bg-gold/15 text-gold" : "border-input bg-input/15 text-white/70 hover:border-white/30"
   }`;
 
 function Page() {
@@ -63,7 +64,7 @@ function Page() {
   const money = (v: number) => `$${v.toLocaleString("en-US")}`;
 
   return (
-    <SiteShell>
+    <SiteShell theme={pageThemes["tools/project-estimator"]}>
       <section className="block-deep">
         <div className="container-page py-20 md:py-24">
           <div className="max-w-3xl">
@@ -129,7 +130,7 @@ function Page() {
                 type="button"
                 onClick={run}
                 disabled={running}
-                className="w-full rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-[#00022D] transition-transform hover:brightness-105 active:scale-[0.98] disabled:opacity-40"
+                className="w-full rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-gold-foreground transition-transform hover:brightness-105 active:scale-[0.98] disabled:opacity-40"
               >
                 {running ? "Estimating…" : "Estimate my project"}
               </button>

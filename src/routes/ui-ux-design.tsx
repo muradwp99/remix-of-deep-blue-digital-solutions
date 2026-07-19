@@ -4,6 +4,7 @@ import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { BentoShowcase } from "@/components/bento-features";
+import { BeforeAfterSlider } from "@/components/signature/before-after";
 import {
   FeatureGrid,
   ProcessSteps,
@@ -35,6 +36,9 @@ export const Route = createFileRoute("/ui-ux-design")({
   component: Page,
 });
 
+const u = (id: string, w = 1200) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=70`;
+
 function Page() {
   const { doc } = Route.useLoaderData();
   // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
@@ -44,28 +48,37 @@ function Page() {
     <SiteShell theme={pageThemes["ui-ux-design"]}>
       {/* ---- Hero (bold rose color-block — energetic, ink on saturation) ---- */}
       <section className="block-bold">
-        <div className="container-page py-28 md:py-36">
-          <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
-            {s("hero_eyebrow", "UI/UX Design")}
-          </p>
-          <h1
-            className="mt-6 max-w-[14ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
-            data-split
-          >
-            {s("hero_title", "Design measured in outcomes")}
-          </h1>
-          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-            {s("hero_subtitle", "Research-driven interfaces judged by the numbers they move — conversion, activation, support volume — not by how they look in a portfolio shot.")}
-          </p>
-          <div className="mt-10" data-reveal>
-            <Link
-              to="/contact"
-              data-magnetic
-              className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold"
+        <div className="container-page grid items-center gap-14 py-28 md:py-36 lg:grid-cols-[1.1fr_1fr]">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
+              {s("hero_eyebrow", "UI/UX Design")}
+            </p>
+            <h1
+              className="mt-6 max-w-[14ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
+              data-split
             >
-              Get a Free Teardown
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
+              {s("hero_title", "Design measured in outcomes")}
+            </h1>
+            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground" data-reveal>
+              {s("hero_subtitle", "Research-driven interfaces judged by the numbers they move — conversion, activation, support volume — not by how they look in a portfolio shot.")}
+            </p>
+            <div className="mt-10" data-reveal>
+              <Link
+                to="/contact"
+                data-magnetic
+                className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold"
+              >
+                Get a Free Teardown
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+            </div>
+          </div>
+          <div className="max-w-md mx-auto lg:mx-0" data-slide="right">
+            <BeforeAfterSlider
+              before={u("photo-1581291518857-4e27b48ff24e", 1200)}
+              after={u("photo-1460925895917-afdab827c52f", 1200)}
+              alt="A product screen, from rough wireframe to shipped interface"
+            />
           </div>
         </div>
       </section>
@@ -232,7 +245,7 @@ function Page() {
         </section>
 
         <BenefitList
-          variant="grid"
+          variant="list"
           eyebrow="What handoff includes"
           title="Files your engineers won't curse at."
           items={[

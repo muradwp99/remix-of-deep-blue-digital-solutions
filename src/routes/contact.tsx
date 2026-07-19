@@ -388,7 +388,7 @@ function ContactPage() {
                 <button
                   type="submit"
                   data-magnetic
-                  className="group inline-flex items-center gap-2 rounded-full btn-navy shine px-6 py-3.5 text-sm font-semibold hover:border-lime/40"
+                  className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold hover:border-lime/40"
                 >
                   Send message
                   <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -407,7 +407,7 @@ function ContactPage() {
 }
 
 const inputCls =
-  "w-full rounded-lg border border-border bg-background/60 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:outline-none focus:border-lime/50 focus:ring-1 focus:ring-lime/30";
+  "w-full rounded-lg border border-input bg-input/15 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:outline-none focus:border-lime/50 focus:ring-1 focus:ring-lime/30";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

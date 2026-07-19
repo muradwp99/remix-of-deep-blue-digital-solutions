@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useLiveEdits } from "@/lib/edit-bridge";
 import { ArrowUpRight, Package } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { AuxtechMark } from "@/components/auxtech-logo";
 import { BenefitList, FAQAccordion } from "@/components/sections";
 import { HorizontalPin } from "@/components/signature/horizontal-strip";
 import { BeforeAfterSlider } from "@/components/signature/before-after";
@@ -138,18 +139,10 @@ function Page() {
               >
                 {MARK_SCALES.map((m) => (
                   <div key={m.label} className="flex flex-col items-center gap-3" data-reveal-child>
-                    <span
-                      aria-hidden
-                      className="grid place-items-center bg-gradient-to-br from-gold to-lime font-display font-bold text-primary-foreground"
-                      style={{
-                        width: m.size,
-                        height: m.size,
-                        fontSize: m.size * 0.48,
-                        borderRadius: m.size * 0.24,
-                      }}
-                    >
-                      N
-                    </span>
+                    <AuxtechMark
+                      style={{ width: m.size, height: m.size }}
+                      className="text-gold"
+                    />
                     <span className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                       {m.label}
                     </span>
@@ -214,7 +207,7 @@ function Page() {
             <Link
               to="/contact"
               data-magnetic
-              className="group inline-flex items-center gap-2 rounded-full btn-navy px-7 py-3.5 text-sm font-semibold"
+              className="group inline-flex items-center gap-2 rounded-full btn-navy px-7 py-3.5 text-sm font-semibold hover:-translate-y-0.5 hover:border-lime/40"
             >
               {page.banner.label}
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

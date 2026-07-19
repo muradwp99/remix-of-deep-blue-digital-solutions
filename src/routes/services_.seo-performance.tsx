@@ -180,6 +180,7 @@ function Page() {
       {/* ── LIGHT · what's included ── */}
       <div className="block-light">
         <FeatureGrid
+          variant="rows"
           eyebrow="What's included"
           title="The work, concretely."
           cols={3}

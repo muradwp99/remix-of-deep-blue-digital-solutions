@@ -126,6 +126,7 @@ function Page() {
       {/* ── TINT · soft mint band for what's included + how it runs ── */}
       <div className="block-tint">
         <FeatureGrid
+          variant="rows"
           eyebrow="What's included"
           title="The work, concretely."
           cols={3}

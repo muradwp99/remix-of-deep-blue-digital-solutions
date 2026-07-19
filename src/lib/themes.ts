@@ -22,9 +22,39 @@ const lerpHue = (a: number, b: number, t: number) => {
 };
 
 const NAVY_HUE = 265;
-const NAVY_FG = "oklch(0.15 0.028 265)";
+const NAVY_FG = "oklch(0.14 0.07 268)";
 
 const r = (n: number) => Math.round(n * 1000) / 1000;
+
+/** OKLab -> linear sRGB, then linear -> gamma sRGB, per Björn Ottosson's
+ *  reference matrices. Used only to test whether an oklch() triple is
+ *  inside the sRGB gamut (all three channels in [0,1] before gamma). */
+function oklchInGamut(L: number, C: number, H: number): boolean {
+  const h = (H * Math.PI) / 180;
+  const a = C * Math.cos(h);
+  const b = C * Math.sin(h);
+  const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
+  const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
+  const s_ = L - 0.0894841775 * a - 1.291485548 * b;
+  const l = l_ ** 3, m = m_ ** 3, s = s_ ** 3;
+  const r = 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
+  const g = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
+  const bl = -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s;
+  const EPS = 0.0005;
+  return r >= -EPS && r <= 1 + EPS && g >= -EPS && g <= 1 + EPS && bl >= -EPS && bl <= 1 + EPS;
+}
+
+/** Binary-search the largest in-gamut chroma at this L/H (26 iters is
+ *  plenty for 3-decimal precision). Runs only at module load — makeTheme
+ *  is evaluated once per pageThemes entry at import time, not per-render. */
+function maxGamutChroma(L: number, H: number): number {
+  let lo = 0, hi = 0.4;
+  for (let i = 0; i < 26; i++) {
+    const mid = (lo + hi) / 2;
+    if (oklchInGamut(L, mid, H)) lo = mid; else hi = mid;
+  }
+  return lo;
+}
 
 export function makeTheme(
   id: string,
@@ -42,8 +72,10 @@ export function makeTheme(
   const cool = lerpHue(hue, NAVY_HUE, 0.6);
   const g2 = hue2 ?? hue - 8;
 
-  const ok = (ll: number, cc: number, h: number, a?: number) =>
-    `oklch(${r(ll)} ${r(Math.max(0, cc))} ${r(h)}${a !== undefined ? ` / ${a}` : ""})`;
+  const ok = (ll: number, cc: number, h: number, a?: number) => {
+    const safeC = Math.min(Math.max(0, cc), maxGamutChroma(ll, h) * 0.98);
+    return `oklch(${r(ll)} ${r(safeC)} ${r(h)}${a !== undefined ? ` / ${a}` : ""})`;
+  };
 
   const vars: Record<string, string> = {
     // Core accents (lime = primary accent, gold = warm sibling)
@@ -142,11 +174,15 @@ export const pageThemes: Record<string, PageTheme> = Object.fromEntries(
       ["industries/retail-dtc", ENERGY],
       ["industries/b2b-enterprise", BUILD],
 
-      // Tools (4)
+      // Tools (8)
       ["tools/website-audit", BUILD],
       ["tools/roi-calculator", GROWTH],
       ["tools/speed-test", BUILD],
       ["tools/brand-grader", CREATIVE],
+      ["tools/project-estimator", GROWTH],
+      ["tools/stack-recommender", BUILD],
+      ["tools/headline-analyzer", ENERGY],
+      ["tools/meta-generator", GROWTH],
 
       // Learning (4)
       ["learning/guides", EDITORIAL],

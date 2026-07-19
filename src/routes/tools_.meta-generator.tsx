@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
+import { pageThemes } from "@/lib/themes";
 import { runMetaGenerate, type MetaResult } from "@/lib/tools-api";
 import { ResultPanel, ToolError, ToolSkeleton } from "@/components/tool-shell";
 
@@ -82,7 +83,7 @@ function Page() {
     ].join("\n");
 
   return (
-    <SiteShell>
+    <SiteShell theme={pageThemes["tools/meta-generator"]}>
       <section className="block-deep">
         <div className="container-page py-20 md:py-24">
           <div className="max-w-3xl">
@@ -120,7 +121,7 @@ function Page() {
               <button
                 type="submit"
                 disabled={running || !business.trim() || !offering.trim()}
-                className="w-full rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-[#00022D] transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+                className="w-full rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-gold-foreground transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {running ? "Writing…" : "Generate my meta"}
               </button>

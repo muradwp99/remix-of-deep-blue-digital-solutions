@@ -41,6 +41,42 @@ const growthFeatures = [
   { title: "Compliance & Security", desc: "SOC2-ready logging, GDPR data flows, SSO/SAML — the checklist that unblocks enterprise deals." },
 ];
 
+/** Hero billing mock — placeholder bars only, no invented stat or gauge; the
+ * line items trace to `growthFeatures`' own "Billing" copy above. */
+function InvoiceMock() {
+  return (
+    <div className="relative overflow-hidden rounded-3xl border border-border/60 gradient-card lift p-7">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground">
+            Invoice · Pro plan
+          </p>
+          <div className="mt-2.5 h-4 w-36 rounded bg-foreground/15" />
+        </div>
+        <span className="rounded-full bg-lime px-3 py-1 text-[11px] font-medium text-lime-foreground">
+          Paid
+        </span>
+      </div>
+      <div className="mt-7 space-y-3 border-t border-border pt-5">
+        {[
+          { l: "Seats", w: "w-16" },
+          { l: "Usage overage", w: "w-10" },
+          { l: "SSO add-on", w: "w-12" },
+        ].map((row) => (
+          <div key={row.l} className="flex items-center justify-between text-sm text-muted-foreground">
+            <span>{row.l}</span>
+            <div className={`h-2.5 ${row.w} rounded-full bg-foreground/10`} />
+          </div>
+        ))}
+      </div>
+      <div className="mt-6 flex items-center justify-between border-t border-border pt-5">
+        <span className="text-xs text-muted-foreground">Auto-charged via</span>
+        <span className="font-display text-sm font-semibold">Stripe</span>
+      </div>
+    </div>
+  );
+}
+
 function Page() {
   const { doc } = Route.useLoaderData();
   // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
@@ -50,28 +86,33 @@ function Page() {
     <SiteShell theme={pageThemes["saas"]}>
       {/* ---- Hero (bold indigo color-block — energetic, ink on saturation) ---- */}
       <section className="block-bold">
-        <div className="container-page py-28 md:py-36">
-          <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
-            {s("hero_eyebrow", "SaaS Development")}
-          </p>
-          <h1
-            className="mt-6 max-w-[15ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
-            data-split
-          >
-            {s("hero_title", "SaaS engineered to invoice")}
-          </h1>
-          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-            {s("hero_subtitle", "Multi-tenant architecture, subscription billing, and compliance wired in from the first commit — because a platform that can't charge isn't a product yet.")}
-          </p>
-          <div className="mt-10" data-reveal>
-            <Link
-              to="/contact"
-              data-magnetic
-              className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold"
+        <div className="container-page grid items-center gap-14 py-28 md:py-36 lg:grid-cols-[1.1fr_1fr]">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
+              {s("hero_eyebrow", "SaaS Development")}
+            </p>
+            <h1
+              className="mt-6 max-w-[15ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
+              data-split
             >
-              Start Your Build
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
+              {s("hero_title", "SaaS engineered to invoice")}
+            </h1>
+            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground" data-reveal>
+              {s("hero_subtitle", "Multi-tenant architecture, subscription billing, and compliance wired in from the first commit — because a platform that can't charge isn't a product yet.")}
+            </p>
+            <div className="mt-10" data-reveal>
+              <Link
+                to="/contact"
+                data-magnetic
+                className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold"
+              >
+                Start Your Build
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+            </div>
+          </div>
+          <div data-slide="right">
+            <InvoiceMock />
           </div>
         </div>
       </section>

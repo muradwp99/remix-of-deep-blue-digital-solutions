@@ -124,7 +124,7 @@ function Page() {
                   data-reveal-child
                   className="grid grid-cols-[auto_1fr] items-baseline gap-6 border-t border-black/10 py-8 last:border-b md:gap-12"
                 >
-                  <span className="font-display text-4xl font-semibold tabular-nums text-gold/30 md:text-6xl">
+                  <span className="font-display text-4xl font-semibold tabular-nums text-gold/70 md:text-6xl">
                     0{i + 1}
                   </span>
                   <div>

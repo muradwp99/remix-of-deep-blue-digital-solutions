@@ -235,7 +235,7 @@ function Page() {
             <Link
               to="/contact"
               data-magnetic
-              className="group inline-flex items-center gap-2 rounded-full btn-navy px-7 py-3.5 text-sm font-semibold"
+              className="group inline-flex items-center gap-2 rounded-full btn-navy px-7 py-3.5 text-sm font-semibold hover:-translate-y-0.5 hover:border-lime/40"
             >
               Run the A/B on your traffic
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />

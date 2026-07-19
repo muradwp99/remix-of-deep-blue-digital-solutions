@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
+import { AuxtechMark } from "@/components/auxtech-logo";
 
 /**
  * BannerCTA — wide ad-style conversion banner: near-black panel swept by
@@ -55,9 +56,7 @@ export function BannerCTA({
         <div className="relative flex min-h-[280px] flex-col justify-between gap-10 p-8 md:min-h-[320px] md:p-12">
           <div className="flex items-start justify-between gap-6">
             <span className="flex items-center gap-2">
-              <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-gold to-lime font-display text-base font-bold text-primary-foreground">
-                N
-              </span>
+              <AuxtechMark className="h-8 w-8 text-gold" />
               <span className="font-display text-base font-semibold tracking-tight">Auxtech</span>
             </span>
             <p className="hidden text-right text-sm leading-snug text-foreground/80 sm:block">
