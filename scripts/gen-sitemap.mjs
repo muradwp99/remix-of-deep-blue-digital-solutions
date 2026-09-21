@@ -19,13 +19,14 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = (process.env.SITE_URL || "https://auxtechint.com").replace(/\/$/, "");
 const CMS = (process.env.VITE_CMS_URL || "https://admin.auxtechint.com").replace(/\/$/, "");
 
-/** Routes that exist but should not be advertised. */
-const EXCLUDE = new Set([
-  "/home-2",
-  "/home-3",
-  "/home-4",
-  "/home-5",
-]);
+/**
+ * Routes that exist but should not be advertised.
+ *
+ * The home-N design experiments used to live here. They are deleted now, so
+ * the set is empty — but the mechanism stays, because the next unfinished
+ * page someone leaves behind should be easy to hide without rewriting this.
+ */
+const EXCLUDE = new Set([]);
 
 /** CMS collection → the URL prefix its slugs live under. */
 const COLLECTIONS = [

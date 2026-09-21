@@ -21,10 +21,6 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OurStoryRouteImport } from './routes/our-story'
 import { Route as MobileAppsRouteImport } from './routes/mobile-apps'
 import { Route as LeadershipRouteImport } from './routes/leadership'
-import { Route as Home5RouteImport } from './routes/home-5'
-import { Route as Home4RouteImport } from './routes/home-4'
-import { Route as Home3RouteImport } from './routes/home-3'
-import { Route as Home2RouteImport } from './routes/home-2'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DigitalTransformationRouteImport } from './routes/digital-transformation'
 import { Route as CustomSoftwareRouteImport } from './routes/custom-software'
@@ -140,26 +136,6 @@ const MobileAppsRoute = MobileAppsRouteImport.update({
 const LeadershipRoute = LeadershipRouteImport.update({
   id: '/leadership',
   path: '/leadership',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Home5Route = Home5RouteImport.update({
-  id: '/home-5',
-  path: '/home-5',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Home4Route = Home4RouteImport.update({
-  id: '/home-4',
-  path: '/home-4',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Home3Route = Home3RouteImport.update({
-  id: '/home-3',
-  path: '/home-3',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Home2Route = Home2RouteImport.update({
-  id: '/home-2',
-  path: '/home-2',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -458,10 +434,6 @@ export interface FileRoutesByFullPath {
   '/custom-software': typeof CustomSoftwareRoute
   '/digital-transformation': typeof DigitalTransformationRoute
   '/faq': typeof FaqRoute
-  '/home-2': typeof Home2Route
-  '/home-3': typeof Home3Route
-  '/home-4': typeof Home4Route
-  '/home-5': typeof Home5Route
   '/leadership': typeof LeadershipRoute
   '/mobile-apps': typeof MobileAppsRoute
   '/our-story': typeof OurStoryRoute
@@ -532,10 +504,6 @@ export interface FileRoutesByTo {
   '/custom-software': typeof CustomSoftwareRoute
   '/digital-transformation': typeof DigitalTransformationRoute
   '/faq': typeof FaqRoute
-  '/home-2': typeof Home2Route
-  '/home-3': typeof Home3Route
-  '/home-4': typeof Home4Route
-  '/home-5': typeof Home5Route
   '/leadership': typeof LeadershipRoute
   '/mobile-apps': typeof MobileAppsRoute
   '/our-story': typeof OurStoryRoute
@@ -607,10 +575,6 @@ export interface FileRoutesById {
   '/custom-software': typeof CustomSoftwareRoute
   '/digital-transformation': typeof DigitalTransformationRoute
   '/faq': typeof FaqRoute
-  '/home-2': typeof Home2Route
-  '/home-3': typeof Home3Route
-  '/home-4': typeof Home4Route
-  '/home-5': typeof Home5Route
   '/leadership': typeof LeadershipRoute
   '/mobile-apps': typeof MobileAppsRoute
   '/our-story': typeof OurStoryRoute
@@ -683,10 +647,6 @@ export interface FileRouteTypes {
     | '/custom-software'
     | '/digital-transformation'
     | '/faq'
-    | '/home-2'
-    | '/home-3'
-    | '/home-4'
-    | '/home-5'
     | '/leadership'
     | '/mobile-apps'
     | '/our-story'
@@ -757,10 +717,6 @@ export interface FileRouteTypes {
     | '/custom-software'
     | '/digital-transformation'
     | '/faq'
-    | '/home-2'
-    | '/home-3'
-    | '/home-4'
-    | '/home-5'
     | '/leadership'
     | '/mobile-apps'
     | '/our-story'
@@ -831,10 +787,6 @@ export interface FileRouteTypes {
     | '/custom-software'
     | '/digital-transformation'
     | '/faq'
-    | '/home-2'
-    | '/home-3'
-    | '/home-4'
-    | '/home-5'
     | '/leadership'
     | '/mobile-apps'
     | '/our-story'
@@ -906,10 +858,6 @@ export interface RootRouteChildren {
   CustomSoftwareRoute: typeof CustomSoftwareRoute
   DigitalTransformationRoute: typeof DigitalTransformationRoute
   FaqRoute: typeof FaqRoute
-  Home2Route: typeof Home2Route
-  Home3Route: typeof Home3Route
-  Home4Route: typeof Home4Route
-  Home5Route: typeof Home5Route
   LeadershipRoute: typeof LeadershipRoute
   MobileAppsRoute: typeof MobileAppsRoute
   OurStoryRoute: typeof OurStoryRoute
@@ -1055,34 +1003,6 @@ declare module '@tanstack/react-router' {
       path: '/leadership'
       fullPath: '/leadership'
       preLoaderRoute: typeof LeadershipRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home-5': {
-      id: '/home-5'
-      path: '/home-5'
-      fullPath: '/home-5'
-      preLoaderRoute: typeof Home5RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home-4': {
-      id: '/home-4'
-      path: '/home-4'
-      fullPath: '/home-4'
-      preLoaderRoute: typeof Home4RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home-3': {
-      id: '/home-3'
-      path: '/home-3'
-      fullPath: '/home-3'
-      preLoaderRoute: typeof Home3RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home-2': {
-      id: '/home-2'
-      path: '/home-2'
-      fullPath: '/home-2'
-      preLoaderRoute: typeof Home2RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -1490,10 +1410,6 @@ const rootRouteChildren: RootRouteChildren = {
   CustomSoftwareRoute: CustomSoftwareRoute,
   DigitalTransformationRoute: DigitalTransformationRoute,
   FaqRoute: FaqRoute,
-  Home2Route: Home2Route,
-  Home3Route: Home3Route,
-  Home4Route: Home4Route,
-  Home5Route: Home5Route,
   LeadershipRoute: LeadershipRoute,
   MobileAppsRoute: MobileAppsRoute,
   OurStoryRoute: OurStoryRoute,

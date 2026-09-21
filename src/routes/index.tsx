@@ -875,7 +875,7 @@ function HomePage() {
   return (
     <SiteShell>
       <div ref={containerRef} className="relative bg-background">
-        {/* New Hero from home-5 */}
+        {/* Hero */}
         <div className="relative flex flex-col items-center overflow-hidden pt-24 pb-4">
           
         {/* Background glowing gradient and grid */}

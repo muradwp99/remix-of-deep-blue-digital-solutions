@@ -201,6 +201,8 @@ Constraints agreed: no invented named-client testimonials/logos/result numbers
 builders/QA at effort 'medium'; everything local, **no push**.
 
 ## Other open items
+- WordPress site title/tagline were "Born To Be Wild" / empty; set to
+  "Auxtech" / "A studio, not a factory." on 2026-09-22.
 - **`design` global is wired to nothing.** LivePress writes `livepress_design`;
   the bridge reads `auxtech_design`. Its Design screen therefore edits a row the
   site never reads. Left empty deliberately — empty means "use the stylesheet",
@@ -212,8 +214,6 @@ builders/QA at effort 'medium'; everything local, **no push**.
   give an editor fields with no effect.
 - The homepage's `work_items` meta key is not in the LivePress schema, so it
   alone of the homepage fields could not be seeded and is not editable.
-- Delete or gate the `home-2`..`home-5` experiment routes (home-4 shows an alien
-  "HOMOLUDENS" brand).
 - Optional: npm publish of `livepress-bridge`; swapping the
   `@lovable.dev/vite-tanstack-config` build dep (risky, needs care).
 
