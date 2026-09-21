@@ -136,10 +136,18 @@ chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
   gapless grids, hero discipline).
 
 ## Known gaps — what is still code, not CMS
-1. The **curated cards** on the services and solutions hubs (3 groups / 4 cards)
-   are hardcoded. A CMS-driven "Every service/solution" index sits below them so
-   nothing is unreachable, but the cards themselves need moving to sitepage
-   repeaters to be editable.
+1. ~~Curated hub cards~~ — **done.** The services capability panels and the
+   solutions cards are `service_groups` / `solution_cards` repeaters on their
+   Site Page docs, seeded with the previous coded copy so nothing changed
+   visually. Row order drives the 01/02/03 numbering, so dragging rows in
+   LivePress reorders the page. Because a repeater sub-field is one string and
+   LivePress has no nested repeater, the inner lists ride in textareas:
+   `items` is `Title | Description` per line on services, and on solutions
+   `metrics` is `Value | Label` per line with `items` one sub-service per line.
+   Icons are Lucide names resolved through `iconFromName`, so a name outside
+   the `ICONS` map in cms-catalog.ts silently becomes Sparkles — add the icon
+   there first. The coded arrays remain as the fallback when the repeater is
+   empty.
 2. ~~Header mega menu~~ — **done.** Every `/services/{slug}` link takes its
    label and description from the CMS doc, and a service with no coded link is
    appended in a "More" column, so a service added in WordPress reaches the nav

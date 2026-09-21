@@ -518,6 +518,19 @@ return array(
 				$t( 'hero_title_em', 'Title gold word', 'hero_title_em' ),
 				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
 			) ),
+			/* The big two-column cards. Rows are draggable; `metrics` is one
+			 * per line as "Value | Label" and `items` is the sub-service list,
+			 * one per line. */
+			array( 'key' => 'cards', 'label' => 'Solution cards', 'fields' => array(
+				$rp( 'solution_cards', 'Cards', 'solution_cards', array(
+					$s( 'tag', 'Tag (small label)' ),
+					$s( 'title', 'Title' ),
+					$s( 'desc', 'Description', 'textarea' ),
+					$s( 'icon', 'Lucide icon name' ),
+					$s( 'metrics', 'Metrics — one per line, "Value | Label"', 'textarea' ),
+					$s( 'items', 'Sub-services — one per line', 'textarea' ),
+				) ),
+			) ),
 			array( 'key' => 'cta', 'label' => 'CTA', 'fields' => array(
 				$t( 'cta_eyebrow', 'Eyebrow', 'cta_eyebrow' ),
 				$t( 'cta_title', 'Title', 'cta_title' ),
@@ -539,6 +552,20 @@ return array(
 				$t( 'hero_title_em', 'Italic word', 'hero_title_em' ),
 				$t( 'hero_title_after', 'Title after', 'hero_title_after' ),
 				$ta( 'hero_subtitle', 'Subtitle', 'hero_subtitle' ),
+			) ),
+			/* The three stacked capability panels. Rows are draggable, so the
+			 * order here is the order on the page and the 01/02/03 numbering
+			 * follows it. `items` is one card per line, "Title | Description";
+			 * a line with no pipe is a title on its own. */
+			array( 'key' => 'groups', 'label' => 'Capability groups', 'fields' => array(
+				$rp( 'service_groups', 'Groups', 'service_groups', array(
+					$s( 'tag', 'Tag (small label)' ),
+					$s( 'title', 'Heading' ),
+					$s( 'desc', 'Description', 'textarea' ),
+					$s( 'icon', 'Lucide icon name' ),
+					$s( 'img', 'Background image URL' ),
+					$s( 'items', 'Cards — one per line, "Title | Description"', 'textarea' ),
+				) ),
 			) ),
 			array( 'key' => 'seo', 'label' => 'SEO', 'fields' => array(
 				$t( 'meta_title', 'SEO title', 'meta_title' ),

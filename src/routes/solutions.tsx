@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { cmsFind, cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import type { ComponentType } from "react";
+import { cmsFind, cmsFindOne, pageRows, pageStr, type SitePageDoc } from "@/lib/cms";
+import { iconFromName } from "@/lib/cms-catalog";
 import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell, PageHeader } from "@/components/site-shell";
 import { CTABand } from "@/components/sections";
@@ -40,6 +42,43 @@ export const Route = createFileRoute("/solutions")({
   },
   component: SolutionsPage,
 });
+
+type IconType = ComponentType<{ className?: string }>;
+
+/** What a solution card renders, whichever source it came from. */
+type RenderCard = {
+  icon: IconType;
+  tag: string;
+  title: string;
+  desc: string;
+  metrics: { v: string; l: string }[];
+  subs: string[];
+};
+
+/**
+ * `Value | Label` per line → metric rows.
+ *
+ * A repeater sub-field is a single string, so a card's metrics ride in one
+ * textarea rather than a nested repeater LivePress does not have.
+ */
+function pipeMetrics(src?: string): { v: string; l: string }[] {
+  return (src ?? "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map((l) => {
+      const at = l.indexOf("|");
+      return at === -1
+        ? { v: l, l: "" }
+        : { v: l.slice(0, at).trim(), l: l.slice(at + 1).trim() };
+    });
+}
+
+const textLines = (src?: string): string[] =>
+  (src ?? "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
 
 const solutions = [
   {
@@ -108,6 +147,27 @@ function SolutionsPage() {
   // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
   const d = useLiveEdits(doc);
   const s = (key: string, fallback: string) => pageStr(d, key, fallback);
+
+  // CMS rows win wholesale — a half-filled repeater is an edit in progress,
+  // not a reason to mix two sources.
+  const cmsCards = pageRows<Record<string, string>>(d, "solution_cards", []);
+  const cards: RenderCard[] = cmsCards.length
+    ? cmsCards.map((c) => ({
+        icon: iconFromName(c.icon),
+        tag: c.tag ?? "",
+        title: c.title ?? "",
+        desc: c.desc ?? "",
+        metrics: pipeMetrics(c.metrics),
+        subs: textLines(c.items),
+      }))
+    : solutions.map((c) => ({
+        icon: c.icon as IconType,
+        tag: c.tag,
+        title: c.title,
+        desc: c.desc,
+        metrics: c.metrics,
+        subs: c.subs,
+      }));
   return (
     <SiteShell>
       <PageHeader
@@ -119,7 +179,7 @@ function SolutionsPage() {
 
       {/* Solution programs */}
       <section className="container-page py-24 grid gap-6 md:grid-cols-2" data-cards data-cards-stagger="0.12">
-        {solutions.map((s) => (
+        {cards.map((s) => (
           <div key={s.title} className="relative overflow-hidden rounded-3xl glare-card gradient-card lift p-10" data-card>
             <div className="grid h-12 w-12 place-items-center rounded-xl bg-background border border-border">
               <s.icon className="h-6 w-6 text-gold" />

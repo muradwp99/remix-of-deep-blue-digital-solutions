@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import type { CSSProperties } from "react";
-import { cmsFind, cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import type { ComponentType, CSSProperties } from "react";
+import { cmsFind, cmsFindOne, pageRows, pageStr, type SitePageDoc } from "@/lib/cms";
+import { iconFromName } from "@/lib/cms-catalog";
 import { useLiveEdits } from "@/lib/edit-bridge";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
@@ -70,6 +71,39 @@ export const Route = createFileRoute("/services")({
 const NAVY_DEEP_OVERRIDE = {
   "--block-bold-deep": "oklch(0.16 0.073 268)", // navy·900
 } as CSSProperties;
+
+type IconType = ComponentType<{ className?: string }>;
+
+/** What the capability panels render, whichever source they came from. */
+type RenderGroup = {
+  index: string;
+  tag: string;
+  icon: IconType;
+  title: string;
+  desc: string;
+  img: string;
+  items: { title: string; desc: string }[];
+};
+
+/**
+ * `Title | Description` per line → card rows.
+ *
+ * A repeater sub-field is a single string, so the cards inside a group ride in
+ * one textarea rather than a nested repeater LivePress does not have. A line
+ * with no pipe is a title on its own.
+ */
+function pipeRows(src?: string): { title: string; desc: string }[] {
+  return (src ?? "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map((l) => {
+      const at = l.indexOf("|");
+      return at === -1
+        ? { title: l, desc: "" }
+        : { title: l.slice(0, at).trim(), desc: l.slice(at + 1).trim() };
+    });
+}
 
 const groups = [
   {
@@ -439,6 +473,31 @@ function ServicesPage() {
   // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
   const d = useLiveEdits(doc);
   const s = (key: string, fallback: string) => pageStr(d, key, fallback);
+
+  // CMS rows win wholesale — a half-filled repeater is an edit in progress, not
+  // a reason to mix two sources — and the numbering follows row order, so
+  // dragging rows in LivePress renumbers the panels.
+  const cmsGroups = pageRows<Record<string, string>>(d, "service_groups", []);
+  const renderGroups: RenderGroup[] = (
+    cmsGroups.length
+      ? cmsGroups.map((g) => ({
+          tag: g.tag ?? "",
+          icon: iconFromName(g.icon),
+          title: g.title ?? "",
+          desc: g.desc ?? "",
+          img: g.img ?? "",
+          items: pipeRows(g.items),
+        }))
+      : groups.map((g) => ({
+          tag: g.tag,
+          icon: g.icon as IconType,
+          title: g.title,
+          desc: g.desc,
+          img: g.img,
+          items: g.items,
+        }))
+  ).map((g, i) => ({ ...g, index: String(i + 1).padStart(2, "0") }));
+
   useServicesMotion();
   return (
     <SiteShell>
@@ -515,7 +574,7 @@ function ServicesPage() {
         </div>
 
         <div className="space-y-10 md:space-y-28">
-          {groups.map((g, i) => (
+          {renderGroups.map((g, i) => (
             <div
               key={g.tag}
               className="svc-panel md:sticky"
