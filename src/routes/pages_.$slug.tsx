@@ -1,27 +1,49 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
-import { BlockRenderer } from "@/components/block-renderer";
-import { cmsFindOne } from "@/lib/cms";
+import { CmsBlocks, type CmsBlockData, type CmsBlockRow } from "@/components/cms-blocks";
+import { cmsFind, cmsFindOne } from "@/lib/cms";
 
 /**
- * Generic CMS page route. Renders any published Payload `pages` doc from its
- * `layout` blocks via <BlockRenderer>. Lives under /pages/<slug> so it never
- * collides with the site's bespoke top-level routes (home, /about, …), which
- * stay hand-built. Fetches at depth 2 so block relationships (projects, team,
- * plans, testimonials, faqs) come back populated.
+ * Free-form CMS page. Any WordPress page composes itself from `page_blocks`
+ * and renders here at /pages/<slug>, which never collides with the site's
+ * bespoke top-level routes (home, /about, …) — those stay hand-built.
+ *
+ * This used to render a second, separate block vocabulary (`layout_json`,
+ * fifteen Payload-era types) that nothing ever wrote to, so the route rendered
+ * an empty page. It now uses the same blocks as every other page, so there is
+ * one vocabulary to learn and one place to add a block type.
+ *
+ * The collection-backed blocks are fetched here rather than inside the block,
+ * so they are server-rendered. They are small lists and this page is rarely
+ * hit, so fetching all four regardless of which blocks the page actually uses
+ * is cheaper than the machinery to work that out in advance.
  */
 type CmsPage = {
   title: string;
   slug?: string | null;
-  layout?: Record<string, unknown>[] | null;
+  pageBlocks?: CmsBlockRow[] | null;
   meta?: { title?: string | null; description?: string | null } | null;
 };
 
 export const Route = createFileRoute("/pages_/$slug")({
-  loader: async ({ params }): Promise<{ page: CmsPage | null }> => {
-    const page = await cmsFindOne<CmsPage>("pages", params.slug, { depth: 2 });
-    return { page };
+  loader: async ({
+    params,
+  }): Promise<{ page: CmsPage | null; data: CmsBlockData }> => {
+    const page = await cmsFindOne<CmsPage>("pages", params.slug);
+    if (!page) return { page: null, data: {} };
+
+    const [projects, team, plans, testimonials] = await Promise.all([
+      cmsFind<NonNullable<CmsBlockData["projects"]>[number]>("projects", {
+        sort: "-featured",
+        limit: 8,
+      }),
+      cmsFind<NonNullable<CmsBlockData["team"]>[number]>("team", { sort: "order", limit: 12 }),
+      cmsFind<NonNullable<CmsBlockData["plans"]>[number]>("plans", { sort: "order", limit: 12 }),
+      cmsFind<NonNullable<CmsBlockData["testimonials"]>[number]>("testimonials", { limit: 12 }),
+    ]);
+
+    return { page, data: { projects, team, plans, testimonials } };
   },
   head: ({ loaderData }) => {
     const page = loaderData?.page;
@@ -40,7 +62,7 @@ export const Route = createFileRoute("/pages_/$slug")({
 });
 
 function Page() {
-  const { page } = Route.useLoaderData();
+  const { page, data } = Route.useLoaderData();
 
   if (!page) {
     return (
@@ -68,9 +90,22 @@ function Page() {
     );
   }
 
+  const blocks = page.pageBlocks ?? [];
+
   return (
     <SiteShell>
-      <BlockRenderer blocks={page.layout ?? []} />
+      {blocks.length ? (
+        <CmsBlocks blocks={blocks} data={data} />
+      ) : (
+        <section className="container-page py-36">
+          <h1 className="font-display text-5xl font-semibold leading-[0.95] md:text-6xl">
+            {page.title}
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
+            This page has no sections yet. Add them under Composed sections in the editor.
+          </p>
+        </section>
+      )}
     </SiteShell>
   );
 }

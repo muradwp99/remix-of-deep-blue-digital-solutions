@@ -1,4 +1,6 @@
+import { Link } from "@tanstack/react-router";
 import { iconFromName } from "@/lib/cms-catalog";
+import { cmsMedia, projectPlaceholder } from "@/lib/cms";
 import {
   BenefitList,
   CTABand,
@@ -7,6 +9,7 @@ import {
   ProcessSteps,
   SectionHead,
   StatsRow,
+  Testimonials,
 } from "@/components/sections";
 import { ComparisonTable, type CompareRow } from "@/components/signature/compare-table";
 import { LogoMarquee } from "@/components/signature/logo-wall";
@@ -44,6 +47,42 @@ export type CmsBlockRow = {
   variant?: string;
 };
 
+/**
+ * Live collection rows a block can draw on.
+ *
+ * These blocks list real documents rather than text an editor retyped, so a
+ * new project or plan appears in them without anyone touching the page. The
+ * route's loader supplies the rows, which keeps the fetch on the server and
+ * leaves the block a pure render. A block that fetched for itself would come
+ * back empty from the server and pop in after hydration, which is the wrong
+ * trade for content a search engine should see.
+ */
+export type CmsBlockData = {
+  projects?: {
+    slug?: string;
+    title?: string;
+    summary?: string | null;
+    industry?: string | null;
+    tag?: string | null;
+    coverImage?: unknown;
+  }[];
+  team?: { slug?: string; name?: string; role?: string | null; bio?: string | null }[];
+  plans?: {
+    name?: string;
+    price?: string;
+    period?: string | null;
+    description?: string | null;
+    featured?: boolean;
+    features?: { label?: string }[];
+  }[];
+  testimonials?: {
+    quote?: string | null;
+    author?: string | null;
+    role?: string | null;
+    company?: string | null;
+  }[];
+};
+
 /** `a | b | c` per line → trimmed columns, blanks dropped. */
 function rows(src?: string): string[][] {
   return (src ?? "")
@@ -77,7 +116,7 @@ const col = (r: string[], i: number) => r[i] ?? "";
  * cta       —  Label | /href     (first row primary, second secondary)
  * image     —  (no items)
  */
-function Block({ row }: { row: CmsBlockRow }) {
+function Block({ row, data }: { row: CmsBlockRow; data: CmsBlockData }) {
   const type = (row.type ?? "").trim().toLowerCase();
   const eyebrow = row.eyebrow ?? "";
   const heading = row.heading ?? "";
@@ -230,6 +269,119 @@ function Block({ row }: { row: CmsBlockRow }) {
         </section>
       ) : null;
 
+    /* ---- Backed by a collection: the block lists documents, not retyped copy ---- */
+
+    case "projects": {
+      const items = (data.projects ?? []).slice(0, Number(variant) || 4);
+      if (!items.length) return null;
+      return (
+        <section className="container-page border-t border-border/60 py-24" data-reveal-group>
+          <BlockHead eyebrow={eyebrow} heading={heading} />
+          <div className="grid gap-8 md:grid-cols-2" data-cards>
+            {items.map((p) => (
+              <Link
+                key={p.slug}
+                to="/works/$slug"
+                params={{ slug: p.slug ?? "" }}
+                className="group glare-card gradient-card lift overflow-hidden rounded-3xl"
+                data-card
+              >
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img
+                    src={cmsMedia(p.coverImage) || projectPlaceholder(p.slug ?? "")}
+                    alt={p.title ?? ""}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="p-8">
+                  <span className="text-xs uppercase tracking-[0.2em] text-gold">
+                    {[p.industry, p.tag].filter(Boolean).join(" · ")}
+                  </span>
+                  <h3 className="mt-4 font-display text-2xl font-semibold md:text-3xl">{p.title}</h3>
+                  {p.summary && <p className="mt-3 text-sm text-muted-foreground">{p.summary}</p>}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    case "team": {
+      const items = data.team ?? [];
+      if (!items.length) return null;
+      return (
+        <section className="container-page border-t border-border/60 py-24" data-reveal-group>
+          <BlockHead eyebrow={eyebrow} heading={heading} />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {items.map((t) => (
+              <div key={t.slug ?? t.name} data-reveal-child className="glass rounded-2xl p-6">
+                <h3 className="font-display text-xl">{t.name}</h3>
+                {t.role && <p className="mt-1 text-sm text-gold">{t.role}</p>}
+                {t.bio && <p className="mt-3 text-sm text-muted-foreground">{t.bio}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    case "plans": {
+      const items = data.plans ?? [];
+      if (!items.length) return null;
+      return (
+        <section className="container-page border-t border-border/60 py-24" data-reveal-group>
+          <BlockHead eyebrow={eyebrow} heading={heading} />
+          <div className="grid items-stretch gap-5 md:grid-cols-3" data-cards>
+            {items.map((p) => (
+              <div
+                key={p.name}
+                data-card
+                className={
+                  p.featured
+                    ? "gradient-card rounded-3xl border border-gold/40 p-8"
+                    : "glass rounded-3xl p-8"
+                }
+              >
+                <h3 className="font-display text-2xl">{p.name}</h3>
+                <p className="mt-4 font-display text-4xl font-semibold text-gradient-lime">
+                  {p.price}
+                </p>
+                {p.period && <p className="mt-1 text-xs text-muted-foreground">{p.period}</p>}
+                {p.description && (
+                  <p className="mt-4 text-sm text-muted-foreground">{p.description}</p>
+                )}
+                {!!p.features?.length && (
+                  <ul className="mt-6 space-y-2 text-sm">
+                    {p.features.map((f) => (
+                      <li key={f.label} className="border-t border-border/60 py-2 text-foreground/85">
+                        {f.label}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    case "testimonials": {
+      const items = (data.testimonials ?? []).filter((t) => t.quote);
+      if (!items.length) return null;
+      return (
+        <Testimonials
+          items={items.map((t) => ({
+            q: t.quote ?? "",
+            a: t.author ?? "",
+            r: [t.role, t.company].filter(Boolean).join(", "),
+          }))}
+        />
+      );
+    }
+
     default:
       // An unknown type is a typo or a block from a newer schema. Rendering
       // nothing is better than rendering a raw object into the page.
@@ -237,13 +389,33 @@ function Block({ row }: { row: CmsBlockRow }) {
   }
 }
 
+/** Shared eyebrow + heading for the collection-backed blocks. */
+function BlockHead({ eyebrow, heading }: { eyebrow?: string; heading?: string }) {
+  if (!eyebrow && !heading) return null;
+  return (
+    <div className="mb-12">
+      {eyebrow && <p className="text-xs uppercase tracking-[0.28em] text-gold">{eyebrow}</p>}
+      {heading && (
+        <h2 className="mt-4 font-display text-4xl leading-tight md:text-5xl">{heading}</h2>
+      )}
+    </div>
+  );
+}
+
 /** Render an authored block list in order. */
-export function CmsBlocks({ blocks }: { blocks: CmsBlockRow[] }) {
+export function CmsBlocks({
+  blocks,
+  data = {},
+}: {
+  blocks: CmsBlockRow[];
+  /** Live rows for the collection-backed types; omit and those blocks render nothing. */
+  data?: CmsBlockData;
+}) {
   if (!blocks.length) return null;
   return (
     <>
       {blocks.map((row, i) => (
-        <Block key={`${row.type ?? "block"}-${i}`} row={row} />
+        <Block key={`${row.type ?? "block"}-${i}`} row={row} data={data} />
       ))}
     </>
   );

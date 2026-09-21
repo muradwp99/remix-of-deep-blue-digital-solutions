@@ -218,6 +218,23 @@ add_action( 'init', function () {
 			},
 		) );
 	}
+
+	/*
+	 * Core `page` is the free-form page type, rendered by the frontend at
+	 * /pages/<slug>. It composes from the same `page_blocks` repeater as
+	 * everything else rather than a vocabulary of its own.
+	 */
+	foreach ( array_merge( AUXTECH_SEO, array( 'page_blocks' ) ) as $key ) {
+		register_post_meta( 'page', $key, array(
+			'type'          => 'string',
+			'single'        => true,
+			'default'       => '',
+			'show_in_rest'  => true,
+			'auth_callback' => function () {
+				return current_user_can( 'edit_pages' );
+			},
+		) );
+	}
 }, 5 );
 
 /* ------------------------------------------------------------------ */
@@ -231,6 +248,8 @@ add_action( 'init', function () {
 add_filter( 'livepress_collections', function ( $types ) {
 	return array_values( array_unique( array_merge(
 		(array) $types,
-		array_keys( auxtech_collections_defs() )
+		array_keys( auxtech_collections_defs() ),
+		/* Free-form pages edit in LivePress too, against `collection:page`. */
+		array( 'page' )
 	) ) );
 } );

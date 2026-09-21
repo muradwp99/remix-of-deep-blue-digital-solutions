@@ -403,21 +403,15 @@ const COLLECTIONS: Record<
   },
   pages: {
     path: "/wp/v2/pages",
-    map: (d) => {
-      let layout: Record<string, unknown>[] = [];
-      try {
-        const parsed = JSON.parse(m(d, "layout_json") || "[]");
-        if (Array.isArray(parsed)) layout = parsed as Record<string, unknown>[];
-      } catch {
-        /* fall through to empty layout */
-      }
-      return {
-        slug: d.slug ?? "",
-        title: wpTitle(d),
-        layout,
-        meta: seoMeta(d),
-      };
-    },
+    map: (d) => ({
+      slug: d.slug ?? "",
+      title: wpTitle(d),
+      // Free-form pages compose from the same `page_blocks` repeater as every
+      // other page. The old `layout_json` key belonged to a second block
+      // vocabulary nothing ever wrote to.
+      pageBlocks: rows(d, "page_blocks"),
+      meta: seoMeta(d),
+    }),
   },
 };
 

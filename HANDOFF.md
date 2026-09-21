@@ -203,9 +203,18 @@ chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
    carrying the type-specific part one entry per line, pipe-separated. A
    repeater per block type cannot interleave types in one order, which is the
    point. Unknown `type` renders nothing rather than dumping an object.
-   Note the older `src/components/block-renderer.tsx` (15 Payload-era blocks
-   on `/pages/{slug}`) is a separate, still-unsourced system — it expects a
-   `layout` array core WP pages do not have.
+   `block-renderer.tsx` — the second, Payload-era vocabulary that rendered
+   `/pages/{slug}` from a `layout_json` nothing ever wrote — is **deleted**.
+   That route now uses these same blocks, so there is one vocabulary and one
+   place to add a type. Its worthwhile part was ported: four collection-backed
+   types (`projects`, `team`, `plans`, `testimonials`) that list live
+   documents rather than retyped copy. Their rows are fetched in the route
+   loader and passed to `CmsBlocks` via `data`, so they server-render; a block
+   that fetched for itself would come back empty from the server. Only
+   `/pages/{slug}` supplies that data today, so those four types render
+   nothing on catalog pages — deliberately, not by accident.
+   Core WP `page` carries `page_blocks` + the SEO pair, and edits in LivePress
+   against `collection:page` (`wp-headless/livepress/schema-page-extra.php`).
    The bespoke sections' internals remain code, by design: they are what makes
    those pages look like themselves. This adds composition alongside them.
 5. `DEPLOY.md` still describes the abandoned `rsautomartllc.com` hosts, and
