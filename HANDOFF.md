@@ -201,6 +201,17 @@ Constraints agreed: no invented named-client testimonials/logos/result numbers
 builders/QA at effort 'medium'; everything local, **no push**.
 
 ## Other open items
+- **`design` global is wired to nothing.** LivePress writes `livepress_design`;
+  the bridge reads `auxtech_design`. Its Design screen therefore edits a row the
+  site never reads. Left empty deliberately — empty means "use the stylesheet",
+  which is correct — but if you want it working, one of the two sides has to
+  move. Note its consumer emits `--radius: <value>px` while the stylesheet uses
+  `0.75rem`, so seeding the current value verbatim would render `0.75px` and
+  flatten every rounded corner.
+- `header` and `site_settings` globals are read by nothing; seeding them would
+  give an editor fields with no effect.
+- The homepage's `work_items` meta key is not in the LivePress schema, so it
+  alone of the homepage fields could not be seeded and is not editable.
 - Delete or gate the `home-2`..`home-5` experiment routes (home-4 shows an alien
   "HOMOLUDENS" brand).
 - Optional: npm publish of `livepress-bridge`; swapping the
