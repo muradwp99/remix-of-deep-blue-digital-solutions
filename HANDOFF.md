@@ -4,6 +4,8 @@ Human-readable mirror of the project state. Claude's auto-memory at
 `~/.claude/projects/F--Auxtech-Website-V2/memory/` carries the same facts in
 more detail — trust memory for recipes, this file for orientation.
 
+Last rewritten: 2026-09-21.
+
 ## What this project is
 **Auxtech** (rebranded from Northline): premium software-studio marketing site
 + a self-invented realtime visual-editing framework (**LivePress**) on headless
@@ -11,148 +13,182 @@ WordPress. Frontend = TanStack Start (Vite SSR) + Tailwind v4 + GSAP. The
 Payload CMS in `northline-payload/` is RETIRED (kept only as history).
 
 ## Live URLs
-- **Frontend (prod demo):** https://auxtech-website.vercel.app — Vercel
-  project `auxtech-website`, CLI authed as muradwp99. Deploy:
-  `npx vercel deploy --prod --yes`. Env there: `VITE_CMS_URL=https://aux.rsautomartllc.com`,
-  `GEMINI_API_KEY` (also in local `.env`, gitignored).
-- **CMS (prod):** https://aux.rsautomartllc.com (Hostinger WP, migrated via
-  All-in-One WP Migration). `wp-content/mu-plugins/prod-config.php` must point
-  `auxtech_frontend_url` + CORS at the Vercel URL. **Prod DB may still contain
-  "Northline" strings** until the user runs Better Search Replace there.
-- **CMS (staging/dev):** LocalWP `auxtech-v2.local`
-  (`C:\Users\murad\Local Sites\auxtech-v2\app\public`). WP-CLI recipe =
-  `scratchpad/wpx.sh` pattern: Local's PHP + `-d extension=mysqli` + phar
-  (DB_HOST 127.0.0.1:10016). Local dev frontend: `npm run dev` → :8080.
-- **GitHub:** site = muradwp99/remix-of-deep-blue-digital-solutions (main);
-  LivePress kit = **github.com/muradwp99/livepress** (plugin + npm bridge pkg,
-  MIT, pushed).
 
-## LivePress (the invention) — ALL SHIPPED
-One "Site Pages" list (25 docs) + 32 collection detail editors. Fullscreen
-editor (WP chrome hidden): schema-driven fields left, live iframe right,
-keystrokes stream via postMessage (`aux-edit` protocol; also aux-design /
-aux-menu / aux-footer / aux-focus). Drag repeaters, media pickers, section
-drag-reorder, click-to-edit, device-width preview, Menus + Design standalone
-screens. Frontend runtime = `src/lib/edit-bridge.ts` (`useLiveEdits`), page
-helpers `pageStr/pageRows/pageLines` in `src/lib/cms.ts` (generic `sitepages`
-collection). Plugin: `wp-headless/livepress/` (schema registry =
-`livepress-schema.php`; plugin self-registers REST meta for every schema
-field). WP contract + gotchas: `WP-MIGRATION.md`; deploy guide: `DEPLOY.md`;
-kit README: `LIVEPRESS.md`. Key rule learned: sentinel-edit to verify (fail-
-soft masks dead wiring); repeaters = JSON strings; one sitepage CPT, never
-CPT-per-page.
+- **Frontend:** https://auxtechint.com — self-hosted on the user's cPanel
+  (136.243.82.43, LiteSpeed, cPanel user `auxtechi`).
+- **CMS:** https://admin.auxtechint.com — WordPress 7.1.1, PHP 8.2.33, same
+  cPanel account, docroot `~/admin.auxtechint.com`.
+- **GitHub:** site = muradwp99/remix-of-deep-blue-digital-solutions (main);
+  LivePress kit = **github.com/muradwp99/livepress** (public, MIT).
+- Local dev: `npm run dev` → :8080. Cold start ~45s, first SSR ~5s.
+
+> **User rule (2026-09-21): no Vercel, no external hosting services. Do not
+> suggest it.** The old `auxtech-website.vercel.app` and the
+> `*.rsautomartllc.com` pair are abandoned; everything runs on the cPanel above.
+
+## Hosting — how the frontend actually runs
+
+**The server has no system Node.** `/usr/bin/node` does not exist, EasyApache
+node packages are absent, and `Cpanel::API::NodeJS` is not installed, so the
+CloudLinux Node.js Selector is unusable even though the `lvenodejssel` feature
+bit is granted. cPanel's `PassengerApps::register_application` hard-codes
+`nodejs: /usr/bin/node` and ignores any path you pass it, and
+`edit_application` is permanently broken on this account because cPanel
+auto-detected a bogus `python: /usr/bin/python-html2text` that it re-validates
+on every call.
+
+What works instead, all through the cPanel API (there is **no SSH** — ports 22,
+2222, 2200, 22222, 21098, 7822, 18765, 2022 and 1022 are filtered; only
+2082/2083/2087 answer):
+
+1. A Node runtime lives **inside the account**:
+   `/home/auxtechi/node-v24.21.0-linux-x64/bin/node`, installed by uploading
+   the official nodejs.org linux-x64 tarball and extracting it server-side.
+2. App root `/home/auxtechi/auxfront` holds `.output/` plus `app.js`, a
+   CommonJS shim that does `import("./.output/server/index.mjs")`.
+3. `/home/auxtechi/public_html/.htaccess` carries `PassengerAppRoot`,
+   `PassengerBaseURI /`, `PassengerNodejs <the account node>`,
+   `PassengerAppType node`, `PassengerStartupFile app.js`.
+
+> **The trap:** a cPanel-**registered** Passenger app overrides that .htaccess
+> and forces `/usr/bin/node`, which gives `lscgid: execve():/usr/bin/node: No
+> such file or directory` in `~/auxfront/stderr.log` and a 503. The app must
+> stay **unregistered**. Never open cPanel's Application Manager for this
+> domain — it re-registers and takes the site down.
+
+### Deploy / redeploy
+
+```
+NITRO_PRESET=node-server VITE_CMS_URL=https://admin.auxtechint.com npm run build
+```
+The repo's default Nitro target is **cloudflare** (emits `wrangler.json`) and is
+useless here, so the preset is not optional. The `node-server` bundle is
+self-contained — no `npm install` on the server. Then: tar `.output`, upload via
+UAPI `Fileman/upload_files`, extract with **API2** `Fileman::fileop op=extract`
+(there is no UAPI extract), and upload any file to `~/auxfront/tmp/restart.txt`
+to restart Passenger.
+
+## CMS — everything is dynamic
+
+**LivePress v1.5.2** (from the public GitHub kit, far newer than the 0.2.0 copy
+still sitting in `wp-headless/livepress/`) + **Novamira** and **Novamira Pro**.
+Pretty permalinks are **required**: with the plain structure `/wp-json/` 404s
+and only `index.php?rest_route=` answers, while `src/lib/cms.ts:49` calls
+`${CMS_URL}/wp-json${path}` — so every fetch fails soft into built-in copy and
+the site looks fine while being entirely disconnected.
+
+Since 1.1 LivePress globs `schema-*.php` beside itself rather than owning one
+site's schema. On the server: `schema-auxtech.php` (the old
+`livepress-schema.php`, 5 catalog types) and `schema-auxtech-extra.php` (the
+other 7).
+
+**mu-plugins** (`~/admin.auxtechint.com/wp-content/mu-plugins/`, sources in
+`wp-headless/`):
+- `auxtech-headless.php` — globals REST + CORS + contact form
+- `prod-config.php` — points LivePress and the bridge at https://auxtechint.com
+- `auxtech-collections.php` — the 12 post types
+
+**12 post types**, named so their default `rest_base` matches `src/lib/cms.ts`:
+`service` `solution` `industry` `tool` `project` `team` `plan` `faq` `job`
+`learning` `testimonial` `resource`, plus core `post` (blog), core `page`
+(free-form, renders at `/pages/{slug}`) and 25 `sitepage` docs. Meta is
+`show_in_rest` strings: repeaters are JSON, line-lists newline-joined, booleans
+`"1"`. `page-attributes` everywhere so `menu_order` drives ordering. All 12 are
+handed to LivePress via the `livepress_collections` filter.
+
+**87 documents seeded** from `wp-headless/payload-dump/` via REST, rebranded
+Northline→Auxtech on the way in.
+
+Add / edit / delete all work end to end — verified by creating a service only in
+WordPress (its detail page and the hub listing both rendered) then deleting it
+(page returned to 404).
 
 ## Free tools (all REAL, server-function backed)
 `src/lib/tools-api.ts` (createServerFn + `.validator`) + `src/lib/gemini.server.ts`
 (Gemini 2.0-flash REST; x-goog-api-key then Bearer fallback; ALWAYS heuristic
-fallback so tools never break). Shared UI `src/components/tool-shell.tsx`
-(ScoreRing/StatTile/FixList/CopyBlock/skeletons). Routes under `/tools/`:
-website-audit (verified live w/ AI), speed-test, roi-calculator, brand-grader,
-**project-estimator** (verified), **stack-recommender**, **headline-analyzer**,
-**meta-generator**. Nova chat (floating-widgets) answers via `runChat`.
-Mega menu lists the 6 strongest.
+fallback so tools never break). Shared UI `src/components/tool-shell.tsx`.
+Routes under `/tools/`: website-audit, speed-test, roi-calculator, brand-grader,
+project-estimator, stack-recommender, headline-analyzer, meta-generator. Nova
+chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
+`GEMINI_API_KEY` lives in local `.env` (gitignored) and must be set on the host.
 
 ## Design state
-- **Brand navy = #00022D** (user-final; revised from #0B0B45). styles.css
-  :root dark tokens all hue-268 family (bg oklch(0.14 0.07 268)); hardcoded
-  hexes in tools/favicon swapped too. Gold/lime accents unchanged.
-- Logo: `src/components/auxtech-logo.tsx` (AuxtechMark, currentColor
-  approximation of user's angular-A wordmark) + `public/favicon.svg`. User's
-  real SVG can replace both (swap path data only).
-- Counter bug FIXED at root: `useScrollReveal` module refcount (SiteShell +
-  pages double-called it → second pass zeroed counters; StrictMode killed
-  anims) + `data-counter-value` stash. Verified sitewide.
-- Shipped redesigns: stats = ledger composition (home + StatsRow); FeatureGrid
-  spotlight lead filled (sibling chips); FeatureGrid default cards = tinted-
-  cell diversity + ghost icons; shared editorial hero figure = offset gold
-  frame (8 pages).
-- **ROUND 3 (2026-07-19, multi-agent WORKFLOW.md run) — build done on disk,
-  QA/commit UNFINISHED.** See "Round 3 in flight" section below. 36 files
-  modified in working tree, NOT committed, NOT pushed (user rule: never push
-  to live from these sessions).
+- **Brand navy = #00022D** (user-final). styles.css `:root` dark tokens are all
+  hue-268; hardcoded hexes in tools/favicon match.
+- Logo: `src/components/auxtech-logo.tsx` (AuxtechMark) + `public/favicon.svg`.
+  The user's real SVG can replace both (swap path data only).
+- Counter bug fixed at root: `useScrollReveal` module refcount +
+  `data-counter-value` stash.
+- **Design round 3 shipped and committed** (`1c58741`): graded colour ramps,
+  themes for the 4 newer tools, CTA unification (btn-gold is the one primary),
+  services hub redesign, /solutions/scale-up StickyPinSteps, contrast fixes.
 - Design skills to reload for design work: design-taste-frontend, gpt-taste,
-  meta-skills:modern-web-design (rules held: zero em-dashes, eyebrow
-  rationing, gapless grids, hero discipline).
+  meta-skills:modern-web-design (rules held: zero em-dashes, eyebrow rationing,
+  gapless grids, hero discipline).
 
-## Round 3 in flight — how to finish (do this FIRST next session)
+## Known gaps — what is still code, not CMS
+1. The **curated cards** on the services and solutions hubs (3 groups / 4 cards)
+   are hardcoded. A CMS-driven "Every service/solution" index sits below them so
+   nothing is unreachable, but the cards themselves need moving to sitepage
+   repeaters to be editable.
+2. The **header mega menu** lists services from code (overridable via the `nav`
+   global), so a new service does not appear in the top nav automatically.
+3. **Images**: `cover_image` / hero image fields exist and are editable, but the
+   seed had nulls, so pages use their coded Unsplash art.
+4. The 13 bespoke service route files keep hand-built layouts; CMS edits drive
+   their text, not their structure.
+5. `DEPLOY.md` still describes the abandoned `rsautomartllc.com` hosts, and
+   `src/lib/cms.ts:21` still defaults to `http://auxtech-v2.local`. Harmless
+   (the build bakes `VITE_CMS_URL`) but both are stale.
 
-The 2026-07-19 session ran a multi-agent team per the user's WORKFLOW.md
-(orchestrator → researchers → design specs → design.lead review gate →
-architect → builders → QA). All specs/findings/review-log live in
-`deliverables/` (brief at `deliverables/_context/brief.md`). Workflow run
-cache (`resumeFromRunId wf_9ace9835-36e`) is SAME-SESSION ONLY — tomorrow you
-CANNOT resume it; but that's fine, all output is ordinary files on disk.
-
-State at handoff (~04:28, 19 agents done): research + 3 approved specs +
-architecture + foundation build + lead 50% spot-review + most route packages
-DONE; "hero-variety" builder was mid-run; NOT yet run: lead 100% spot-review,
-QA gate, final sign-off, commit.
-
-What shipped (on disk, uncommitted): Tailwind-style graded ramps in
-styles.css/themes.ts; theme entries for the 4 new tools (project-estimator,
-stack-recommender, headline-analyzer, meta-generator — they had NONE and
-rendered muddy-brown block-deep heroes); CTA unification (btn-navy demoted,
-btn-gold = the one primary incl. header/CTABand/contact submit); homepage
-marquee hex cleanup; tool-shell red-400 → --destructive grading; services.tsx
-hub redesign (block modes, was 7 flat navy sections); /solutions/scale-up
-StickyPinSteps filled; retail-dtc text-gold/30 contrast fix; stale "N" glyph
-in banner-cta.tsx → AuxtechMark "A".
-
-To finish round 3:
-1. If hero-variety builder died mid-edit: `git status` + `npx tsc --noEmit`
-   tells you; finish its 4 hero pages per
-   `deliverables/design.motion/motion-spec.md` §hero-variety.
-2. QA gate: `npx tsc --noEmit` && `npm run build` && `node
-   scripts/check-pages.mjs`; then dev server :4321 + playwright/Edge
-   screenshots (recipe in memory `verifying-pages-headless.md`) of ~12 pages;
-   fix blockers.
-3. Read `deliverables/design.lead/review-log.md` end-block for residual
-   open issues to include in commit message / report.
-4. Commit locally (surgical: the 36 src files + deliverables if wanted),
-   message `feat(design): round 3 — graded color system + services/scale-up/
-   hero variety`. **DO NOT git push** — user pushes when ready.
-
-## ROUND 4 — QUEUED (user-approved scope, run after round 3 commits)
-
-User asked for a full round 4 with the same WORKFLOW.md team pattern:
+## ROUND 4 — still queued (user-approved scope)
+Same WORKFLOW.md team pattern:
 1. Layout/IA de-genericization: per-page section ORDER varies, kill uniform
-   BenefitList/FAQAccordion clones, add missing sections, trim bloat,
-   animation audit + thinning. (Known uniform spots list = memory
-   `per-page-theme-system.md` round-6 notes.)
-2. Production-ready content site-wide, no mock/filler; resolve found copy
-   contradictions (84% vs 98% retention, phantom API/AI/SOC2 services,
-   service-name drift, "a Auxtech" grammar).
+   BenefitList/FAQAccordion clones, add missing sections, trim bloat, animation
+   audit + thinning.
+2. Production-ready content site-wide, no filler; resolve copy contradictions
+   (84% vs 98% retention, phantom API/AI/SOC2 services, service-name drift).
 3. Pricing for ALL 13 services + 10 solutions, USA/UK/Europe oriented (USD
    primary + GBP/EUR, VAT note), per-subpage bands + pricing page.
-4. Real images: Bloom MCP (trybloom — onboard Auxtech brand, check credits)
-   + Canva MCP (connected) + licensed stock (Unsplash/Pexels). NO Google
-   Image scraping (copyright). Figma MCP needs user auth first.
-Constraints agreed: no invented named-client testimonials/logos/result
-numbers (flag list for user instead); pricing = market-rate, user adjusts;
-speed = builders/QA at effort 'medium'; everything local, no push.
+4. Real images: Bloom MCP (trybloom) + Canva MCP + licensed stock
+   (Unsplash/Pexels). NO Google Image scraping. Figma MCP needs user auth.
+
+Constraints agreed: no invented named-client testimonials/logos/result numbers
+(flag a list for the user instead); pricing = market-rate, user adjusts;
+builders/QA at effort 'medium'; everything local, **no push**.
+
+## Other open items
+- Delete or gate the `home-2`..`home-5` experiment routes (home-4 shows an alien
+  "HOMOLUDENS" brand).
+- Register the 4 newer tools in `tools.ts` so the check-pages guard sees them.
+- Optional: npm publish of `livepress-bridge`; swapping the
+  `@lovable.dev/vite-tanstack-config` build dep (risky, needs care).
 
 ## Verify before every commit
-`npx tsc --noEmit` + `node scripts/check-pages.mjs` (35 slugs) + sentinel test
-against WP when CMS wiring changed. Never trust bodyLen alone.
-
-## Open items (in priority order)
-0. FINISH ROUND 3 (section above): QA gate + local commit, then ROUND 4.
-   Also user-decision residuals from round-3 review: delete-or-gate
-   home-2..home-5 experiment routes (home-4 shows alien "HOMOLUDENS" brand);
-   register 4 new tools in tools.ts so check-pages guard sees them.
-1. Prod WP: Better Search Replace Northline→Auxtech + prod-config.php check.
-2. ~~Design round 3~~ → in flight, see section above.
-3. Hostinger frontend (auxfront.rsautomartllc.com) per DEPLOY.md — Vercel is
-   the demo host meanwhile.
-4. Optional: npm publish of `livepress-bridge` (user's npm account);
-   `@lovable.dev/vite-tanstack-config` build-dep swap (risky, needs care).
-5. LocalWP → prod content sync flow when the user wants parity.
+`npx tsc --noEmit` + `node scripts/check-pages.mjs` (35 slugs) + a **sentinel
+edit** against WP whenever CMS wiring changed. The CMS layer fails soft by
+design, so a dead pipeline still returns 200 on every page — never trust
+`bodyLen` or a status code alone. Set a unique string in WP, fetch the live
+page, grep for it, then revert.
 
 ## Gotchas that bite
-- Vite env vars are BUILD-time (change → redeploy, not restart).
-- `.env*` gitignored; Gemini key never in code.
-- `wp-headless/` copies deploy to LocalWP via `cp` (plugins dir) — prod WP gets
-  them via AIO migration or manual upload.
-- Heredocs with JS template literals break in Git Bash — append files via
-  python instead.
-- TanStack loaders: serializable data only (icons stay component-side).
+- Vite env vars are BUILD-time (change → rebuild, not restart).
+- `.env*` is gitignored; the Gemini key never goes in code.
+- TanStack loaders: serializable data only. Icon components blank the page on
+  hydration — that is why the DTO + hydrate-in-component pattern exists.
+- Git Bash rewrites `/home/...` in curl args (needs `MSYS_NO_PATHCONV=1`) but
+  that same variable breaks curl's own `@localfile` paths — `cd` to the file and
+  use a bare `@./name`. `tar` treats `C:/...` as a remote host; use `/c/...`.
+- Python's TLS to admin.auxtechint.com gets reset; drive it with curl.
+- Python on Windows writes CRLF in text mode — strip `\r` before feeding a file
+  to a shell `read` loop.
+- cPanel `Fileman/upload_files` will not overwrite without `overwrite=1`.
+- PowerShell here-strings (`@'...'@`) are a parse error in the Bash tool; use a
+  message file for multi-line commit messages.
+
+## Credentials
+cPanel password + API token and the WordPress application password were shared
+in a chat transcript on 2026-09-21 and **should be rotated**. The WP app
+password reaches Novamira's `execute-php` / `write-file` abilities, i.e. full
+server control — treat it as the most sensitive of the three. No secrets are
+stored in this repo.
