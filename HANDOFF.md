@@ -65,8 +65,17 @@ The repo's default Nitro target is **cloudflare** (emits `wrangler.json`) and is
 useless here, so the preset is not optional. The `node-server` bundle is
 self-contained — no `npm install` on the server. Then: tar `.output`, upload via
 UAPI `Fileman/upload_files`, extract with **API2** `Fileman::fileop op=extract`
-(there is no UAPI extract), and upload any file to `~/auxfront/tmp/restart.txt`
-to restart Passenger.
+(there is no UAPI extract), and touch `~/auxfront/tmp/restart.txt` to restart
+Passenger.
+
+> **Delete `tmp/restart.txt` before re-uploading it.** `Fileman/upload_files`
+> silently refuses to overwrite an existing file, so a second deploy uploads
+> nothing, Passenger never restarts, and the old process keeps serving the old
+> asset manifest — new hashed chunks 404 while the HTML still points at the
+> previous ones. The files are on disk and the deploy looks clean; only the
+> served bundle gives it away. Confirm with:
+> `curl -s https://auxtechint.com/ | grep -o '/assets/site-shell-[^"]*\.js'`
+> and check it matches the local `.output/public/assets` filename.
 
 ## CMS — everything is dynamic
 
@@ -131,8 +140,12 @@ chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
    are hardcoded. A CMS-driven "Every service/solution" index sits below them so
    nothing is unreachable, but the cards themselves need moving to sitepage
    repeaters to be editable.
-2. The **header mega menu** lists services from code (overridable via the `nav`
-   global), so a new service does not appear in the top nav automatically.
+2. ~~Header mega menu~~ — **done.** Every `/services/{slug}` link takes its
+   label and description from the CMS doc, and a service with no coded link is
+   appended in a "More" column, so a service added in WordPress reaches the nav
+   on its own. The curated Build/Design/Mobile/Ongoing grouping and the
+   non-service links (Web Applications → /custom-software) are untouched. Top
+   level order/rename/hide still comes from the `nav` global.
 3. **Images**: `cover_image` / hero image fields exist and are editable, but the
    seed had nulls, so pages use their coded Unsplash art.
 4. The 13 bespoke service route files keep hand-built layouts; CMS edits drive

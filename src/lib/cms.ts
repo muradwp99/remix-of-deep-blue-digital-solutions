@@ -559,18 +559,32 @@ export function cmsMedia(media: unknown): string | undefined {
 /* ------------------------------------------------------------------ */
 
 /** Decode the handful of HTML entities our own generated markup contains. */
+/** Numeric entity → character, ignoring anything outside the Unicode range. */
+function fromCodePoint(code: number): string | null {
+  if (!Number.isFinite(code) || code < 0 || code > 0x10ffff) return null;
+  try {
+    return String.fromCodePoint(code);
+  } catch {
+    return null;
+  }
+}
+
 function decodeEntities(s: string): string {
-  return s
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#0?39;/g, "'")
-    .replace(/&#8217;/g, "’")
-    .replace(/&#8216;/g, "‘")
-    .replace(/&#8220;/g, "“")
-    .replace(/&#8221;/g, "”")
-    .replace(/&nbsp;/g, " ");
+  return (
+    s
+      // Numeric entities first, decimal and hex. WordPress encodes a plain
+      // ampersand in `title.rendered` as `&#038;`, which a list of named
+      // entities never catches — it reached the nav as "SEO &#038; Performance".
+      .replace(/&#x([0-9a-f]+);/gi, (m, hex) => fromCodePoint(parseInt(hex, 16)) ?? m)
+      .replace(/&#(\d+);/g, (m, dec) => fromCodePoint(parseInt(dec, 10)) ?? m)
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&nbsp;/g, " ")
+      // Last, so a double-encoded `&amp;#038;` resolves rather than stalling
+      // half-decoded.
+      .replace(/&amp;/g, "&")
+  );
 }
 
 function stripHtml(html: string): string {

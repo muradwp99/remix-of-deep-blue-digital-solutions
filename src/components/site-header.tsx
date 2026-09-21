@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { AuxtechMark } from "./auxtech-logo";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { cmsGlobal } from "@/lib/cms";
+import { cmsFind, cmsGlobal } from "@/lib/cms";
 import { isEditMode } from "@/lib/edit-bridge";
 import {
   Home,
@@ -362,8 +362,88 @@ function useNavItems(): NavItem[] {
   return out.length ? out : NAV;
 }
 
+/** Mega-menu descriptions are one-liners; service summaries are not. */
+function shortDesc(s?: string | null): string | undefined {
+  const t = (s ?? "").trim();
+  if (!t) return undefined;
+  if (t.length <= 44) return t;
+  const cut = t.slice(0, 44);
+  const space = cut.lastIndexOf(" ");
+  return `${(space > 20 ? cut.slice(0, space) : cut).replace(/[,.;:]$/, "")}…`;
+}
+
+type CmsServiceRow = { slug?: string; title?: string; summary?: string | null };
+
+/**
+ * The `service` collection, for the Services mega panel.
+ *
+ * Same fail-soft contract as the nav config above: until this resolves (and
+ * if it never does) the coded NAV stands on its own, so the menu is never
+ * empty or half-rendered.
+ */
+function useCmsServices(): CmsServiceRow[] {
+  const { data } = useQuery({
+    queryKey: ["nav-services"],
+    queryFn: () => cmsFind<CmsServiceRow>("services", { sort: "order", limit: 100 }),
+    staleTime: 5 * 60 * 1000,
+  });
+  return Array.isArray(data) ? data.filter((d) => d.slug && d.title) : [];
+}
+
+/**
+ * Drive the Services mega panel from the CMS.
+ *
+ * Two halves, because the coded panel is a curated thing worth keeping: every
+ * `/services/{slug}` link takes its label and description from the matching
+ * CMS doc, so renaming a service in WordPress renames it in the nav; and any
+ * service with no coded link at all is appended in its own column, so a
+ * service added in WordPress reaches the menu without a code change.
+ *
+ * Links that are not `/services/{slug}` (Web Applications points at
+ * /custom-software, for instance) are left exactly as they are.
+ */
+function withCmsServices(items: NavItem[], services: CmsServiceRow[]): NavItem[] {
+  if (!services.length) return items;
+
+  const bySlug = new Map(services.map((s) => [s.slug as string, s]));
+  const linked = new Set<string>();
+
+  const next = items.map((item) => {
+    if (item.href !== "/services" || !item.mega) return item;
+
+    const groups = item.mega.groups.map((group) => ({
+      ...group,
+      items: group.items.map((li) => {
+        const slug = li.href.startsWith("/services/") ? li.href.slice("/services/".length) : null;
+        const doc = slug ? bySlug.get(slug) : undefined;
+        if (!doc) return li;
+        linked.add(slug as string);
+        return { ...li, label: doc.title as string, desc: shortDesc(doc.summary) ?? li.desc };
+      }),
+    }));
+
+    const extra = services
+      .filter((s) => !linked.has(s.slug as string))
+      .map((s) => ({
+        label: s.title as string,
+        href: `/services/${s.slug}`,
+        desc: shortDesc(s.summary),
+      }));
+
+    return {
+      ...item,
+      mega: {
+        ...item.mega,
+        groups: extra.length ? [...groups, { kicker: "More", items: extra }] : groups,
+      },
+    };
+  });
+
+  return next;
+}
+
 export function SiteHeader() {
-  const nav = useNavItems();
+  const nav = withCmsServices(useNavItems(), useCmsServices());
   const [mobileOpen, setMobileOpen] = useState(false);
   // Which mega is hovered/focused right now (null = closed)
   const [openMega, setOpenMega] = useState<string | null>(null);

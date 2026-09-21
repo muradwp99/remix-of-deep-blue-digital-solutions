@@ -22,7 +22,10 @@ export const Route = createFileRoute("/solutions_/$slug")({
   head: ({ loaderData, params }) => {
     const dto = loaderData?.dto ?? null;
     const fb = getSubpage("solutions", params.slug);
-    const title = dto?.metaTitle || fb?.metaTitle || "Solutions — Auxtech";
+    // A CMS solution with no meta_title should still get its own name in the
+    // tab, not the generic hub title.
+    const title =
+      dto?.metaTitle || (dto?.nav ? `${dto.nav} — Auxtech` : "") || fb?.metaTitle || "Solutions — Auxtech";
     const description =
       dto?.metaDesc || fb?.metaDesc || "Outcome-led solutions from Auxtech.";
     return {
