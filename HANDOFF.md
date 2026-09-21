@@ -182,6 +182,11 @@ chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
    The 4 industry pages (6 sections each) and the 4 CMS-wired tool pages
    (`hero` + `banner` — the whole page is one surface plus the CTA) are
    converted too.
+   All 8 tool pages are wired now: `headline-analyzer`, `meta-generator`,
+   `project-estimator` and `stack-recommender` had no `tool` doc, no loader and
+   no `cmsToTool` at all, so they were pure client pages. They now have registry
+   entries in `tools.ts` (which is why check-pages counts 39 slugs, not 35),
+   CMS docs seeded from that registry, and heroes that render the doc.
    The sections' *internal* composition is still code; this is order and
    visibility, not a block builder.
 5. `DEPLOY.md` still describes the abandoned `rsautomartllc.com` hosts, and
@@ -205,21 +210,13 @@ Constraints agreed: no invented named-client testimonials/logos/result numbers
 builders/QA at effort 'medium'; everything local, **no push**.
 
 ## Other open items
-- **4 tools have no CMS presence at all**: `headline-analyzer`, `meta-generator`,
-  `project-estimator`, `stack-recommender`. No `tool` doc, no loader, no
-  `cmsToTool` — they are pure client pages, so none of their copy is editable
-  and `section_order` cannot reach them. Wiring them means creating the four
-  docs and giving each route the loader the other four already have. They were
-  deliberately left unconverted rather than given a PageSections wrapper that
-  could never do anything.
 - Delete or gate the `home-2`..`home-5` experiment routes (home-4 shows an alien
   "HOMOLUDENS" brand).
-- Register the 4 newer tools in `tools.ts` so the check-pages guard sees them.
 - Optional: npm publish of `livepress-bridge`; swapping the
   `@lovable.dev/vite-tanstack-config` build dep (risky, needs care).
 
 ## Verify before every commit
-`npx tsc --noEmit` + `node scripts/check-pages.mjs` (35 slugs) + a **sentinel
+`npx tsc --noEmit` + `node scripts/check-pages.mjs` (39 slugs) + a **sentinel
 edit** against WP whenever CMS wiring changed. The CMS layer fails soft by
 design, so a dead pipeline still returns 200 on every page — never trust
 `bodyLen` or a status code alone. Set a unique string in WP, fetch the live

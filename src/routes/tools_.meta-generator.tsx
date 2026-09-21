@@ -6,15 +6,32 @@ import { pageThemes } from "@/lib/themes";
 import { runMetaGenerate, type MetaResult } from "@/lib/tools-api";
 import { ResultPanel, ToolError, ToolSkeleton } from "@/components/tool-shell";
 
+import { getTool, type Tool } from "@/lib/tools";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsToTool, type CmsTool } from "@/lib/cms-catalog";
+import { useLiveEdits } from "@/lib/edit-bridge";
+import type { ReactNode } from "react";
+import { PageSections } from "@/components/page-sections";
+
+const SLUG = "meta-generator";
+
 export const Route = createFileRoute("/tools_/meta-generator")({
-  head: () => ({
-    meta: [
-      { title: "SEO Meta Generator — Auxtech" },
-      { name: "description", content: "Generate a copy-paste title tag, meta description, Open Graph set, and JSON-LD for your homepage." },
-      { property: "og:title", content: "SEO Meta Generator — Auxtech" },
-      { property: "og:description", content: "Title tag, meta description, OG set, and JSON-LD, ready to paste." },
-    ],
-  }),
+  loader: async (): Promise<{ tool: Tool; doc: CmsTool | null }> => {
+    const fallback = getTool(SLUG)!;
+    const doc = await cmsFindOne<CmsTool>("tools", SLUG, { depth: 1 });
+    return { tool: doc ? cmsToTool(doc, fallback) : fallback, doc };
+  },
+  head: ({ loaderData }) => {
+    const tool = loaderData?.tool;
+    return {
+      meta: [
+        { title: tool?.metaTitle ?? "SEO Meta Generator — Auxtech" },
+        { name: "description", content: tool?.metaDesc ?? "" },
+        { property: "og:title", content: tool?.metaTitle ?? "SEO Meta Generator — Auxtech" },
+        { property: "og:description", content: tool?.metaDesc ?? "" },
+      ],
+    };
+  },
   component: Page,
 });
 
@@ -52,6 +69,10 @@ function CopyBlock({ label, code }: { label: string; code: string }) {
 }
 
 function Page() {
+  const { tool, doc } = Route.useLoaderData();
+  // LivePress: overlay admin keystrokes on the raw doc, then re-map.
+  const liveDoc = useLiveEdits(doc);
+  const liveTool = liveDoc ? cmsToTool(liveDoc, tool) : tool;
   const [business, setBusiness] = useState("");
   const [offering, setOffering] = useState("");
   const [audience, setAudience] = useState("");
@@ -82,100 +103,162 @@ function Page() {
       ...r.og.map((o) => `<meta property="${o.property}" content="${o.content}" />`),
     ].join("\n");
 
-  return (
-    <SiteShell theme={pageThemes["tools/meta-generator"]}>
-      <section className="block-deep">
-        <div className="container-page py-20 md:py-24">
-          <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              Free tool
-            </p>
-            <h1 className="mt-5 font-display text-5xl font-semibold leading-[0.98] md:text-6xl" data-reveal>
-              Meta tags, done <span className="text-gold">properly</span>.
-            </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted-foreground" data-reveal>
-              Title tag, meta description, Open Graph set, and JSON-LD schema. Character-counted, benefit-led, ready to paste.
-            </p>
-          </div>
-
-          <div className="mt-12 grid max-w-5xl gap-8 lg:grid-cols-[1fr_1.25fr]" data-reveal>
-            <form onSubmit={run} className="space-y-5 rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
-              <label className="block">
-                <span className="text-xs uppercase tracking-[0.16em] text-white/60">Business name</span>
-                <input required value={business} onChange={(e) => setBusiness(e.target.value)} placeholder="Auxtech" className={`mt-2 ${inputCls}`} />
-              </label>
-              <label className="block">
-                <span className="text-xs uppercase tracking-[0.16em] text-white/60">What you offer</span>
-                <input required value={offering} onChange={(e) => setOffering(e.target.value)} placeholder="Custom websites and apps for growing teams" className={`mt-2 ${inputCls}`} />
-              </label>
-              <div className="grid gap-5 sm:grid-cols-2">
-                <label className="block">
-                  <span className="text-xs uppercase tracking-[0.16em] text-white/60">Audience (optional)</span>
-                  <input value={audience} onChange={(e) => setAudience(e.target.value)} placeholder="Founders" className={`mt-2 ${inputCls}`} />
-                </label>
-                <label className="block">
-                  <span className="text-xs uppercase tracking-[0.16em] text-white/60">City (optional)</span>
-                  <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Austin" className={`mt-2 ${inputCls}`} />
-                </label>
-              </div>
-              <button
-                type="submit"
-                disabled={running || !business.trim() || !offering.trim()}
-                className="w-full rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-gold-foreground transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+  const blocks: Record<string, ReactNode> = {
+    hero: (
+      <>
+        <section className="block-deep">
+          <div className="container-page py-20 md:py-24">
+            <div className="max-w-3xl">
+              <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
+                {liveTool.eyebrow}
+              </p>
+              <h1
+                className="mt-5 font-display text-5xl font-semibold leading-[0.98] md:text-6xl"
+                data-reveal
               >
-                {running ? "Writing…" : "Generate my meta"}
-              </button>
-            </form>
+                {liveTool.title} <span className="text-gold">{liveTool.titleEm}</span>
+                {liveTool.titleAfter ?? ""}
+              </h1>
+              <p className="mt-6 max-w-xl text-lg text-muted-foreground" data-reveal>
+                {liveTool.subtitle}
+              </p>
+            </div>
 
-            <div aria-live="polite">
-              {error && <ToolError message={error} />}
-              {running && (
-                <ResultPanel>
-                  <ToolSkeleton />
-                </ResultPanel>
-              )}
-              {result && (
-                <ResultPanel footnote={result.ai ? "Written by AI, length-checked for Google's limits." : "Template output, length-checked for Google's limits."}>
-                  {/* SERP preview */}
-                  <div className="rounded-2xl border border-white/10 bg-white p-5">
-                    <p className="truncate text-[13px] text-[#202124]">{location ? `${business} · ${location}` : business}</p>
-                    <p className="mt-0.5 truncate font-display text-xl text-[#1a0dab]">{result.title}</p>
-                    <p className="mt-1 text-sm leading-snug text-[#4d5156]">{result.description}</p>
-                  </div>
-                  <div className="mt-3 flex gap-4 text-xs text-white/45">
-                    <span>Title: {result.title.length}/60</span>
-                    <span>Description: {result.description.length}/155</span>
-                  </div>
-
-                  <div className="mt-7 space-y-4">
-                    <CopyBlock label="HTML head tags" code={htmlBlock(result)} />
-                    <CopyBlock label="JSON-LD schema" code={`<script type="application/ld+json">\n${result.jsonLd}\n</script>`} />
-                  </div>
-                </ResultPanel>
-              )}
-              {!running && !result && !error && (
-                <div className="grid h-full min-h-64 place-items-center rounded-3xl border border-dashed border-white/15 p-8 text-center">
-                  <p className="max-w-xs text-sm leading-relaxed text-white/45">
-                    Two fields in, a Google-preview and copy-paste head tags out.
-                  </p>
+            <div className="mt-12 grid max-w-5xl gap-8 lg:grid-cols-[1fr_1.25fr]" data-reveal>
+              <form
+                onSubmit={run}
+                className="space-y-5 rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:p-8"
+              >
+                <label className="block">
+                  <span className="text-xs uppercase tracking-[0.16em] text-white/60">
+                    Business name
+                  </span>
+                  <input
+                    required
+                    value={business}
+                    onChange={(e) => setBusiness(e.target.value)}
+                    placeholder="Auxtech"
+                    className={`mt-2 ${inputCls}`}
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-xs uppercase tracking-[0.16em] text-white/60">
+                    What you offer
+                  </span>
+                  <input
+                    required
+                    value={offering}
+                    onChange={(e) => setOffering(e.target.value)}
+                    placeholder="Custom websites and apps for growing teams"
+                    className={`mt-2 ${inputCls}`}
+                  />
+                </label>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <label className="block">
+                    <span className="text-xs uppercase tracking-[0.16em] text-white/60">
+                      Audience (optional)
+                    </span>
+                    <input
+                      value={audience}
+                      onChange={(e) => setAudience(e.target.value)}
+                      placeholder="Founders"
+                      className={`mt-2 ${inputCls}`}
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="text-xs uppercase tracking-[0.16em] text-white/60">
+                      City (optional)
+                    </span>
+                    <input
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="Austin"
+                      className={`mt-2 ${inputCls}`}
+                    />
+                  </label>
                 </div>
-              )}
+                <button
+                  type="submit"
+                  disabled={running || !business.trim() || !offering.trim()}
+                  className="w-full rounded-xl bg-gold px-7 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-gold-foreground transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {running ? "Writing…" : "Generate my meta"}
+                </button>
+              </form>
+
+              <div aria-live="polite">
+                {error && <ToolError message={error} />}
+                {running && (
+                  <ResultPanel>
+                    <ToolSkeleton />
+                  </ResultPanel>
+                )}
+                {result && (
+                  <ResultPanel
+                    footnote={
+                      result.ai
+                        ? "Written by AI, length-checked for Google's limits."
+                        : "Template output, length-checked for Google's limits."
+                    }
+                  >
+                    {/* SERP preview */}
+                    <div className="rounded-2xl border border-white/10 bg-white p-5">
+                      <p className="truncate text-[13px] text-[#202124]">
+                        {location ? `${business} · ${location}` : business}
+                      </p>
+                      <p className="mt-0.5 truncate font-display text-xl text-[#1a0dab]">
+                        {result.title}
+                      </p>
+                      <p className="mt-1 text-sm leading-snug text-[#4d5156]">{result.description}</p>
+                    </div>
+                    <div className="mt-3 flex gap-4 text-xs text-white/45">
+                      <span>Title: {result.title.length}/60</span>
+                      <span>Description: {result.description.length}/155</span>
+                    </div>
+
+                    <div className="mt-7 space-y-4">
+                      <CopyBlock label="HTML head tags" code={htmlBlock(result)} />
+                      <CopyBlock
+                        label="JSON-LD schema"
+                        code={`<script type="application/ld+json">\n${result.jsonLd}\n</script>`}
+                      />
+                    </div>
+                  </ResultPanel>
+                )}
+                {!running && !result && !error && (
+                  <div className="grid h-full min-h-64 place-items-center rounded-3xl border border-dashed border-white/15 p-8 text-center">
+                    <p className="max-w-xs text-sm leading-relaxed text-white/45">
+                      Two fields in, a Google-preview and copy-paste head tags out.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <BannerCTA
-        message={["Meta gets the click,", "the site earns the sale."]}
-        title={
-          <>
-            Need the page behind the
-            <br />
-            <span className="text-gold">search result</span>?
-          </>
-        }
-        cta={{ label: "Start a Project", to: "/contact" }}
-      />
+      </>
+    ),
+    banner: (
+      <>
+        <BannerCTA
+          message={["Meta gets the click,", "the site earns the sale."]}
+          title={
+            <>
+              Need the page behind the
+              <br />
+              <span className="text-gold">search result</span>?
+            </>
+          }
+          cta={{ label: "Start a Project", to: "/contact" }}
+        />
+      </>
+    ),
+  };
+
+  return (
+    <SiteShell theme={pageThemes["tools/meta-generator"]}>
+      <PageSections order={liveTool?.sectionOrder ?? []} blocks={blocks} />
     </SiteShell>
   );
 }

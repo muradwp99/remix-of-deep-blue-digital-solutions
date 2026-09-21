@@ -96,6 +96,66 @@ export const tools: Tool[] = [
     image: u("photo-1561070791-2526d30994b5"),
     checks: [],
   },
+  {
+    slug: "project-estimator",
+    nav: "Project Estimator",
+    metaTitle: "Project Estimator — Auxtech",
+    metaDesc:
+      "Scope your build in two minutes: budget range, timeline, and phase plan, before any sales call.",
+    eyebrow: "Free tool",
+    title: "Scope it before the",
+    titleEm: "sales call",
+    titleAfter: ".",
+    subtitle:
+      "Answer four questions, get a real budget range, timeline, and phase plan. The same math we use internally.",
+    image: u("photo-1454165804606-c3d57bc86b40"),
+    checks: [],
+  },
+  {
+    slug: "stack-recommender",
+    nav: "Tech Stack Recommender",
+    metaTitle: "Tech Stack Recommender — Auxtech",
+    metaDesc:
+      "Describe your product and get a pragmatic production stack with reasoning, alternatives, and hiring notes.",
+    eyebrow: "Free tool",
+    title: "The stack a principal would",
+    titleEm: "pick",
+    titleAfter: ".",
+    subtitle:
+      "Describe the product. Get five layers of boring, proven tech with the reasoning, the strongest alternative, and how hard it is to hire for.",
+    image: u("photo-1517180102446-f3ece451e9d8"),
+    checks: [],
+  },
+  {
+    slug: "headline-analyzer",
+    nav: "Headline Analyzer",
+    metaTitle: "Headline Analyzer — Auxtech",
+    metaDesc:
+      "Paste your homepage headline, get four scores, a straight verdict, and five stronger rewrites.",
+    eyebrow: "Free tool",
+    title: "Is your headline doing its",
+    titleEm: "job",
+    titleAfter: "?",
+    subtitle:
+      "The headline decides the bounce. Paste yours and get four scores, a straight verdict, and five rewrites you can ship today.",
+    image: u("photo-1455390582262-044cdead277a"),
+    checks: [],
+  },
+  {
+    slug: "meta-generator",
+    nav: "SEO Meta Generator",
+    metaTitle: "SEO Meta Generator — Auxtech",
+    metaDesc:
+      "Generate a copy-paste title tag, meta description, Open Graph set, and JSON-LD for your homepage.",
+    eyebrow: "Free tool",
+    title: "Meta tags, done",
+    titleEm: "properly",
+    titleAfter: ".",
+    subtitle:
+      "Title tag, meta description, Open Graph set, and JSON-LD schema. Character-counted, benefit-led, ready to paste.",
+    image: u("photo-1526628953301-3e589a6a8b74"),
+    checks: [],
+  },
 ];
 
 export const getTool = (slug: string) => tools.find((t) => t.slug === slug);
