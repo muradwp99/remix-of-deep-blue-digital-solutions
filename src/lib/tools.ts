@@ -11,6 +11,8 @@ export type Tool = {
   subtitle: string;
   image: string;
   checks: string[];
+  /** Section keys the page renders, in order. Empty = the coded order. */
+  sectionOrder?: string[];
 };
 
 const u = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1920&q=70`;

@@ -189,6 +189,7 @@ export type CmsIndustry = {
   stats?: { value: string; label: string }[] | null;
   banner?: CmsBanner | null;
   meta?: CmsMeta | null;
+  sectionOrder?: string[] | null;
 };
 
 /** A Payload `tools` doc. */
@@ -204,6 +205,7 @@ export type CmsTool = {
   image?: unknown;
   checks?: (string | null)[] | null;
   meta?: CmsMeta | null;
+  sectionOrder?: string[] | null;
 };
 
 /** A Payload `learning` doc (an individual item). */
@@ -262,6 +264,8 @@ export type IndustryDTO = {
   points: { icon: string; title: string; desc: string }[];
   stats: { value: string; label: string }[];
   banner: { message: [string, string]; title: string; titleEm: string; label: string };
+  /** Section keys the page renders, in order. Empty = the coded order. */
+  sectionOrder: string[];
 };
 
 const bannerMessage = (b?: CmsBanner | null): [string, string] => [
@@ -329,6 +333,7 @@ export function cmsToIndustryDTO(d: CmsIndustry): IndustryDTO {
       titleEm: d.banner?.titleEm ?? "",
       label: d.banner?.label ?? "",
     },
+    sectionOrder: d.sectionOrder ?? [],
   };
 }
 
@@ -456,6 +461,7 @@ export function cmsToTool(d: CmsTool, fallback?: Tool): Tool {
     subtitle: d.subtitle || fallback?.subtitle || "",
     image: cmsMedia(d.image) || fallback?.image || "",
     checks: d.checks?.length ? (d.checks.filter(Boolean) as string[]) : fallback?.checks ?? [],
+    sectionOrder: d.sectionOrder ?? fallback?.sectionOrder ?? [],
   };
 }
 

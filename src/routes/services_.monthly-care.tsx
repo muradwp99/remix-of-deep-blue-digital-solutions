@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { PageSections } from "@/components/page-sections";
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
@@ -10,8 +12,6 @@ import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
 import { cmsFindOne } from "@/lib/cms";
 import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
-import type { ReactNode } from "react";
-import { PageSections } from "@/components/page-sections";
 
 const SLUG = "monthly-care";
 
