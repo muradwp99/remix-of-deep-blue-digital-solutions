@@ -37,6 +37,11 @@ const AUXTECH_CATALOG = array(
 	'subtitle',
 	'summary',
 	'icon',
+	/* Hero image as a URL. LivePress pairs an `image` field with `image_alt`
+	 * and keeps the two in step when the picture changes, so the alt text can
+	 * never end up describing a picture that is no longer there. */
+	'image',
+	'image_alt',
 	'banner_message_line1',
 	'banner_message_line2',
 	'banner_title',
@@ -94,6 +99,7 @@ function auxtech_collections_defs(): array {
 					'tag',
 					'summary',
 					'cover_image',
+					'cover_image_alt',
 					'featured',
 					'challenge',
 					'approach',

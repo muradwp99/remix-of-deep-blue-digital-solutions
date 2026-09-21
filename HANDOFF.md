@@ -154,8 +154,18 @@ chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
    on its own. The curated Build/Design/Mobile/Ongoing grouping and the
    non-service links (Web Applications → /custom-software) are untouched. Top
    level order/rename/hide still comes from the `nav` global.
-3. **Images**: `cover_image` / hero image fields exist and are editable, but the
-   seed had nulls, so pages use their coded Unsplash art.
+3. ~~Images~~ — **done.** `catalogDoc` in cms.ts used to hard-code
+   `image: undefined`, so a CMS image could never reach a catalog page however
+   it was set; it now reads the `image` meta. Hero images on service, solution,
+   industry and tool docs and `cover_image` on projects are LivePress `image`
+   fields — thumbnail plus Media Library picker — each paired with an
+   `<key>_alt` field the plugin keeps in step when the picture changes. The 31
+   catalog heroes were seeded with the exact coded URLs so nothing moved, and
+   the six project covers, which were rendering random `picsum.photos`
+   placeholders, got industry-matched Unsplash stock with real alt text.
+   **Those six are stock standing in for real client work — replace them.**
+   Images are stored as plain URLs, not attachment IDs, so an absolute URL and
+   a Media Library pick both work (`cmsMedia` prefixes a site-relative path).
 4. The 13 bespoke service route files keep hand-built layouts; CMS edits drive
    their text, not their structure.
 5. `DEPLOY.md` still describes the abandoned `rsautomartllc.com` hosts, and

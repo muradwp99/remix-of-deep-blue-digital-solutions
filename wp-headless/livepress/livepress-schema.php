@@ -10,13 +10,19 @@ $t  = fn( $key, $label, $path ) => array( 'key' => $key, 'label' => $label, 'kin
 $ta = fn( $key, $label, $path ) => array( 'key' => $key, 'label' => $label, 'kind' => 'textarea', 'path' => $path );
 $ln = fn( $key, $label, $path ) => array( 'key' => $key, 'label' => $label, 'kind' => 'lines', 'path' => $path );
 $rp = fn( $key, $label, $path, $subs ) => array( 'key' => $key, 'label' => $label, 'kind' => 'repeater', 'path' => $path, 'subs' => $subs );
+/* `image` renders a thumbnail plus a Media Library picker rather than a bare
+ * URL box, and LivePress keeps the matching `<key>_alt` field in step when the
+ * picture changes. */
+$im = fn( $key, $label, $path ) => array( 'key' => $key, 'label' => $label, 'kind' => 'image', 'path' => $path );
 $s  = fn( $key, $label, $kind = 'text' ) => array( 'key' => $key, 'label' => $label, 'kind' => $kind );
 
 /* Catalog collection schemas — paths mirror the CMS doc shape the frontend
  * re-maps (cms.ts), so live edits re-render the real detail page. */
-$catalog_sections = function ( $with_after = true ) use ( $t, $ta, $ln, $rp, $s ) {
+$catalog_sections = function ( $with_after = true ) use ( $t, $ta, $ln, $rp, $s, $im ) {
 	return array(
 		array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array_values( array_filter( array(
+			$im( 'image', 'Hero image', 'image' ),
+			$t( 'image_alt', 'Hero image alt text', 'image_alt' ),
 			$t( 'eyebrow', 'Eyebrow', 'eyebrow' ),
 			$t( 'heading', 'Heading', 'heading' ),
 			$t( 'heading_em', 'Heading emphasis', 'headingEm' ),
@@ -132,7 +138,8 @@ return array(
 				$t( 'tag', 'Tag', 'tag' ),
 				$t( 'year', 'Year', 'year' ),
 				$ta( 'summary', 'Summary', 'summary' ),
-				$t( 'cover_image', 'Cover image', 'coverImage' ),
+				$im( 'cover_image', 'Cover image', 'coverImage' ),
+				$t( 'cover_image_alt', 'Cover image alt text', 'cover_image_alt' ),
 			) ),
 			array( 'key' => 'story', 'label' => 'Challenge & approach', 'fields' => array(
 				$ta( 'challenge', 'Challenge', 'challenge' ),

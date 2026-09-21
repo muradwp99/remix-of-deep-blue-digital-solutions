@@ -101,7 +101,11 @@ const catalogDoc = (d: WpDoc) => ({
   headingAfter: m(d, "heading_after") || null,
   subtitle: m(d, "subtitle") || null,
   summary: m(d, "summary") || null,
-  image: undefined,
+  // The hero image, as a URL string in meta. `cmsMedia` downstream passes an
+  // absolute URL straight through and prefixes a site-relative one, so a
+  // Media Library pick and a pasted address both work. Empty means "no CMS
+  // image", which lets the coded art stay as the fallback.
+  image: m(d, "image") || undefined,
   order: d.menu_order ?? 0,
   banner: banner(d),
   meta: seoMeta(d),
