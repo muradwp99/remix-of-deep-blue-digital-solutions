@@ -330,6 +330,63 @@ export function cmsToIndustryDTO(d: CmsIndustry): IndustryDTO {
 /* DTO → render shape (run in components; resolves icons, fills gaps)  */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Render a `SubpageDTO` with no local fallback.
+ *
+ * The coded registry in `subpages.ts` only knows the pages that shipped with
+ * the site. A service or solution added in the CMS afterwards has no entry
+ * there, so `hydrateSubpage` has nothing to hydrate against — this fills the
+ * gaps from the doc itself instead, which is what makes a brand-new catalog
+ * item render at all.
+ */
+export function subpageFromDTO(dto: SubpageDTO): Subpage {
+  return {
+    slug: dto.slug,
+    kind: dto.kind,
+    nav: dto.nav,
+    metaTitle: dto.metaTitle || `${dto.nav} — Auxtech`,
+    metaDesc: dto.metaDesc,
+    eyebrow: dto.eyebrow,
+    title: dto.title || dto.nav,
+    titleEm: dto.titleEm,
+    titleAfter: dto.titleAfter,
+    subtitle: dto.subtitle,
+    image: dto.image,
+    features: dto.features.map((f) => ({
+      icon: iconFromName(f.icon),
+      title: f.title,
+      desc: f.desc,
+    })),
+    steps: dto.steps,
+    benefits: dto.benefits,
+    faqs: dto.faqs,
+    banner: dto.banner,
+  };
+}
+
+/** `subpageFromDTO`'s counterpart for industries. */
+export function industryFromDTO(dto: IndustryDTO): Industry {
+  return {
+    slug: dto.slug,
+    nav: dto.nav,
+    metaTitle: dto.metaTitle || `${dto.nav} — Auxtech`,
+    metaDesc: dto.metaDesc,
+    eyebrow: dto.eyebrow,
+    title: dto.title || dto.nav,
+    titleEm: dto.titleEm,
+    subtitle: dto.subtitle,
+    image: dto.image,
+    matches: dto.matches,
+    points: dto.points.map((p) => ({
+      icon: iconFromName(p.icon),
+      title: p.title,
+      desc: p.desc,
+    })),
+    stats: dto.stats,
+    banner: dto.banner,
+  };
+}
+
 /** Hydrate a `SubpageDTO` into a `Subpage`, filling empty fields from `fb`. */
 export function hydrateSubpage(dto: SubpageDTO, fb: Subpage): Subpage {
   return {

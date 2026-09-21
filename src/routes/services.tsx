@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import type { CSSProperties } from "react";
-import { cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import { cmsFind, cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
 import { useLiveEdits } from "@/lib/edit-bridge";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
@@ -22,10 +22,26 @@ import {
   TrendingUp,
 } from "lucide-react";
 
+/** One row of the CMS-backed index below the editorial groups. */
+type ServiceLink = { slug: string; title: string; summary: string };
+
 export const Route = createFileRoute("/services")({
-  loader: async (): Promise<{ doc: SitePageDoc }> => {
-    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "services");
-    return { doc };
+  loader: async (): Promise<{ doc: SitePageDoc; all: ServiceLink[] }> => {
+    // The three groups below are an editorial cut, hand-curated and not a
+    // mirror of the collection — so a service added in the CMS would never
+    // appear here. This index is the complete list, straight from the
+    // `services` collection, so nothing is unreachable.
+    const [doc, docs] = await Promise.all([
+      cmsFindOne<Record<string, unknown>>("sitepages", "services"),
+      cmsFind<{ slug?: string; title?: string; summary?: string | null }>("services", {
+        sort: "order",
+        limit: 100,
+      }),
+    ]);
+    const all: ServiceLink[] = docs
+      .filter((d) => d.slug && d.title)
+      .map((d) => ({ slug: d.slug as string, title: d.title as string, summary: d.summary ?? "" }));
+    return { doc, all };
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
@@ -419,7 +435,7 @@ function StatCardSteps() {
 /* ------------------------------------------------------------------ */
 
 function ServicesPage() {
-  const { doc } = Route.useLoaderData();
+  const { doc, all } = Route.useLoaderData();
   // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
   const d = useLiveEdits(doc);
   const s = (key: string, fallback: string) => pageStr(d, key, fallback);
@@ -563,6 +579,35 @@ function ServicesPage() {
             </div>
           ))}
         </div>
+
+        {/* Complete, CMS-driven index — the groups above are a curated cut,
+            so this is what guarantees a newly added service is reachable. */}
+        {all.length > 0 && (
+          <div className="mt-20 md:mt-28 border-t border-border/60 pt-12">
+            <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
+              Every service
+            </p>
+            <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4" data-reveal-group>
+              {all.map((s) => (
+                <Link
+                  key={s.slug}
+                  to="/services/$slug"
+                  params={{ slug: s.slug }}
+                  data-reveal-child
+                  className="group glass glare-card lift rounded-2xl p-6 relative overflow-hidden"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <h4 className="font-display text-xl">{s.title}</h4>
+                    <ArrowUpRight className="h-4 w-4 shrink-0 opacity-40 group-hover:opacity-100 group-hover:text-gold transition-all" />
+                  </div>
+                  {s.summary && (
+                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{s.summary}</p>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ---- New section 1: Process ---- */}

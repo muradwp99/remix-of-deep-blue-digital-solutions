@@ -5,10 +5,17 @@ import { BannerCTA } from "@/components/banner-cta";
 import { AuditRequest, RoiCalculator, BrandGrader } from "@/components/tool-widgets";
 import { getTool } from "@/lib/tools";
 import { pageThemes } from "@/lib/themes";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsToTool, type CmsTool } from "@/lib/cms-catalog";
+import type { Tool } from "@/lib/tools";
 
 export const Route = createFileRoute("/tools_/$slug")({
-  head: ({ params }) => {
-    const tool = getTool(params.slug);
+  loader: async ({ params }): Promise<{ tool: Tool | null }> => {
+    const doc = await cmsFindOne<CmsTool>("tools", params.slug, { depth: 1 });
+    return { tool: doc ? cmsToTool(doc, getTool(params.slug)) : null };
+  },
+  head: ({ loaderData, params }) => {
+    const tool = loaderData?.tool ?? getTool(params.slug);
     const title = tool?.metaTitle ?? "Free Tools — Auxtech";
     const description = tool?.metaDesc ?? "Free tools from Auxtech.";
     return {
@@ -25,7 +32,11 @@ export const Route = createFileRoute("/tools_/$slug")({
 
 function Page() {
   const { slug } = Route.useParams();
-  const tool = getTool(slug);
+  const { tool: cmsTool } = Route.useLoaderData();
+
+  // `cmsToTool` already folded the coded entry in as its fallback, so a tool
+  // that exists only in the CMS renders too — see `services_.$slug.tsx`.
+  const tool = cmsTool ?? getTool(slug);
 
   if (!tool) {
     return (

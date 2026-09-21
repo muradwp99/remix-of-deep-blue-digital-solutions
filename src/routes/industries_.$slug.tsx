@@ -6,12 +6,25 @@ import { BannerCTA } from "@/components/banner-cta";
 import { getIndustry, industries } from "@/lib/industries";
 import { caseStudies } from "@/lib/case-studies";
 import { pageThemes } from "@/lib/themes";
+import { cmsFindOne } from "@/lib/cms";
+import {
+  cmsToIndustryDTO,
+  hydrateIndustry,
+  industryFromDTO,
+  type CmsIndustry,
+  type IndustryDTO,
+} from "@/lib/cms-catalog";
 
 export const Route = createFileRoute("/industries_/$slug")({
-  head: ({ params }) => {
-    const ind = getIndustry(params.slug);
-    const title = ind?.metaTitle ?? "Industries — Auxtech";
-    const description = ind?.metaDesc ?? "Industries Auxtech builds for.";
+  loader: async ({ params }): Promise<{ dto: IndustryDTO | null }> => {
+    const doc = await cmsFindOne<CmsIndustry>("industries", params.slug, { depth: 1 });
+    return { dto: doc ? cmsToIndustryDTO(doc) : null };
+  },
+  head: ({ loaderData, params }) => {
+    const dto = loaderData?.dto ?? null;
+    const fb = getIndustry(params.slug);
+    const title = dto?.metaTitle || fb?.metaTitle || "Industries — Auxtech";
+    const description = dto?.metaDesc || fb?.metaDesc || "Industries Auxtech builds for.";
     return {
       meta: [
         { title },
@@ -26,7 +39,12 @@ export const Route = createFileRoute("/industries_/$slug")({
 
 function Page() {
   const { slug } = Route.useParams();
-  const ind = getIndustry(slug);
+  const { dto } = Route.useLoaderData();
+  const fb = getIndustry(slug);
+
+  // CMS wins, the coded entry fills its gaps, and an industry that exists only
+  // in the CMS still renders — see `services_.$slug.tsx`.
+  const ind = dto ? (fb ? hydrateIndustry(dto, fb) : industryFromDTO(dto)) : fb;
 
   if (!ind) {
     return (

@@ -1,14 +1,29 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowUpRight } from "lucide-react";
+import { cmsFind, cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
 import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell, PageHeader } from "@/components/site-shell";
 import { CTABand } from "@/components/sections";
 import { ShoppingBag, Boxes, Megaphone, Sparkles } from "lucide-react";
 
+/** One row of the CMS-backed index below the curated cards. */
+type SolutionLink = { slug: string; title: string; summary: string };
+
 export const Route = createFileRoute("/solutions")({
-  loader: async (): Promise<{ doc: SitePageDoc }> => {
-    const doc = await cmsFindOne<Record<string, unknown>>("sitepages", "solutions");
-    return { doc };
+  loader: async (): Promise<{ doc: SitePageDoc; all: SolutionLink[] }> => {
+    // The cards below are a curated four, not the whole collection, so a
+    // solution added in the CMS would otherwise never surface here.
+    const [doc, docs] = await Promise.all([
+      cmsFindOne<Record<string, unknown>>("sitepages", "solutions"),
+      cmsFind<{ slug?: string; title?: string; summary?: string | null }>("solutions", {
+        sort: "order",
+        limit: 100,
+      }),
+    ]);
+    const all: SolutionLink[] = docs
+      .filter((d) => d.slug && d.title)
+      .map((d) => ({ slug: d.slug as string, title: d.title as string, summary: d.summary ?? "" }));
+    return { doc, all };
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
@@ -89,7 +104,7 @@ const industries = [
 ];
 
 function SolutionsPage() {
-  const { doc } = Route.useLoaderData();
+  const { doc, all } = Route.useLoaderData();
   // LivePress: overlay admin keystrokes (flat meta keys) on the page doc.
   const d = useLiveEdits(doc);
   const s = (key: string, fallback: string) => pageStr(d, key, fallback);
@@ -132,6 +147,34 @@ function SolutionsPage() {
           </div>
         ))}
       </section>
+
+      {/* Complete, CMS-driven index — guarantees a newly added solution is
+          reachable even though the cards above are a curated selection. */}
+      {all.length > 0 && (
+        <section className="container-page pb-24">
+          <div className="border-t border-border/60 pt-12">
+            <p className="text-xs uppercase tracking-[0.28em] text-gold">Every solution</p>
+            <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {all.map((s) => (
+                <Link
+                  key={s.slug}
+                  to="/solutions/$slug"
+                  params={{ slug: s.slug }}
+                  className="group glass glare-card lift rounded-2xl p-6 relative overflow-hidden"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="font-display text-xl">{s.title}</h3>
+                    <ArrowUpRight className="h-4 w-4 shrink-0 opacity-40 group-hover:opacity-100 group-hover:text-gold transition-all" />
+                  </div>
+                  {s.summary && (
+                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{s.summary}</p>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Industries */}
       <section className="border-t border-border/60 overflow-hidden">
