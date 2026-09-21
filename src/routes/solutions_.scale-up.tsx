@@ -10,6 +10,8 @@ import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
 import { cmsFindOne } from "@/lib/cms";
 import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
+import type { ReactNode } from "react";
+import { PageSections } from "@/components/page-sections";
 
 const SLUG = "scale-up";
 
@@ -83,104 +85,132 @@ function Page() {
   const liveDoc = useLiveEdits(doc);
   const liveDto = liveDoc ? cmsToSubpageDTO(liveDoc, "solutions") : dto;
   const page = liveDto ? hydrateSubpage(liveDto, getSubpage("solutions", SLUG)!) : getSubpage("solutions", SLUG)!;
+  const blocks: Record<string, ReactNode> = {
+    "big-type-systemic-hero": (
+      <>
+        {/* ── DEEP · big-type systemic hero ── */}
+        <section className="block-deep relative overflow-hidden">
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-70"
+            style={{ background: "var(--gradient-hero)" }}
+          />
+          <div aria-hidden className="absolute inset-0 grain-bg pointer-events-none" />
+          <div className="container-page relative py-24 md:py-36">
+            <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
+              {page.eyebrow}
+            </p>
+            <h1
+              className="mt-5 max-w-4xl font-display text-[clamp(3rem,8vw,7rem)] font-semibold leading-[0.95] tracking-tight"
+              data-split
+            >
+              Your v1 worked. <span className="text-gold">That's the problem.</span>
+            </h1>
+            <p className="mt-7 max-w-2xl text-lg text-muted-foreground" data-reveal>
+              {page.subtitle}
+            </p>
+            <HeroCtas primary="Book the Audit" />
+          </div>
+        </section>
+
+      </>
+    ),
+    "growth-ticker-as": (
+      <>
+        {/* ── BOLD · the growth ticker as a bright teal strip ── */}
+        <div className="block-bold">
+          <StatTicker
+            items={[
+              "3× release cadence in two quarters",
+              "Zero-downtime cutovers",
+              "Strangler pattern, never big-bang",
+              "40% median infra-cost reduction",
+              "Your team levels up with us",
+            ]}
+          />
+        </div>
+
+        {/* ── LIGHT · what's included ── */}
+        <div className="block-light">
+          <BackToParent kind="solutions" />
+          <FeatureGrid
+            variant="rows"
+            eyebrow="What's included"
+            title="The work, concretely."
+            cols={3}
+            items={page.features}
+          />
+        </div>
+
+      </>
+    ),
+    "pinned-1-node-cluster": (
+      <>
+        {/* ── DEEP · pinned 1-node → cluster narrative ── */}
+        <div className="block-deep">
+          <StickyPinSteps
+            eyebrow="How it runs"
+            title="One node becomes a system."
+            steps={page.steps}
+            stepGap={24}
+            panels={[
+              <Cluster key="mono" nodes={1} />,
+              <TerminalWindow
+                key="observe"
+                title="observability — zsh"
+                lines={[
+                  { prompt: "$", text: "auxctl metrics --window 7d" },
+                  { text: "p95 latency   212ms", ok: true, dim: true },
+                  { text: "error rate    0.4%", ok: true, dim: true },
+                  { text: "queue depth   1.2k, bottleneck" },
+                ]}
+              />,
+              <Cluster key="partial" nodes={5} />,
+              <div key="full" className="rounded-2xl bg-card p-8 shadow-panel">
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Release cadence</p>
+                <p className="mt-3 font-display text-6xl font-semibold text-lime" data-counter>
+                  3×
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  The median outcome across our transformation work within two quarters.
+                </p>
+              </div>,
+            ]}
+          />
+        </div>
+
+      </>
+    ),
+    faq: (
+      <>
+        {/* ── TINT · why us + answers ── */}
+        <div className="block-tint">
+          <BenefitList
+            eyebrow="Why Auxtech"
+            title="What you get that others skip."
+            items={page.benefits}
+          />
+          <FAQAccordion faqs={page.faqs} />
+        </div>
+
+      </>
+    ),
+    banner: (
+      <>
+        {/* ── DARK bookend ── */}
+        <SubpageBanner page={page} />
+      </>
+    ),
+    related: (
+      <>
+        <RelatedPages kind="solutions" slug={page.slug} />
+      </>
+    ),
+  };
+
   return (
     <SiteShell theme={pageThemes["solutions/scale-up"]}>
-      {/* ── DEEP · big-type systemic hero ── */}
-      <section className="block-deep relative overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-70"
-          style={{ background: "var(--gradient-hero)" }}
-        />
-        <div aria-hidden className="absolute inset-0 grain-bg pointer-events-none" />
-        <div className="container-page relative py-24 md:py-36">
-          <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-            {page.eyebrow}
-          </p>
-          <h1
-            className="mt-5 max-w-4xl font-display text-[clamp(3rem,8vw,7rem)] font-semibold leading-[0.95] tracking-tight"
-            data-split
-          >
-            Your v1 worked. <span className="text-gold">That's the problem.</span>
-          </h1>
-          <p className="mt-7 max-w-2xl text-lg text-muted-foreground" data-reveal>
-            {page.subtitle}
-          </p>
-          <HeroCtas primary="Book the Audit" />
-        </div>
-      </section>
-
-      {/* ── BOLD · the growth ticker as a bright teal strip ── */}
-      <div className="block-bold">
-        <StatTicker
-          items={[
-            "3× release cadence in two quarters",
-            "Zero-downtime cutovers",
-            "Strangler pattern, never big-bang",
-            "40% median infra-cost reduction",
-            "Your team levels up with us",
-          ]}
-        />
-      </div>
-
-      {/* ── LIGHT · what's included ── */}
-      <div className="block-light">
-        <BackToParent kind="solutions" />
-        <FeatureGrid
-          variant="rows"
-          eyebrow="What's included"
-          title="The work, concretely."
-          cols={3}
-          items={page.features}
-        />
-      </div>
-
-      {/* ── DEEP · pinned 1-node → cluster narrative ── */}
-      <div className="block-deep">
-        <StickyPinSteps
-          eyebrow="How it runs"
-          title="One node becomes a system."
-          steps={page.steps}
-          stepGap={24}
-          panels={[
-            <Cluster key="mono" nodes={1} />,
-            <TerminalWindow
-              key="observe"
-              title="observability — zsh"
-              lines={[
-                { prompt: "$", text: "auxctl metrics --window 7d" },
-                { text: "p95 latency   212ms", ok: true, dim: true },
-                { text: "error rate    0.4%", ok: true, dim: true },
-                { text: "queue depth   1.2k, bottleneck" },
-              ]}
-            />,
-            <Cluster key="partial" nodes={5} />,
-            <div key="full" className="rounded-2xl bg-card p-8 shadow-panel">
-              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Release cadence</p>
-              <p className="mt-3 font-display text-6xl font-semibold text-lime" data-counter>
-                3×
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                The median outcome across our transformation work within two quarters.
-              </p>
-            </div>,
-          ]}
-        />
-      </div>
-
-      {/* ── TINT · why us + answers ── */}
-      <div className="block-tint">
-        <BenefitList
-          eyebrow="Why Auxtech"
-          title="What you get that others skip."
-          items={page.benefits}
-        />
-        <FAQAccordion faqs={page.faqs} />
-      </div>
-
-      {/* ── DARK bookend ── */}
-      <SubpageBanner page={page} />
-      <RelatedPages kind="solutions" slug={page.slug} />
+      <PageSections order={liveDto?.sectionOrder ?? []} blocks={blocks} />
     </SiteShell>
   );
 }

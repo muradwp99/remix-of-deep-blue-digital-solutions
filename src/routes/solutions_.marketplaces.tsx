@@ -8,6 +8,8 @@ import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
 import { cmsFindOne } from "@/lib/cms";
 import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
+import type { ReactNode } from "react";
+import { PageSections } from "@/components/page-sections";
 
 const SLUG = "marketplaces";
 
@@ -86,143 +88,171 @@ function Page() {
   const liveDoc = useLiveEdits(doc);
   const liveDto = liveDoc ? cmsToSubpageDTO(liveDoc, "solutions") : dto;
   const page = liveDto ? hydrateSubpage(liveDto, getSubpage("solutions", SLUG)!) : getSubpage("solutions", SLUG)!;
-  return (
-    <SiteShell theme={pageThemes["solutions/marketplaces"]}>
-      {/* ── DEEP · dual-tone platform hero: violet/cyan glows on deep color ── */}
-      <section className="block-deep relative overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute -left-32 top-20 h-96 w-96 rounded-full opacity-25 blur-[100px]"
-          style={{ background: "oklch(0.78 0.15 292)" }}
-        />
-        <div
-          aria-hidden
-          className="absolute -right-32 top-20 h-96 w-96 rounded-full opacity-25 blur-[100px]"
-          style={{ background: "oklch(0.78 0.15 205)" }}
-        />
-        <div className="container-page relative py-24 md:py-32 text-center">
-          <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-            {page.eyebrow}
-          </p>
-          <h1
-            className="mx-auto mt-5 max-w-4xl font-display text-5xl md:text-7xl leading-[0.98] font-semibold"
-            data-split
-          >
-            Two sides, one flywheel
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground" data-reveal>
-            {page.subtitle}
-          </p>
-          <div className="flex justify-center">
-            <HeroCtas primary="Plan the Platform" />
-          </div>
-          <div className="mt-16 flex flex-col gap-5 text-left lg:flex-row">
-            <SidePanel side="supply" />
-            <SidePanel side="demand" />
-          </div>
-        </div>
-      </section>
-
-      {/* ── LIGHT · the liquidity flywheel draws itself, then what's included ── */}
-      <div className="block-light">
-        <BackToParent kind="solutions" />
-
-        <section className="container-page py-24" data-reveal-group>
-          <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.1fr]">
-            <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-                The liquidity flywheel
-              </p>
-              <h2
-                className="mt-4 font-display text-4xl md:text-6xl leading-tight font-semibold"
-                data-reveal-child
-              >
-                Every sprint feeds the loop.
-              </h2>
-              <p className="mt-6 text-lg text-muted-foreground" data-reveal-child>
-                More supply improves matches; better matches convert demand; converted demand
-                attracts supply. We prioritize the backlog by which feature spins this wheel
-                fastest — nothing else earns a sprint.
-              </p>
+  const blocks: Record<string, ReactNode> = {
+    "dual-tone-platform-hero": (
+      <>
+        {/* ── DEEP · dual-tone platform hero: violet/cyan glows on deep color ── */}
+        <section className="block-deep relative overflow-hidden">
+          <div
+            aria-hidden
+            className="absolute -left-32 top-20 h-96 w-96 rounded-full opacity-25 blur-[100px]"
+            style={{ background: "oklch(0.78 0.15 292)" }}
+          />
+          <div
+            aria-hidden
+            className="absolute -right-32 top-20 h-96 w-96 rounded-full opacity-25 blur-[100px]"
+            style={{ background: "oklch(0.78 0.15 205)" }}
+          />
+          <div className="container-page relative py-24 md:py-32 text-center">
+            <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
+              {page.eyebrow}
+            </p>
+            <h1
+              className="mx-auto mt-5 max-w-4xl font-display text-5xl md:text-7xl leading-[0.98] font-semibold"
+              data-split
+            >
+              Two sides, one flywheel
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground" data-reveal>
+              {page.subtitle}
+            </p>
+            <div className="flex justify-center">
+              <HeroCtas primary="Plan the Platform" />
             </div>
-            <div className="relative mx-auto w-full max-w-md" data-reveal-child>
-              <svg viewBox="0 0 320 320" className="w-full" aria-hidden>
-                <circle
-                  cx="160"
-                  cy="160"
-                  r="110"
-                  fill="none"
-                  stroke="var(--border)"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M 160 50 A 110 110 0 1 1 159 50"
-                  fill="none"
-                  stroke="var(--lime)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  data-draw="scrub"
-                />
-                {[
-                  { x: 160, y: 38, t: "Supply joins" },
-                  { x: 282, y: 165, t: "Matches improve" },
-                  { x: 160, y: 292, t: "Demand converts" },
-                  { x: 38, y: 165, t: "Word spreads" },
-                ].map((n) => (
-                  <g key={n.t}>
-                    <circle cx={n.x} cy={n.y} r="6" fill="var(--lime)" />
-                  </g>
-                ))}
-              </svg>
-              {[
-                { c: "left-1/2 top-0 -translate-x-1/2 -translate-y-1", t: "Supply joins" },
-                { c: "right-0 top-1/2 translate-x-3 -translate-y-1/2", t: "Matches improve" },
-                { c: "left-1/2 bottom-0 -translate-x-1/2 translate-y-1", t: "Demand converts" },
-                { c: "left-0 top-1/2 -translate-x-3 -translate-y-1/2", t: "Word spreads" },
-              ].map((n) => (
-                <span
-                  key={n.t}
-                  className={`absolute ${n.c} whitespace-nowrap rounded-full glass px-3.5 py-1.5 text-xs font-medium`}
-                >
-                  {n.t}
-                </span>
-              ))}
+            <div className="mt-16 flex flex-col gap-5 text-left lg:flex-row">
+              <SidePanel side="supply" />
+              <SidePanel side="demand" />
             </div>
           </div>
         </section>
 
-        <FeatureGrid
-          variant="spotlight"
-          eyebrow="What's included"
-          title="The work, concretely."
-          cols={3}
-          items={page.features}
-        />
-      </div>
+        {/* ── LIGHT · the liquidity flywheel draws itself, then what's included ── */}
+        <div className="block-light">
+          <BackToParent kind="solutions" />
 
-      {/* ── TINT · soft violet band for the process ── */}
-      <div className="block-tint">
-        <ProcessSteps
-          variant="ladder"
-          eyebrow="How it runs"
-          title="Constrain, seed, match, scale."
-          steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}
-        />
-      </div>
+          <section className="container-page py-24" data-reveal-group>
+            <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.1fr]">
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+                  The liquidity flywheel
+                </p>
+                <h2
+                  className="mt-4 font-display text-4xl md:text-6xl leading-tight font-semibold"
+                  data-reveal-child
+                >
+                  Every sprint feeds the loop.
+                </h2>
+                <p className="mt-6 text-lg text-muted-foreground" data-reveal-child>
+                  More supply improves matches; better matches convert demand; converted demand
+                  attracts supply. We prioritize the backlog by which feature spins this wheel
+                  fastest — nothing else earns a sprint.
+                </p>
+              </div>
+              <div className="relative mx-auto w-full max-w-md" data-reveal-child>
+                <svg viewBox="0 0 320 320" className="w-full" aria-hidden>
+                  <circle
+                    cx="160"
+                    cy="160"
+                    r="110"
+                    fill="none"
+                    stroke="var(--border)"
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="M 160 50 A 110 110 0 1 1 159 50"
+                    fill="none"
+                    stroke="var(--lime)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    data-draw="scrub"
+                  />
+                  {[
+                    { x: 160, y: 38, t: "Supply joins" },
+                    { x: 282, y: 165, t: "Matches improve" },
+                    { x: 160, y: 292, t: "Demand converts" },
+                    { x: 38, y: 165, t: "Word spreads" },
+                  ].map((n) => (
+                    <g key={n.t}>
+                      <circle cx={n.x} cy={n.y} r="6" fill="var(--lime)" />
+                    </g>
+                  ))}
+                </svg>
+                {[
+                  { c: "left-1/2 top-0 -translate-x-1/2 -translate-y-1", t: "Supply joins" },
+                  { c: "right-0 top-1/2 translate-x-3 -translate-y-1/2", t: "Matches improve" },
+                  { c: "left-1/2 bottom-0 -translate-x-1/2 translate-y-1", t: "Demand converts" },
+                  { c: "left-0 top-1/2 -translate-x-3 -translate-y-1/2", t: "Word spreads" },
+                ].map((n) => (
+                  <span
+                    key={n.t}
+                    className={`absolute ${n.c} whitespace-nowrap rounded-full glass px-3.5 py-1.5 text-xs font-medium`}
+                  >
+                    {n.t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </section>
 
-      {/* ── BOLD · bright violet pop before the dark close ── */}
-      <div className="block-bold">
-        <BenefitList
-          eyebrow="Why Auxtech"
-          title="What you get that others skip."
-          items={page.benefits}
-        />
-      </div>
+          <FeatureGrid
+            variant="spotlight"
+            eyebrow="What's included"
+            title="The work, concretely."
+            cols={3}
+            items={page.features}
+          />
+        </div>
 
-      {/* Dark bookend into the footer */}
-      <FAQAccordion faqs={page.faqs} />
-      <SubpageBanner page={page} />
-      <RelatedPages kind="solutions" slug={page.slug} />
+      </>
+    ),
+    "soft-violet-band": (
+      <>
+        {/* ── TINT · soft violet band for the process ── */}
+        <div className="block-tint">
+          <ProcessSteps
+            variant="ladder"
+            eyebrow="How it runs"
+            title="Constrain, seed, match, scale."
+            steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}
+          />
+        </div>
+
+      </>
+    ),
+    benefits: (
+      <>
+        {/* ── BOLD · bright violet pop before the dark close ── */}
+        <div className="block-bold">
+          <BenefitList
+            eyebrow="Why Auxtech"
+            title="What you get that others skip."
+            items={page.benefits}
+          />
+        </div>
+
+      </>
+    ),
+    faq: (
+      <>
+        {/* Dark bookend into the footer */}
+        <FAQAccordion faqs={page.faqs} />
+      </>
+    ),
+    banner: (
+      <>
+        <SubpageBanner page={page} />
+      </>
+    ),
+    related: (
+      <>
+        <RelatedPages kind="solutions" slug={page.slug} />
+      </>
+    ),
+  };
+
+  return (
+    <SiteShell theme={pageThemes["solutions/marketplaces"]}>
+      <PageSections order={liveDto?.sectionOrder ?? []} blocks={blocks} />
     </SiteShell>
   );
 }

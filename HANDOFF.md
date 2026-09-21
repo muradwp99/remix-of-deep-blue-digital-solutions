@@ -166,7 +166,8 @@ chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
    **Those six are stock standing in for real client work — replace them.**
    Images are stored as plain URLs, not attachment IDs, so an absolute URL and
    a Media Library pick both work (`cmsMedia` prefixes a site-relative path).
-4. ~~Bespoke service page layouts~~ — **done.** All 13 route files now build a
+4. ~~Bespoke service and solution page layouts~~ — **done.** All 13 service and
+   10 solution route files now build a
    keyed `blocks` record rendered through `src/components/page-sections.tsx`,
    driven by a `section_order` line-list on the doc. Empty = the page's coded
    order; a non-empty list is taken literally, so **removing a line hides that
@@ -176,7 +177,9 @@ chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
    comment (e.g. `week-by-week-ledger-rail`), so they read as the designer
    named them. Unknown keys are ignored, so a stale list degrades to the
    sections that still exist. Verified by reordering and deleting a section on
-   /services/mvp-development and reverting.
+   /services/mvp-development and /solutions/ecommerce, then reverting. The
+   `section_order` field rides on the shared catalog schema, so industry and
+   tool docs carry it too; their routes are not converted yet.
    The sections' *internal* composition is still code; this is order and
    visibility, not a block builder.
 5. `DEPLOY.md` still describes the abandoned `rsautomartllc.com` hosts, and
