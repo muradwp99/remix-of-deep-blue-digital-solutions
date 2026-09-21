@@ -106,6 +106,9 @@ const catalogDoc = (d: WpDoc) => ({
   // Media Library pick and a pasted address both work. Empty means "no CMS
   // image", which lets the coded art stay as the fallback.
   image: m(d, "image") || undefined,
+  // Which sections the page renders, and in what order. Empty means the page's
+  // own coded order; see `PageSections`.
+  sectionOrder: lines(d, "section_order"),
   order: d.menu_order ?? 0,
   banner: banner(d),
   meta: seoMeta(d),

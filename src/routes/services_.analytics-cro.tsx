@@ -8,6 +8,8 @@ import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
 import { cmsFindOne } from "@/lib/cms";
 import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
+import type { ReactNode } from "react";
+import { PageSections } from "@/components/page-sections";
 
 const SLUG = "analytics-cro";
 
@@ -79,133 +81,169 @@ function Page() {
   const liveDoc = useLiveEdits(doc);
   const liveDto = liveDoc ? cmsToSubpageDTO(liveDoc, "services") : dto;
   const page = liveDto ? hydrateSubpage(liveDto, getSubpage("services", SLUG)!) : getSubpage("services", SLUG)!;
-  return (
-    <SiteShell theme={pageThemes["services/analytics-cro"]}>
-      {/* ── DEEP · chartreuse-dark dashboard hero ── */}
-      <section className="block-deep relative overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-70"
-          style={{ background: "var(--gradient-hero)" }}
-        />
-        <div aria-hidden className="absolute inset-0 grain-bg pointer-events-none" />
-        <div className="container-page relative grid items-center gap-14 py-24 md:py-32 lg:grid-cols-[1.05fr_1fr]">
-          <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              {page.eyebrow}
-            </p>
-            <h1
-              className="mt-5 font-display text-5xl md:text-6xl xl:text-7xl leading-[0.98] font-semibold"
-              data-split
-            >
-              Measure honestly, then move the number
-            </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted-foreground" data-reveal>
-              {page.subtitle}
-            </p>
-            <HeroCtas primary="Find the Leaks" />
-          </div>
-          <div data-reveal>
-            <BrowserFrame url="analytics.yoursite.com">
-              <ChartMock />
-            </BrowserFrame>
-          </div>
-        </div>
-      </section>
-
-      {/* ── LIGHT · back + what's included ── */}
-      <div className="block-light">
-        <BackToParent kind="services" />
-        <FeatureGrid
-          variant="rows"
-          eyebrow="What's included"
-          title="The work, concretely."
-          cols={3}
-          items={page.features}
-        />
-      </div>
-
-      {/* ── BOLD · the CRO math, one big number ── */}
-      <section className="block-bold">
-        <div className="container-page py-20 md:py-24">
-          <div className="grid gap-x-16 gap-y-8 lg:grid-cols-[auto_1fr] lg:items-center">
-            <p
-              className="font-display text-[clamp(4.5rem,14vw,10rem)] font-semibold leading-none tracking-tight"
-              data-counter
-            >
-              40%
-            </p>
-            <div className="max-w-md">
-              <p className="text-xs uppercase tracking-[0.28em] text-foreground/70">The CRO math</p>
-              <p className="mt-4 text-lg text-muted-foreground">
-                The top of the 15–40% conversion lift a disciplined two-quarter program tends to
-                find — revenue pulled from traffic you already pay for.
+  const blocks: Record<string, ReactNode> = {
+    "chartreuse-dark-dashboard-hero": (
+      <>
+        {/* ── DEEP · chartreuse-dark dashboard hero ── */}
+        <section className="block-deep relative overflow-hidden">
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-70"
+            style={{ background: "var(--gradient-hero)" }}
+          />
+          <div aria-hidden className="absolute inset-0 grain-bg pointer-events-none" />
+          <div className="container-page relative grid items-center gap-14 py-24 md:py-32 lg:grid-cols-[1.05fr_1fr]">
+            <div>
+              <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
+                {page.eyebrow}
               </p>
+              <h1
+                className="mt-5 font-display text-5xl md:text-6xl xl:text-7xl leading-[0.98] font-semibold"
+                data-split
+              >
+                Measure honestly, then move the number
+              </h1>
+              <p className="mt-6 max-w-xl text-lg text-muted-foreground" data-reveal>
+                {page.subtitle}
+              </p>
+              <HeroCtas primary="Find the Leaks" />
+            </div>
+            <div data-reveal>
+              <BrowserFrame url="analytics.yoursite.com">
+                <ChartMock />
+              </BrowserFrame>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ── TINT · the experiment log ── */}
-      <div className="block-tint">
-        <section className="container-page py-24" data-reveal-group>
-          <div className="mb-12 max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              The experiment log
-            </p>
-            <h2
-              className="mt-4 font-display text-4xl md:text-6xl leading-tight font-semibold"
-              data-reveal-child
-            >
-              Winners ship. Losers teach. Both count.
-            </h2>
-          </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            {[
-              { id: "EXP-041", h: "Two-step checkout", r: "+18% completion", win: true },
-              { id: "EXP-042", h: "Social proof above fold", r: "+6% signups", win: true },
-              { id: "EXP-043", h: "Video hero", r: "−4% — reverted, documented", win: false },
-            ].map((e) => (
-              <div
-                key={e.id}
-                className={`glare-card lift rounded-2xl p-7 ${e.win ? "gradient-card-gold" : "gradient-card opacity-80"}`}
-                data-reveal-child
+        {/* ── LIGHT · back + what's included ── */}
+        <div className="block-light">
+          <BackToParent kind="services" />
+          <FeatureGrid
+            variant="rows"
+            eyebrow="What's included"
+            title="The work, concretely."
+            cols={3}
+            items={page.features}
+          />
+        </div>
+
+      </>
+    ),
+    "cro-math-one": (
+      <>
+        {/* ── BOLD · the CRO math, one big number ── */}
+        <section className="block-bold">
+          <div className="container-page py-20 md:py-24">
+            <div className="grid gap-x-16 gap-y-8 lg:grid-cols-[auto_1fr] lg:items-center">
+              <p
+                className="font-display text-[clamp(4.5rem,14vw,10rem)] font-semibold leading-none tracking-tight"
+                data-counter
               >
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs text-muted-foreground">{e.id}</span>
-                  <span
-                    className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${e.win ? "bg-lime text-background" : "bg-black/10 text-muted-foreground"}`}
-                  >
-                    {e.win ? "Shipped" : "Null"}
-                  </span>
-                </div>
-                <h3 className="mt-4 font-display text-xl font-semibold">{e.h}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{e.r}</p>
+                40%
+              </p>
+              <div className="max-w-md">
+                <p className="text-xs uppercase tracking-[0.28em] text-foreground/70">The CRO math</p>
+                <p className="mt-4 text-lg text-muted-foreground">
+                  The top of the 15–40% conversion lift a disciplined two-quarter program tends to
+                  find — revenue pulled from traffic you already pay for.
+                </p>
               </div>
-            ))}
+            </div>
           </div>
         </section>
-      </div>
 
-      {/* ── LIGHT · how it runs ── */}
-      <div className="block-light">
-        <ProcessSteps
-          variant="rail"
-          eyebrow="How it runs"
-          title="Taxonomy to compounding wins."
-          steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}
+      </>
+    ),
+    "experiment-log": (
+      <>
+        {/* ── TINT · the experiment log ── */}
+        <div className="block-tint">
+          <section className="container-page py-24" data-reveal-group>
+            <div className="mb-12 max-w-3xl">
+              <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+                The experiment log
+              </p>
+              <h2
+                className="mt-4 font-display text-4xl md:text-6xl leading-tight font-semibold"
+                data-reveal-child
+              >
+                Winners ship. Losers teach. Both count.
+              </h2>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {[
+                { id: "EXP-041", h: "Two-step checkout", r: "+18% completion", win: true },
+                { id: "EXP-042", h: "Social proof above fold", r: "+6% signups", win: true },
+                { id: "EXP-043", h: "Video hero", r: "−4% — reverted, documented", win: false },
+              ].map((e) => (
+                <div
+                  key={e.id}
+                  className={`glare-card lift rounded-2xl p-7 ${e.win ? "gradient-card-gold" : "gradient-card opacity-80"}`}
+                  data-reveal-child
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs text-muted-foreground">{e.id}</span>
+                    <span
+                      className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${e.win ? "bg-lime text-background" : "bg-black/10 text-muted-foreground"}`}
+                    >
+                      {e.win ? "Shipped" : "Null"}
+                    </span>
+                  </div>
+                  <h3 className="mt-4 font-display text-xl font-semibold">{e.h}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{e.r}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+      </>
+    ),
+    "how-it-runs": (
+      <>
+        {/* ── LIGHT · how it runs ── */}
+        <div className="block-light">
+          <ProcessSteps
+            variant="rail"
+            eyebrow="How it runs"
+            title="Taxonomy to compounding wins."
+            steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}
+          />
+        </div>
+
+      </>
+    ),
+    benefits: (
+      <>
+        {/* ── DARK bookend ── */}
+        <BenefitList
+          eyebrow="Why Auxtech"
+          title="What you get that others skip."
+          items={page.benefits}
         />
-      </div>
+      </>
+    ),
+    faq: (
+      <>
+        <FAQAccordion faqs={page.faqs} />
+      </>
+    ),
+    banner: (
+      <>
+        <SubpageBanner page={page} />
+      </>
+    ),
+    related: (
+      <>
+        <RelatedPages kind="services" slug={page.slug} />
+      </>
+    ),
+  };
 
-      {/* ── DARK bookend ── */}
-      <BenefitList
-        eyebrow="Why Auxtech"
-        title="What you get that others skip."
-        items={page.benefits}
-      />
-      <FAQAccordion faqs={page.faqs} />
-      <SubpageBanner page={page} />
-      <RelatedPages kind="services" slug={page.slug} />
+  return (
+    <SiteShell theme={pageThemes["services/analytics-cro"]}>
+      <PageSections order={liveDto?.sectionOrder ?? []} blocks={blocks} />
     </SiteShell>
   );
 }

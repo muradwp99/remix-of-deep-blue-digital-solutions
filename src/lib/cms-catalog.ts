@@ -171,6 +171,7 @@ export type CmsSubpage = {
   faqs?: { question: string; answer: string }[] | null;
   banner?: CmsBanner | null;
   meta?: CmsMeta | null;
+  sectionOrder?: string[] | null;
 };
 
 /** A Payload `industries` doc. */
@@ -242,6 +243,8 @@ export type SubpageDTO = {
     titleAfter?: string;
     label: string;
   };
+  /** Section keys the page renders, in order. Empty = the coded order. */
+  sectionOrder: string[];
 };
 
 /** Serializable form of `Industry` (icons as names). Safe to return from a loader. */
@@ -298,6 +301,7 @@ export function cmsToSubpageDTO(d: CmsSubpage, kind: SubpageKind): SubpageDTO {
       titleAfter: d.banner?.titleAfter ?? undefined,
       label: d.banner?.label ?? "",
     },
+    sectionOrder: d.sectionOrder ?? [],
   };
 }
 

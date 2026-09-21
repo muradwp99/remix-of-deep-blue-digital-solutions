@@ -42,6 +42,10 @@ const AUXTECH_CATALOG = array(
 	 * never end up describing a picture that is no longer there. */
 	'image',
 	'image_alt',
+	/* Which sections the page renders, and in what order — one key per line.
+	 * Empty means the page's own coded order. Removing a line hides that
+	 * section, which is how a section is deleted without a deploy. */
+	'section_order',
 	'banner_message_line1',
 	'banner_message_line2',
 	'banner_title',

@@ -20,6 +20,12 @@ $s  = fn( $key, $label, $kind = 'text' ) => array( 'key' => $key, 'label' => $la
  * re-maps (cms.ts), so live edits re-render the real detail page. */
 $catalog_sections = function ( $with_after = true ) use ( $t, $ta, $ln, $rp, $s, $im ) {
 	return array(
+		/* One section key per line, top to bottom. Leave it empty for the
+		 * page's built-in order; drag a line to move a section and delete a
+		 * line to hide one. Keys the page does not have are ignored. */
+		array( 'key' => 'layout', 'label' => 'Layout', 'fields' => array(
+			$ln( 'section_order', 'Section order — one key per line', 'section_order' ),
+		) ),
 		array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array_values( array_filter( array(
 			$im( 'image', 'Hero image', 'image' ),
 			$t( 'image_alt', 'Hero image alt text', 'image_alt' ),

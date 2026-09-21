@@ -9,6 +9,8 @@ import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
 import { cmsFindOne } from "@/lib/cms";
 import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
+import type { ReactNode } from "react";
+import { PageSections } from "@/components/page-sections";
 
 const SLUG = "seo-performance";
 
@@ -73,140 +75,176 @@ function Page() {
   const liveDoc = useLiveEdits(doc);
   const liveDto = liveDoc ? cmsToSubpageDTO(liveDoc, "services") : dto;
   const page = liveDto ? hydrateSubpage(liveDto, getSubpage("services", SLUG)!) : getSubpage("services", SLUG)!;
-  return (
-    <SiteShell theme={pageThemes["services/seo-performance"]}>
-      {/* ── BOLD · periwinkle poster hero, giant Lighthouse number ── */}
-      <section className="block-bold relative overflow-hidden">
-        <div className="container-page pt-24 pb-12 md:pt-32">
-          <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
-            {page.eyebrow}
-          </p>
-          <h1
-            className="mt-6 max-w-[18ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
-            data-split
-          >
-            Speed and search are the same job
-          </h1>
-          <div className="mt-12 grid gap-x-16 gap-y-10 lg:grid-cols-[1fr_auto] lg:items-end">
-            <div>
-              <p className="max-w-xl text-lg text-muted-foreground" data-reveal>
-                {page.subtitle}
-              </p>
-              <HeroCtas primary="Get the Audit" />
-            </div>
-            <div data-reveal>
-              <p
-                className="font-display text-[clamp(5rem,15vw,11rem)] font-semibold leading-none tracking-tight"
-                data-counter
-              >
-                96
-              </p>
-              <p className="mt-2 max-w-[16rem] text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                median Lighthouse after an engagement, measured on real phones
-              </p>
+  const blocks: Record<string, ReactNode> = {
+    "periwinkle-poster-hero": (
+      <>
+        {/* ── BOLD · periwinkle poster hero, giant Lighthouse number ── */}
+        <section className="block-bold relative overflow-hidden">
+          <div className="container-page pt-24 pb-12 md:pt-32">
+            <p className="text-xs uppercase tracking-[0.28em] text-foreground/70" data-reveal>
+              {page.eyebrow}
+            </p>
+            <h1
+              className="mt-6 max-w-[18ch] font-display text-5xl font-semibold leading-[0.95] md:text-8xl"
+              data-split
+            >
+              Speed and search are the same job
+            </h1>
+            <div className="mt-12 grid gap-x-16 gap-y-10 lg:grid-cols-[1fr_auto] lg:items-end">
+              <div>
+                <p className="max-w-xl text-lg text-muted-foreground" data-reveal>
+                  {page.subtitle}
+                </p>
+                <HeroCtas primary="Get the Audit" />
+              </div>
+              <div data-reveal>
+                <p
+                  className="font-display text-[clamp(5rem,15vw,11rem)] font-semibold leading-none tracking-tight"
+                  data-counter
+                >
+                  96
+                </p>
+                <p className="mt-2 max-w-[16rem] text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                  median Lighthouse after an engagement, measured on real phones
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-        <p
-          aria-hidden
-          className="type-outline pointer-events-none select-none whitespace-nowrap pb-2 font-display text-[clamp(3.5rem,12vw,9rem)] font-semibold leading-none opacity-50"
-        >
-          RANK · SPEED · RANK · SPEED
-        </p>
-      </section>
+          <p
+            aria-hidden
+            className="type-outline pointer-events-none select-none whitespace-nowrap pb-2 font-display text-[clamp(3.5rem,12vw,9rem)] font-semibold leading-none opacity-50"
+          >
+            RANK · SPEED · RANK · SPEED
+          </p>
+        </section>
 
-      {/* ── LIGHT · back + Core Web Vitals ── */}
-      <div className="block-light">
-        <BackToParent kind="services" />
-        <section className="container-page py-24 border-t border-border/60" data-reveal-group>
-          <div className="grid items-start gap-14 lg:grid-cols-2">
+        {/* ── LIGHT · back + Core Web Vitals ── */}
+        <div className="block-light">
+          <BackToParent kind="services" />
+          <section className="container-page py-24 border-t border-border/60" data-reveal-group>
+            <div className="grid items-start gap-14 lg:grid-cols-2">
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+                  Core Web Vitals
+                </p>
+                <h2
+                  className="mt-4 font-display text-4xl md:text-6xl leading-tight font-semibold"
+                  data-reveal-child
+                >
+                  Red to green, measured in the field.
+                </h2>
+                <p className="mt-6 text-lg text-muted-foreground" data-reveal-child>
+                  Lab scores flatter; field data pays. We work against real-user metrics from
+                  mid-range phones — the numbers Google actually ranks on.
+                </p>
+              </div>
+              <div className="gradient-card rounded-3xl p-8" data-reveal-child>
+                <p className="mb-5 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  Typical engagement, week 0 → week 8
+                </p>
+                <ScoreBars
+                  items={[
+                    { label: "LCP — 4.8s → 1.6s", value: 92, display: "1.6s" },
+                    { label: "INP — 410ms → 140ms", value: 88, display: "140ms" },
+                    { label: "CLS — 0.31 → 0.02", value: 97, display: "0.02" },
+                    { label: "Lighthouse — 54 → 96", value: 96, display: "96" },
+                  ]}
+                />
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </>
+    ),
+    "where-you-land": (
+      <>
+        {/* ── DEEP · where you land on the results page ── */}
+        <section className="block-deep relative overflow-hidden">
+          <div aria-hidden className="absolute inset-0 grain-bg pointer-events-none opacity-60" />
+          <div className="container-page relative grid items-center gap-14 py-24 md:py-28 lg:grid-cols-2">
             <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-                Core Web Vitals
+              <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
+                The payoff
               </p>
               <h2
                 className="mt-4 font-display text-4xl md:text-6xl leading-tight font-semibold"
-                data-reveal-child
+                data-reveal
               >
-                Red to green, measured in the field.
+                When speed and structure agree, you climb.
               </h2>
-              <p className="mt-6 text-lg text-muted-foreground" data-reveal-child>
-                Lab scores flatter; field data pays. We work against real-user metrics from
-                mid-range phones — the numbers Google actually ranks on.
+              <p className="mt-6 max-w-md text-lg text-muted-foreground" data-reveal>
+                Green vitals and clean markup are the same lever the ranking algorithm pulls — the
+                result shows up where it counts, above the fold of the results page.
               </p>
             </div>
-            <div className="gradient-card rounded-3xl p-8" data-reveal-child>
-              <p className="mb-5 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Typical engagement, week 0 → week 8
-              </p>
-              <ScoreBars
-                items={[
-                  { label: "LCP — 4.8s → 1.6s", value: 92, display: "1.6s" },
-                  { label: "INP — 410ms → 140ms", value: 88, display: "140ms" },
-                  { label: "CLS — 0.31 → 0.02", value: 97, display: "0.02" },
-                  { label: "Lighthouse — 54 → 96", value: 96, display: "96" },
-                ]}
-              />
+            <div data-slide="right">
+              <SerpMock />
             </div>
           </div>
         </section>
-      </div>
 
-      {/* ── DEEP · where you land on the results page ── */}
-      <section className="block-deep relative overflow-hidden">
-        <div aria-hidden className="absolute inset-0 grain-bg pointer-events-none opacity-60" />
-        <div className="container-page relative grid items-center gap-14 py-24 md:py-28 lg:grid-cols-2">
-          <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
-              The payoff
-            </p>
-            <h2
-              className="mt-4 font-display text-4xl md:text-6xl leading-tight font-semibold"
-              data-reveal
-            >
-              When speed and structure agree, you climb.
-            </h2>
-            <p className="mt-6 max-w-md text-lg text-muted-foreground" data-reveal>
-              Green vitals and clean markup are the same lever the ranking algorithm pulls — the
-              result shows up where it counts, above the fold of the results page.
-            </p>
-          </div>
-          <div data-slide="right">
-            <SerpMock />
-          </div>
+      </>
+    ),
+    "whats-included": (
+      <>
+        {/* ── LIGHT · what's included ── */}
+        <div className="block-light">
+          <FeatureGrid
+            variant="rows"
+            eyebrow="What's included"
+            title="The work, concretely."
+            cols={3}
+            items={page.features}
+          />
         </div>
-      </section>
 
-      {/* ── LIGHT · what's included ── */}
-      <div className="block-light">
-        <FeatureGrid
-          variant="rows"
-          eyebrow="What's included"
-          title="The work, concretely."
-          cols={3}
-          items={page.features}
+      </>
+    ),
+    "how-it-runs": (
+      <>
+        {/* ── TINT · how it runs ── */}
+        <div className="block-tint">
+          <ProcessSteps
+            variant="rail"
+            eyebrow="How it runs"
+            title="Audit, fix, structure, hold."
+            steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}
+          />
+        </div>
+
+      </>
+    ),
+    benefits: (
+      <>
+        {/* ── DARK bookend ── */}
+        <BenefitList
+          eyebrow="Why Auxtech"
+          title="What you get that others skip."
+          items={page.benefits}
         />
-      </div>
+      </>
+    ),
+    faq: (
+      <>
+        <FAQAccordion faqs={page.faqs} />
+      </>
+    ),
+    banner: (
+      <>
+        <SubpageBanner page={page} />
+      </>
+    ),
+    related: (
+      <>
+        <RelatedPages kind="services" slug={page.slug} />
+      </>
+    ),
+  };
 
-      {/* ── TINT · how it runs ── */}
-      <div className="block-tint">
-        <ProcessSteps
-          variant="rail"
-          eyebrow="How it runs"
-          title="Audit, fix, structure, hold."
-          steps={page.steps.map((s, i) => ({ n: String(i + 1).padStart(2, "0"), t: s.t, d: s.d }))}
-        />
-      </div>
-
-      {/* ── DARK bookend ── */}
-      <BenefitList
-        eyebrow="Why Auxtech"
-        title="What you get that others skip."
-        items={page.benefits}
-      />
-      <FAQAccordion faqs={page.faqs} />
-      <SubpageBanner page={page} />
-      <RelatedPages kind="services" slug={page.slug} />
+  return (
+    <SiteShell theme={pageThemes["services/seo-performance"]}>
+      <PageSections order={liveDto?.sectionOrder ?? []} blocks={blocks} />
     </SiteShell>
   );
 }
