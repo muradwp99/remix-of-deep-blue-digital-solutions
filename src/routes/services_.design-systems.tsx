@@ -13,13 +13,16 @@ import { getSubpage } from "@/lib/subpages";
 import { pageThemes } from "@/lib/themes";
 import { cmsFindOne } from "@/lib/cms";
 import { cmsToSubpageDTO, hydrateSubpage, type SubpageDTO, type CmsSubpage } from "@/lib/cms-catalog";
+import { cmsBlockData } from "@/lib/block-data";
+import type { CmsBlockData } from "@/components/cms-blocks";
 
 const SLUG = "design-systems";
 
 export const Route = createFileRoute("/services_/design-systems")({
-  loader: async (): Promise<{ dto: SubpageDTO | null; doc: CmsSubpage | null }> => {
+  loader: async (): Promise<{ dto: SubpageDTO | null; doc: CmsSubpage | null; blockData: CmsBlockData }> => {
     const doc = await cmsFindOne<CmsSubpage>("services", SLUG, { depth: 1 });
-    return { dto: doc ? cmsToSubpageDTO(doc, "services") : null, doc };
+    const blockData = await cmsBlockData(doc?.pageBlocks ?? []);
+    return { dto: doc ? cmsToSubpageDTO(doc, "services") : null, doc, blockData };
   },
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
@@ -90,7 +93,7 @@ const CHIPS = [
 ];
 
 function Page() {
-  const { dto, doc } = Route.useLoaderData();
+  const { dto, doc, blockData } = Route.useLoaderData();
   // LivePress: overlay admin keystrokes on the raw doc, then re-map.
   const liveDoc = useLiveEdits(doc);
   const liveDto = liveDoc ? cmsToSubpageDTO(liveDoc, "services") : dto;
@@ -413,6 +416,7 @@ function Page() {
       <PageSections
         order={liveDto?.sectionOrder ?? []}
         blocks={blocks}
+        cmsData={blockData}
         cmsBlocks={liveDto?.pageBlocks ?? []}
       />
     </SiteShell>

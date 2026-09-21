@@ -210,9 +210,11 @@ chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
    types (`projects`, `team`, `plans`, `testimonials`) that list live
    documents rather than retyped copy. Their rows are fetched in the route
    loader and passed to `CmsBlocks` via `data`, so they server-render; a block
-   that fetched for itself would come back empty from the server. Only
-   `/pages/{slug}` supplies that data today, so those four types render
-   nothing on catalog pages — deliberately, not by accident.
+   that fetched for itself would come back empty from the server. **Every
+   catalog route supplies that data too**, via `cmsBlockData` in
+   `src/lib/block-data.ts`, which reads the page's own block list and fetches
+   only the collections it names — a page with no collection blocks, which is
+   nearly all of them, makes no extra request.
    Core WP `page` carries `page_blocks` + the SEO pair, and edits in LivePress
    against `collection:page` (`wp-headless/livepress/schema-page-extra.php`).
    The bespoke sections' internals remain code, by design: they are what makes

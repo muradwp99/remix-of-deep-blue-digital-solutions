@@ -10,6 +10,8 @@ import { cmsFindOne } from "@/lib/cms";
 import { cmsToTool, type CmsTool } from "@/lib/cms-catalog";
 import { useLiveEdits } from "@/lib/edit-bridge";
 import { runWebsiteAudit, type AuditResult } from "@/lib/tools-api";
+import { cmsBlockData } from "@/lib/block-data";
+import type { CmsBlockData } from "@/components/cms-blocks";
 import {
   FixList,
   ResultPanel,
@@ -22,10 +24,11 @@ import {
 const SLUG = "website-audit";
 
 export const Route = createFileRoute("/tools_/website-audit")({
-  loader: async (): Promise<{ tool: Tool; doc: CmsTool | null }> => {
+  loader: async (): Promise<{ tool: Tool; doc: CmsTool | null; blockData: CmsBlockData }> => {
     const fallback = getTool(SLUG)!;
     const doc = await cmsFindOne<CmsTool>("tools", SLUG, { depth: 1 });
-    return { tool: doc ? cmsToTool(doc, fallback) : fallback, doc };
+    const blockData = await cmsBlockData(doc?.pageBlocks ?? []);
+    return { tool: doc ? cmsToTool(doc, fallback) : fallback, doc, blockData };
   },
   head: ({ loaderData }) => {
     const tool = loaderData?.tool;
@@ -42,7 +45,7 @@ export const Route = createFileRoute("/tools_/website-audit")({
 });
 
 function Page() {
-  const { tool, doc } = Route.useLoaderData();
+  const { tool, doc, blockData } = Route.useLoaderData();
   // LivePress: overlay admin keystrokes on the raw doc, then re-map.
   const liveDoc = useLiveEdits(doc);
   const liveTool = liveDoc ? cmsToTool(liveDoc, tool) : tool;
@@ -162,6 +165,7 @@ function Page() {
       <PageSections
         order={liveTool?.sectionOrder ?? []}
         blocks={blocks}
+        cmsData={blockData}
         cmsBlocks={liveTool?.pageBlocks ?? []}
       />
     </SiteShell>

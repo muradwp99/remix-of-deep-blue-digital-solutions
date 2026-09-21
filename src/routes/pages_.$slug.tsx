@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { CmsBlocks, type CmsBlockData, type CmsBlockRow } from "@/components/cms-blocks";
-import { cmsFind, cmsFindOne } from "@/lib/cms";
+import { cmsFindOne } from "@/lib/cms";
+import { cmsBlockData } from "@/lib/block-data";
 
 /**
  * Free-form CMS page. Any WordPress page composes itself from `page_blocks`
@@ -15,9 +16,8 @@ import { cmsFind, cmsFindOne } from "@/lib/cms";
  * one vocabulary to learn and one place to add a block type.
  *
  * The collection-backed blocks are fetched here rather than inside the block,
- * so they are server-rendered. They are small lists and this page is rarely
- * hit, so fetching all four regardless of which blocks the page actually uses
- * is cheaper than the machinery to work that out in advance.
+ * so they are server-rendered — `cmsBlockData` reads the page's own block list
+ * and fetches only the collections it actually names.
  */
 type CmsPage = {
   title: string;
@@ -32,18 +32,7 @@ export const Route = createFileRoute("/pages_/$slug")({
   }): Promise<{ page: CmsPage | null; data: CmsBlockData }> => {
     const page = await cmsFindOne<CmsPage>("pages", params.slug);
     if (!page) return { page: null, data: {} };
-
-    const [projects, team, plans, testimonials] = await Promise.all([
-      cmsFind<NonNullable<CmsBlockData["projects"]>[number]>("projects", {
-        sort: "-featured",
-        limit: 8,
-      }),
-      cmsFind<NonNullable<CmsBlockData["team"]>[number]>("team", { sort: "order", limit: 12 }),
-      cmsFind<NonNullable<CmsBlockData["plans"]>[number]>("plans", { sort: "order", limit: 12 }),
-      cmsFind<NonNullable<CmsBlockData["testimonials"]>[number]>("testimonials", { limit: 12 }),
-    ]);
-
-    return { page, data: { projects, team, plans, testimonials } };
+    return { page, data: await cmsBlockData(page.pageBlocks ?? []) };
   },
   head: ({ loaderData }) => {
     const page = loaderData?.page;

@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode } from "react";
-import { CmsBlocks, type CmsBlockRow } from "@/components/cms-blocks";
+import { CmsBlocks, type CmsBlockData, type CmsBlockRow } from "@/components/cms-blocks";
 
 /**
  * Render a page's sections in the order the CMS asks for.
@@ -29,6 +29,7 @@ export function PageSections({
   order,
   blocks,
   cmsBlocks,
+  cmsData,
 }: {
   order: string[];
   blocks: Record<string, ReactNode>;
@@ -40,10 +41,15 @@ export function PageSections({
    * the key is not registered when the list is empty.
    */
   cmsBlocks?: CmsBlockRow[];
+  /**
+   * Live rows for the collection-backed block types, loaded by the route (see
+   * `cmsBlockData`). Omit and those blocks render nothing.
+   */
+  cmsData?: CmsBlockData;
 }) {
   const all: Record<string, ReactNode> =
     cmsBlocks && cmsBlocks.length
-      ? { ...blocks, "cms-blocks": <CmsBlocks blocks={cmsBlocks} /> }
+      ? { ...blocks, "cms-blocks": <CmsBlocks blocks={cmsBlocks} data={cmsData} /> }
       : blocks;
 
   const wanted = order.filter((key) => key in all);

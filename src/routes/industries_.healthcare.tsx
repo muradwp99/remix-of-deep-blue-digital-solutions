@@ -12,13 +12,16 @@ import { caseStudies } from "@/lib/case-studies";
 import { pageThemes } from "@/lib/themes";
 import { cmsFindOne } from "@/lib/cms";
 import { cmsToIndustryDTO, hydrateIndustry, type IndustryDTO, type CmsIndustry } from "@/lib/cms-catalog";
+import { cmsBlockData } from "@/lib/block-data";
+import type { CmsBlockData } from "@/components/cms-blocks";
 
 const SLUG = "healthcare";
 
 export const Route = createFileRoute("/industries_/healthcare")({
-  loader: async (): Promise<{ dto: IndustryDTO | null; doc: CmsIndustry | null }> => {
+  loader: async (): Promise<{ dto: IndustryDTO | null; doc: CmsIndustry | null; blockData: CmsBlockData }> => {
     const doc = await cmsFindOne<CmsIndustry>("industries", SLUG, { depth: 1 });
-    return { dto: doc ? cmsToIndustryDTO(doc) : null, doc };
+    const blockData = await cmsBlockData(doc?.pageBlocks ?? []);
+    return { dto: doc ? cmsToIndustryDTO(doc) : null, doc, blockData };
   },
   head: ({ loaderData }) => {
     const dto = loaderData?.dto;
@@ -60,7 +63,7 @@ function PanelNote({ k, t, d }: { k: string; t: string; d: string }) {
 }
 
 function Page() {
-  const { dto, doc } = Route.useLoaderData();
+  const { dto, doc, blockData } = Route.useLoaderData();
   // LivePress: overlay admin keystrokes on the raw doc, then re-map.
   const liveDoc = useLiveEdits(doc);
   const liveDto = liveDoc ? cmsToIndustryDTO(liveDoc) : dto;
@@ -281,6 +284,7 @@ function Page() {
       <PageSections
         order={liveDto?.sectionOrder ?? []}
         blocks={blocks}
+        cmsData={blockData}
         cmsBlocks={liveDto?.pageBlocks ?? []}
       />
     </SiteShell>
