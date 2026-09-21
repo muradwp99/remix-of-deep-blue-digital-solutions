@@ -32,3 +32,6 @@ dist-ssr
 *.sw?
 .vercel
 .env*
+
+# Local-only notes (hosting detail kept out of the public repo)
+*.local.md

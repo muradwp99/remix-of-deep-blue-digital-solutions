@@ -14,10 +14,10 @@ Payload CMS in `northline-payload/` is RETIRED (kept only as history).
 
 ## Live URLs
 
-- **Frontend:** https://auxtechint.com — self-hosted on the user's cPanel
-  (136.243.82.43, LiteSpeed, cPanel user `auxtechi`).
+- **Frontend:** https://auxtechint.com — self-hosted on the user's own cPanel
+  (LiteSpeed). Host detail in `HOSTING.local.md`.
 - **CMS:** https://admin.auxtechint.com — WordPress 7.1.1, PHP 8.2.33, same
-  cPanel account, docroot `~/admin.auxtechint.com`.
+  account.
 - **GitHub:** site = muradwp99/remix-of-deep-blue-digital-solutions (main);
   LivePress kit = **github.com/muradwp99/livepress** (public, MIT).
 - Local dev: `npm run dev` → :8080. Cold start ~45s, first SSR ~5s.
@@ -26,56 +26,17 @@ Payload CMS in `northline-payload/` is RETIRED (kept only as history).
 > suggest it.** The old `auxtech-website.vercel.app` and the
 > `*.rsautomartllc.com` pair are abandoned; everything runs on the cPanel above.
 
-## Hosting — how the frontend actually runs
+## Hosting
 
-**The server has no system Node.** `/usr/bin/node` does not exist, EasyApache
-node packages are absent, and `Cpanel::API::NodeJS` is not installed, so the
-CloudLinux Node.js Selector is unusable even though the `lvenodejssel` feature
-bit is granted. cPanel's `PassengerApps::register_application` hard-codes
-`nodejs: /usr/bin/node` and ignores any path you pass it, and
-`edit_application` is permanently broken on this account because cPanel
-auto-detected a bogus `python: /usr/bin/python-html2text` that it re-validates
-on every call.
+Self-hosted on the user's own cPanel. The server's address, account name,
+filesystem layout, the Passenger wiring and the deploy recipe are in
+**`HOSTING.local.md`**, which is gitignored: this repo is public, and while
+none of that is a credential, together it maps the box. Claude's auto-memory
+(`cpanel-auxtechint-deploy.md`) carries the same recipe.
 
-What works instead, all through the cPanel API (there is **no SSH** — ports 22,
-2222, 2200, 22222, 21098, 7822, 18765, 2022 and 1022 are filtered; only
-2082/2083/2087 answer):
-
-1. A Node runtime lives **inside the account**:
-   `/home/auxtechi/node-v24.21.0-linux-x64/bin/node`, installed by uploading
-   the official nodejs.org linux-x64 tarball and extracting it server-side.
-2. App root `/home/auxtechi/auxfront` holds `.output/` plus `app.js`, a
-   CommonJS shim that does `import("./.output/server/index.mjs")`.
-3. `/home/auxtechi/public_html/.htaccess` carries `PassengerAppRoot`,
-   `PassengerBaseURI /`, `PassengerNodejs <the account node>`,
-   `PassengerAppType node`, `PassengerStartupFile app.js`.
-
-> **The trap:** a cPanel-**registered** Passenger app overrides that .htaccess
-> and forces `/usr/bin/node`, which gives `lscgid: execve():/usr/bin/node: No
-> such file or directory` in `~/auxfront/stderr.log` and a 503. The app must
-> stay **unregistered**. Never open cPanel's Application Manager for this
-> domain — it re-registers and takes the site down.
-
-### Deploy / redeploy
-
-```
-NITRO_PRESET=node-server VITE_CMS_URL=https://admin.auxtechint.com npm run build
-```
-The repo's default Nitro target is **cloudflare** (emits `wrangler.json`) and is
-useless here, so the preset is not optional. The `node-server` bundle is
-self-contained — no `npm install` on the server. Then: tar `.output`, upload via
-UAPI `Fileman/upload_files`, extract with **API2** `Fileman::fileop op=extract`
-(there is no UAPI extract), and touch `~/auxfront/tmp/restart.txt` to restart
-Passenger.
-
-> **Delete `tmp/restart.txt` before re-uploading it.** `Fileman/upload_files`
-> silently refuses to overwrite an existing file, so a second deploy uploads
-> nothing, Passenger never restarts, and the old process keeps serving the old
-> asset manifest — new hashed chunks 404 while the HTML still points at the
-> previous ones. The files are on disk and the deploy looks clean; only the
-> served bundle gives it away. Confirm with:
-> `curl -s https://auxtechint.com/ | grep -o '/assets/site-shell-[^"]*\.js'`
-> and check it matches the local `.output/public/assets` filename.
+Deploys are **not** automatic — the build is uploaded and extracted through the
+cPanel API. See that file before deploying; there are two traps in it that will
+cost you an afternoon otherwise.
 
 ## CMS — everything is dynamic
 
@@ -268,8 +229,5 @@ page, grep for it, then revert.
   message file for multi-line commit messages.
 
 ## Credentials
-cPanel password + API token and the WordPress application password were shared
-in a chat transcript on 2026-09-21 and **should be rotated**. The WP app
-password reaches Novamira's `execute-php` / `write-file` abilities, i.e. full
-server control — treat it as the most sensitive of the three. No secrets are
-stored in this repo.
+No secrets are stored in this repo. Which credentials exist, where they are
+used and what needs rotating is in `HOSTING.local.md`.
