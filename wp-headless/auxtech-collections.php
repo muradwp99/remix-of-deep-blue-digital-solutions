@@ -46,6 +46,9 @@ const AUXTECH_CATALOG = array(
 	 * Empty means the page's own coded order. Removing a line hides that
 	 * section, which is how a section is deleted without a deploy. */
 	'section_order',
+	/* Sections authored in the CMS, as a JSON repeater. Rendered wherever
+	 * `section_order` names `cms-blocks`. */
+	'page_blocks',
 	'banner_message_line1',
 	'banner_message_line2',
 	'banner_title',

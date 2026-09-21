@@ -252,7 +252,11 @@ function Page() {
 
   return (
     <SiteShell theme={pageThemes["solutions/marketplaces"]}>
-      <PageSections order={liveDto?.sectionOrder ?? []} blocks={blocks} />
+      <PageSections
+        order={liveDto?.sectionOrder ?? []}
+        blocks={blocks}
+        cmsBlocks={liveDto?.pageBlocks ?? []}
+      />
     </SiteShell>
   );
 }

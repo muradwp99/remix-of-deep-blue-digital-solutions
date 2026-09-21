@@ -297,7 +297,11 @@ function Page() {
 
   return (
     <SiteShell theme={pageThemes["industries/b2b-enterprise"]}>
-      <PageSections order={liveDto?.sectionOrder ?? []} blocks={blocks} />
+      <PageSections
+        order={liveDto?.sectionOrder ?? []}
+        blocks={blocks}
+        cmsBlocks={liveDto?.pageBlocks ?? []}
+      />
     </SiteShell>
   );
 }

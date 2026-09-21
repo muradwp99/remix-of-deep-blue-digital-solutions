@@ -251,7 +251,11 @@ function Page() {
 
   return (
     <SiteShell theme={pageThemes["industries/retail-dtc"]}>
-      <PageSections order={liveDto?.sectionOrder ?? []} blocks={blocks} />
+      <PageSections
+        order={liveDto?.sectionOrder ?? []}
+        blocks={blocks}
+        cmsBlocks={liveDto?.pageBlocks ?? []}
+      />
     </SiteShell>
   );
 }

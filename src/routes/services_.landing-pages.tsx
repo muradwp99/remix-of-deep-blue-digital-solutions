@@ -411,7 +411,11 @@ function Page() {
 
   return (
     <SiteShell theme={pageThemes["services/landing-pages"]}>
-      <PageSections order={liveDto?.sectionOrder ?? []} blocks={blocks} />
+      <PageSections
+        order={liveDto?.sectionOrder ?? []}
+        blocks={blocks}
+        cmsBlocks={liveDto?.pageBlocks ?? []}
+      />
     </SiteShell>
   );
 }

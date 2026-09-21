@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from "react";
+import { CmsBlocks, type CmsBlockRow } from "@/components/cms-blocks";
 
 /**
  * Render a page's sections in the order the CMS asks for.
@@ -27,17 +28,31 @@ import { Fragment, type ReactNode } from "react";
 export function PageSections({
   order,
   blocks,
+  cmsBlocks,
 }: {
   order: string[];
   blocks: Record<string, ReactNode>;
+  /**
+   * Sections authored in the CMS, available under the reserved key
+   * `cms-blocks`. They render only where `section_order` names that key, so
+   * authored content lands at a chosen point in the page rather than always
+   * at the end — and a page with no authored blocks is unaffected, because
+   * the key is not registered when the list is empty.
+   */
+  cmsBlocks?: CmsBlockRow[];
 }) {
-  const wanted = order.filter((key) => key in blocks);
+  const all: Record<string, ReactNode> =
+    cmsBlocks && cmsBlocks.length
+      ? { ...blocks, "cms-blocks": <CmsBlocks blocks={cmsBlocks} /> }
+      : blocks;
+
+  const wanted = order.filter((key) => key in all);
   const keys = wanted.length ? wanted : Object.keys(blocks);
 
   return (
     <>
       {keys.map((key) => (
-        <Fragment key={key}>{blocks[key]}</Fragment>
+        <Fragment key={key}>{all[key]}</Fragment>
       ))}
     </>
   );

@@ -26,6 +26,30 @@ $catalog_sections = function ( $with_after = true ) use ( $t, $ta, $ln, $rp, $s,
 		array( 'key' => 'layout', 'label' => 'Layout', 'fields' => array(
 			$ln( 'section_order', 'Section order — one key per line', 'section_order' ),
 		) ),
+		/* Sections you compose here. They appear wherever `cms-blocks` sits in
+		 * the section order above, so add that key to place them. Each row is
+		 * one section; `items` is one entry per line and its pipe-separated
+		 * columns depend on the type:
+		 *   features  Icon | Title | Description
+		 *   steps     Title | Description
+		 *   benefits  Title | Description
+		 *   stats     Value | Label
+		 *   faq       Question | Answer
+		 *   compare   Row | Column A | Column B | a or b
+		 *   cta       Label | /href   (first row primary, second secondary)
+		 *   marquee / bigtype   one entry per line
+		 *   heading / prose / image   leave items empty */
+		array( 'key' => 'blocks', 'label' => 'Composed sections', 'fields' => array(
+			$rp( 'page_blocks', 'Sections', 'page_blocks', array(
+				$s( 'type', 'Type (heading, prose, features, steps, benefits, stats, faq, compare, marquee, bigtype, cta, image)' ),
+				$s( 'eyebrow', 'Eyebrow' ),
+				$s( 'heading', 'Heading' ),
+				$s( 'body', 'Body', 'textarea' ),
+				$s( 'items', 'Items — one per line', 'textarea' ),
+				$s( 'image', 'Image URL', 'image' ),
+				$s( 'variant', 'Variant' ),
+			) ),
+		) ),
 		array( 'key' => 'hero', 'label' => 'Hero', 'fields' => array_values( array_filter( array(
 			$im( 'image', 'Hero image', 'image' ),
 			$t( 'image_alt', 'Hero image alt text', 'image_alt' ),

@@ -187,8 +187,27 @@ chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
    no `cmsToTool` at all, so they were pure client pages. They now have registry
    entries in `tools.ts` (which is why check-pages counts 39 slugs, not 35),
    CMS docs seeded from that registry, and heroes that render the doc.
-   The sections' *internal* composition is still code; this is order and
-   visibility, not a block builder.
+5. ~~Composable section internals~~ — **done.** `page_blocks` is a repeater on
+   every catalog doc, rendered by `src/components/cms-blocks.tsx` wherever
+   `section_order` names the reserved key **`cms-blocks`** — so authored
+   sections land at a chosen point in the page, not always at the end.
+   12 types: heading, prose, features, steps, benefits, stats, faq, compare,
+   marquee, bigtype, cta, image. Each renders a component the site already
+   uses (FeatureGrid, ProcessSteps, StatsRow, FAQAccordion, ComparisonTable,
+   CTABand, LogoMarquee, OutlineTypeSection), so an authored section inherits
+   the page's theme, spacing and reveal animation — no second visual
+   vocabulary that only the CMS can produce.
+   **One row shape, not one per type**: a LivePress repeater has fixed
+   sub-fields, so every block is the same seven (type, eyebrow, heading, body,
+   items, image, variant) and each type reads what it needs, with `items`
+   carrying the type-specific part one entry per line, pipe-separated. A
+   repeater per block type cannot interleave types in one order, which is the
+   point. Unknown `type` renders nothing rather than dumping an object.
+   Note the older `src/components/block-renderer.tsx` (15 Payload-era blocks
+   on `/pages/{slug}`) is a separate, still-unsourced system — it expects a
+   `layout` array core WP pages do not have.
+   The bespoke sections' internals remain code, by design: they are what makes
+   those pages look like themselves. This adds composition alongside them.
 5. `DEPLOY.md` still describes the abandoned `rsautomartllc.com` hosts, and
    `src/lib/cms.ts:21` still defaults to `http://auxtech-v2.local`. Harmless
    (the build bakes `VITE_CMS_URL`) but both are stale.

@@ -72,6 +72,7 @@ import {
   Zap,
 } from "lucide-react";
 import { cmsMedia } from "./cms";
+import type { CmsBlockRow } from "@/components/cms-blocks";
 import type { Subpage, SubpageKind } from "./subpages";
 import type { Industry } from "./industries";
 import type { Tool } from "./tools";
@@ -172,6 +173,7 @@ export type CmsSubpage = {
   banner?: CmsBanner | null;
   meta?: CmsMeta | null;
   sectionOrder?: string[] | null;
+  pageBlocks?: CmsBlockRow[] | null;
 };
 
 /** A Payload `industries` doc. */
@@ -190,6 +192,7 @@ export type CmsIndustry = {
   banner?: CmsBanner | null;
   meta?: CmsMeta | null;
   sectionOrder?: string[] | null;
+  pageBlocks?: CmsBlockRow[] | null;
 };
 
 /** A Payload `tools` doc. */
@@ -206,6 +209,7 @@ export type CmsTool = {
   checks?: (string | null)[] | null;
   meta?: CmsMeta | null;
   sectionOrder?: string[] | null;
+  pageBlocks?: CmsBlockRow[] | null;
 };
 
 /** A Payload `learning` doc (an individual item). */
@@ -247,6 +251,8 @@ export type SubpageDTO = {
   };
   /** Section keys the page renders, in order. Empty = the coded order. */
   sectionOrder: string[];
+  /** Sections authored in the CMS, shown where `section_order` says. */
+  pageBlocks: CmsBlockRow[];
 };
 
 /** Serializable form of `Industry` (icons as names). Safe to return from a loader. */
@@ -266,6 +272,8 @@ export type IndustryDTO = {
   banner: { message: [string, string]; title: string; titleEm: string; label: string };
   /** Section keys the page renders, in order. Empty = the coded order. */
   sectionOrder: string[];
+  /** Sections authored in the CMS, shown where `section_order` says. */
+  pageBlocks: CmsBlockRow[];
 };
 
 const bannerMessage = (b?: CmsBanner | null): [string, string] => [
@@ -306,6 +314,7 @@ export function cmsToSubpageDTO(d: CmsSubpage, kind: SubpageKind): SubpageDTO {
       label: d.banner?.label ?? "",
     },
     sectionOrder: d.sectionOrder ?? [],
+    pageBlocks: d.pageBlocks ?? [],
   };
 }
 
@@ -334,6 +343,7 @@ export function cmsToIndustryDTO(d: CmsIndustry): IndustryDTO {
       label: d.banner?.label ?? "",
     },
     sectionOrder: d.sectionOrder ?? [],
+    pageBlocks: d.pageBlocks ?? [],
   };
 }
 
@@ -462,6 +472,7 @@ export function cmsToTool(d: CmsTool, fallback?: Tool): Tool {
     image: cmsMedia(d.image) || fallback?.image || "",
     checks: d.checks?.length ? (d.checks.filter(Boolean) as string[]) : fallback?.checks ?? [],
     sectionOrder: d.sectionOrder ?? fallback?.sectionOrder ?? [],
+    pageBlocks: d.pageBlocks ?? fallback?.pageBlocks ?? [],
   };
 }
 

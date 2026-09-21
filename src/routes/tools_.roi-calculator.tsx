@@ -243,7 +243,11 @@ function Page() {
 
   return (
     <SiteShell theme={pageThemes["tools/roi-calculator"]}>
-      <PageSections order={liveTool?.sectionOrder ?? []} blocks={blocks} />
+      <PageSections
+        order={liveTool?.sectionOrder ?? []}
+        blocks={blocks}
+        cmsBlocks={liveTool?.pageBlocks ?? []}
+      />
     </SiteShell>
   );
 }

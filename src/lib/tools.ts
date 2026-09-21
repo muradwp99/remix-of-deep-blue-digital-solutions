@@ -1,3 +1,5 @@
+import type { CmsBlockRow } from "@/components/cms-blocks";
+
 export type Tool = {
   slug: string;
   nav: string;
@@ -13,6 +15,8 @@ export type Tool = {
   checks: string[];
   /** Section keys the page renders, in order. Empty = the coded order. */
   sectionOrder?: string[];
+  /** Sections authored in the CMS. */
+  pageBlocks?: CmsBlockRow[];
 };
 
 const u = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1920&q=70`;

@@ -258,7 +258,11 @@ function Page() {
 
   return (
     <SiteShell theme={pageThemes["tools/meta-generator"]}>
-      <PageSections order={liveTool?.sectionOrder ?? []} blocks={blocks} />
+      <PageSections
+        order={liveTool?.sectionOrder ?? []}
+        blocks={blocks}
+        cmsBlocks={liveTool?.pageBlocks ?? []}
+      />
     </SiteShell>
   );
 }

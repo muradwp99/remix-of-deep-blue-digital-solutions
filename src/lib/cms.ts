@@ -109,6 +109,9 @@ const catalogDoc = (d: WpDoc) => ({
   // Which sections the page renders, and in what order. Empty means the page's
   // own coded order; see `PageSections`.
   sectionOrder: lines(d, "section_order"),
+  // Sections authored in the CMS, rendered where `section_order` names
+  // `cms-blocks`. See `src/components/cms-blocks.tsx`.
+  pageBlocks: rows(d, "page_blocks"),
   order: d.menu_order ?? 0,
   banner: banner(d),
   meta: seoMeta(d),
