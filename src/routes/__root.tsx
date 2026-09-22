@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { OG_IMAGE, OG_IMAGE_ALT, absolute, canonicalPath } from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -36,16 +37,13 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-  }, [error]);
+  useEffect(() => {}, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="font-display text-3xl text-foreground">Something broke</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Please try again, or head back home.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">Please try again, or head back home.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -69,38 +67,61 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Auxtech — Premium Software Agency" },
-      {
-        name: "description",
-        content:
-          "Auxtech is a software studio designing and engineering premium websites, apps, and digital products for ambitious teams.",
-      },
-      { name: "author", content: "Auxtech" },
-      { property: "og:title", content: "Auxtech — Premium Software Agency" },
-      {
-        property: "og:description",
-        content:
-          "Design, engineering, and growth for ambitious teams. Websites, apps, ecommerce, SaaS, and brand.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "alternate icon", href: "/favicon.ico", type: "image/x-icon" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Fustat:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,500;1,600&display=swap",
-      },
-    ],
-  }),
+  /**
+   * Everything here is a default a route may override, plus the three things
+   * no route can know on its own: the canonical URL, `og:url`, and the share
+   * image. They are derived from the matches, so every page gets them —
+   * including the CMS-driven ones that have no route file to edit.
+   */
+  head: ({ matches }) => {
+    const url = absolute(canonicalPath(matches));
+    const image = absolute(OG_IMAGE);
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { title: "Auxtech — Premium Software Agency" },
+        {
+          name: "description",
+          content:
+            "Auxtech is a software studio designing and engineering premium websites, apps, and digital products for ambitious teams.",
+        },
+        { name: "author", content: "Auxtech" },
+        { property: "og:title", content: "Auxtech — Premium Software Agency" },
+        {
+          property: "og:description",
+          content:
+            "Design, engineering, and growth for ambitious teams. Websites, apps, ecommerce, SaaS, and brand.",
+        },
+        { property: "og:type", content: "website" },
+        { property: "og:site_name", content: "Auxtech" },
+        { property: "og:locale", content: "en_US" },
+        { property: "og:url", content: url },
+        // Declared without an image since the beginning, so every link to this
+        // site rendered a large blank card.
+        { name: "twitter:card", content: "summary_large_image" },
+        { property: "og:image", content: image },
+        { property: "og:image:alt", content: OG_IMAGE_ALT },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { name: "twitter:image", content: image },
+      ],
+      links: [
+        { rel: "stylesheet", href: appCss },
+        { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+        { rel: "alternate icon", href: "/favicon.ico", type: "image/x-icon" },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Fustat:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,500;1,600&display=swap",
+        },
+        // Search params are dropped, which is the point: /blog?cat=design and
+        // /blog are one page and only one of them is the address.
+        { rel: "canonical", href: url },
+      ],
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OG card generator</title>
+<!--
+  Source for public/og.jpg — the share card behind og:image.
+
+  It is a page rather than a node script because the card uses the site's own
+  brand tokens and webfont, and the most reliable way to resolve an oklch()
+  colour and a Google font is to ask a browser. The probes below let it read
+  the real values instead of my approximation of them.
+
+  To regenerate: serve the repo (npm run dev), open /scripts/og-card.html
+  through any static server, run `await renderCard()` in the console, and save
+  the returned data URL as public/og.jpg at 1200x630.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fustat:wght@300;400;500;600;700;800&display=swap">
+<style>
+  body { margin: 0; background: #111; }
+  canvas { width: 600px; display: block; margin: 20px auto; }
+  /* Probes: let the browser resolve the site's oklch tokens to rgb for us,
+     so the card uses the real brand values rather than my approximation. */
+  #ink { background: oklch(0.14 0.07 268); }
+  #gold { background: oklch(0.80 0.13 88); }
+  #surface { background: oklch(0.18 0.075 268); }
+  #muted { background: oklch(0.72 0.025 265); }
+  .probe { width: 1px; height: 1px; position: absolute; }
+</style>
+</head>
+<body>
+<div class="probe" id="ink"></div>
+<div class="probe" id="gold"></div>
+<div class="probe" id="surface"></div>
+<div class="probe" id="muted"></div>
+<canvas id="c" width="1200" height="630"></canvas>
+<script>
+const rgb = (id) => getComputedStyle(document.getElementById(id)).backgroundColor;
+
+window.renderCard = async function () {
+  await document.fonts.load('600 1em Fustat');
+  await document.fonts.load('300 1em Fustat');
+  await document.fonts.ready;
+
+  const c = document.getElementById('c');
+  const x = c.getContext('2d');
+  const INK = rgb('ink'), GOLD = rgb('gold'), SURFACE = rgb('surface'), MUTED = rgb('muted');
+
+  x.fillStyle = INK;
+  x.fillRect(0, 0, 1200, 630);
+
+  // The hero wash, same shape as --gradient-hero: a wide ellipse off the top.
+  const g = x.createRadialGradient(600, 0, 0, 600, 0, 760);
+  g.addColorStop(0, SURFACE);
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  x.fillStyle = g;
+  x.fillRect(0, 0, 1200, 630);
+
+  // Mark: the triangle from the site logo, drawn rather than imported so the
+  // card has no runtime dependency on an SVG that may move.
+  x.strokeStyle = GOLD;
+  x.lineWidth = 3;
+  x.beginPath();
+  x.moveTo(96, 152);
+  x.lineTo(140, 76);
+  x.lineTo(184, 152);
+  x.closePath();
+  x.stroke();
+  x.beginPath();
+  x.moveTo(118, 152);
+  x.lineTo(140, 114);
+  x.lineTo(162, 152);
+  x.closePath();
+  x.stroke();
+
+  x.fillStyle = '#ffffff';
+  x.font = '600 52px Fustat, sans-serif';
+  x.textBaseline = 'alphabetic';
+  x.fillText('Auxtech', 212, 140);
+
+  x.fillStyle = '#ffffff';
+  x.font = '600 96px Fustat, sans-serif';
+  x.fillText('Software worth', 96, 330);
+  x.fillText('being proud of.', 96, 432);
+
+  x.strokeStyle = GOLD;
+  x.lineWidth = 4;
+  x.beginPath();
+  x.moveTo(96, 486);
+  x.lineTo(212, 486);
+  x.stroke();
+
+  x.fillStyle = GOLD;
+  x.font = '500 30px Fustat, sans-serif';
+  x.fillText('A studio, not a factory.', 96, 552);
+
+  x.fillStyle = MUTED;
+  x.font = '400 26px Fustat, sans-serif';
+  const url = 'auxtechint.com';
+  x.fillText(url, 1104 - x.measureText(url).width, 552);
+
+  return c.toDataURL('image/jpeg', 0.92);
+};
+</script>
+</body>
+</html>
