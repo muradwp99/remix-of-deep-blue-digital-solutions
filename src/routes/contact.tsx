@@ -99,9 +99,7 @@ function ContactPage() {
   const [message, setMessage] = useState("");
 
   const toggleService = (s: string) =>
-    setSelectedServices((prev) =>
-      prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s],
-    );
+    setSelectedServices((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -149,9 +147,15 @@ function ContactPage() {
             </p>
           </div>
           <figure className="relative" data-reveal>
-            <div className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border border-gold/30" aria-hidden />
+            <div
+              className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border border-gold/30"
+              aria-hidden
+            />
             <img
-              src={s("hero_img", "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?auto=format&fit=crop&w=1200&q=75")}
+              src={s(
+                "hero_img",
+                "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?auto=format&fit=crop&w=1200&q=75",
+              )}
               alt="A quiet place to start the conversation"
               className="aspect-[4/5] w-full rounded-[2rem] border border-black/10 object-cover shadow-elegant transition-transform duration-700 hover:scale-[1.015]"
               data-parallax-img
@@ -161,246 +165,263 @@ function ContactPage() {
       </section>
 
       <section className="block-light">
-      <div className="container-page relative grid gap-16 py-24 md:grid-cols-12">
-        {/* decorative parallax glow */}
-        <div
-          className="pointer-events-none absolute -left-40 top-1/3 -z-10 h-96 w-96 rounded-full opacity-25"
-          style={{ background: "var(--gradient-lime)", filter: "blur(100px)" }}
-          data-parallax="0.3"
-        />
+        <div className="container-page relative grid gap-16 py-24 md:grid-cols-12">
+          {/* decorative parallax glow */}
+          <div
+            className="pointer-events-none absolute -left-40 top-1/3 -z-10 h-96 w-96 rounded-full opacity-25"
+            style={{ background: "var(--gradient-lime)", filter: "blur(100px)" }}
+            data-parallax="0.3"
+          />
 
-        <div className="space-y-12 md:col-span-4">
-          <div data-reveal-group>
-            <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
-              {s("steps_eyebrow", "What happens next")}
-            </p>
-            <h2 className="mt-4 font-display text-3xl font-semibold" data-reveal-child>
-              {s("steps_heading", "Three steps, no run-around.")}
-            </h2>
-            <div className="mt-8 space-y-3">
-              {steps.map((step) => (
-                <div key={step.n} className="glass lift flex gap-5 rounded-2xl p-6" data-reveal-child>
-                  <span className="shrink-0 font-display text-2xl font-semibold text-gradient-lime">{step.n}</span>
-                  <div>
-                    <h3 className="font-display text-base font-semibold">{step.t}</h3>
-                    <p className="mt-1.5 text-sm text-muted-foreground">{step.d}</p>
+          <div className="space-y-12 md:col-span-4">
+            <div data-reveal-group>
+              <p className="text-xs uppercase tracking-[0.28em] text-lime" data-reveal-child>
+                {s("steps_eyebrow", "What happens next")}
+              </p>
+              <h2 className="mt-4 font-display text-3xl font-semibold" data-reveal-child>
+                {s("steps_heading", "Three steps, no run-around.")}
+              </h2>
+              <div className="mt-8 space-y-3">
+                {steps.map((step) => (
+                  <div
+                    key={step.n}
+                    className="glass lift flex gap-5 rounded-2xl p-6"
+                    data-reveal-child
+                  >
+                    <span className="shrink-0 font-display text-2xl font-semibold text-gradient-lime">
+                      {step.n}
+                    </span>
+                    <div>
+                      <h3 className="font-display text-base font-semibold">{step.t}</h3>
+                      <p className="mt-1.5 text-sm text-muted-foreground">{step.d}</p>
+                    </div>
                   </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-6" data-reveal>
+              <p className="text-xs uppercase tracking-[0.28em] text-lime">Direct lines</p>
+              <div className="flex gap-4">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-surface">
+                  <Mail className="h-5 w-5 text-lime" />
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-6" data-reveal>
-            <p className="text-xs uppercase tracking-[0.28em] text-lime">Direct lines</p>
-            <div className="flex gap-4">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-surface">
-                <Mail className="h-5 w-5 text-lime" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Email</p>
-                <a
-                  href={`mailto:${s("contact_email", "hello@auxtech.studio")}`}
-                  className="link-underline mt-1 inline-block text-foreground"
-                >
-                  {s("contact_email", "hello@auxtech.studio")}
-                </a>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-surface">
-                <Phone className="h-5 w-5 text-lime" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Phone</p>
-                <a
-                  href={`tel:${s("contact_phone", "+1 (415) 555-0134").replace(/[^+\d]/g, "")}`}
-                  className="link-underline mt-1 inline-block text-foreground"
-                >
-                  {s("contact_phone", "+1 (415) 555-0134")}
-                </a>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-surface">
-                <MapPin className="h-5 w-5 text-lime" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Studio</p>
-                <p className="mt-1 text-foreground">{s("contact_studio", "San Francisco · London · Lisbon")}</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {s(
-                    "contact_studio_note",
-                    "Remote-first since 2014 — 50+ senior designers and engineers across nine time zones. Someone is awake when you are.",
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="gradient-card-gold rounded-2xl border border-gold/25 p-6" data-reveal>
-            <p className="text-xs uppercase tracking-[0.2em] text-gold">{s("response_eyebrow", "Response time")}</p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {s(
-                "response_text",
-                "Reply within one business day — from a senior, not a sales rep. Usually the same afternoon.",
-              )}
-            </p>
-          </div>
-        </div>
-
-        <div className="md:col-span-8" data-reveal>
-          {submitted ? (
-            <div className="glass-strong relative overflow-hidden rounded-3xl border border-lime/30 p-10 md:p-14">
-              <div className="pointer-events-none absolute inset-0 grain-bg" />
-              <div className="relative">
-                <div className="grid h-14 w-14 place-items-center rounded-2xl border border-lime/30 bg-lime/10">
-                  <CheckCircle2 className="h-7 w-7 text-lime" />
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Email</p>
+                  <a
+                    href={`mailto:${s("contact_email", "hello@auxtech.studio")}`}
+                    className="link-underline mt-1 inline-block text-foreground"
+                  >
+                    {s("contact_email", "hello@auxtech.studio")}
+                  </a>
                 </div>
-                <p className="mt-8 text-xs uppercase tracking-[0.28em] text-lime">Received</p>
-                <h3 className="mt-4 font-display text-4xl font-semibold md:text-5xl">
-                  Thanks. Talk <span className="text-gold">soon</span>.
-                </h3>
-                <p className="mt-4 max-w-md text-lg text-muted-foreground">
-                  Your brief is in front of a senior right now. Expect a reply within one business day.
-                </p>
-                <div className="mt-10 space-y-3 border-t border-black/10 pt-8">
-                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">While you wait</p>
-                  <div className="flex flex-wrap gap-3">
-                    <Link
-                      to="/works"
-                      className="inline-flex items-center gap-2 rounded-full glass px-5 py-2.5 text-sm font-medium hover:bg-white/5"
-                    >
-                      Browse recent work
-                      <ArrowUpRight className="h-4 w-4" />
-                    </Link>
-                    <Link
-                      to="/pricing"
-                      className="inline-flex items-center gap-2 rounded-full glass px-5 py-2.5 text-sm font-medium hover:bg-white/5"
-                    >
-                      Check the pricing floors
-                      <ArrowUpRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                  <p className="pt-2 text-sm text-muted-foreground">
-                    In a hurry? Email{" "}
-                    <a href="mailto:hello@auxtech.studio" className="link-underline text-foreground">
-                      hello@auxtech.studio
-                    </a>{" "}
-                    with "urgent" in the subject and we'll bump you up the queue.
+              </div>
+              <div className="flex gap-4">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-surface">
+                  <Phone className="h-5 w-5 text-lime" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Phone</p>
+                  <a
+                    href={`tel:${s("contact_phone", "+1 (415) 555-0134").replace(/[^+\d]/g, "")}`}
+                    className="link-underline mt-1 inline-block text-foreground"
+                  >
+                    {s("contact_phone", "+1 (415) 555-0134")}
+                  </a>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-surface">
+                  <MapPin className="h-5 w-5 text-lime" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Studio</p>
+                  <p className="mt-1 text-foreground">
+                    {s("contact_studio", "San Francisco · London · Lisbon")}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {s(
+                      "contact_studio_note",
+                      "Remote-first since 2014 — 50+ senior designers and engineers across nine time zones. Someone is awake when you are.",
+                    )}
                   </p>
                 </div>
               </div>
             </div>
-          ) : (
-            <form
-              onSubmit={handleSubmit}
-              className="glass-strong space-y-6 rounded-3xl p-8 md:p-10"
-            >
-              <div className="grid gap-6 md:grid-cols-2">
-                <Field label="Your name">
-                  <input
+
+            <div className="gradient-card-gold rounded-2xl border border-gold/25 p-6" data-reveal>
+              <p className="text-xs uppercase tracking-[0.2em] text-gold">
+                {s("response_eyebrow", "Response time")}
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {s(
+                  "response_text",
+                  "Reply within one business day — from a senior, not a sales rep. Usually the same afternoon.",
+                )}
+              </p>
+            </div>
+          </div>
+
+          <div className="md:col-span-8" data-reveal>
+            {submitted ? (
+              <div className="glass-strong relative overflow-hidden rounded-3xl border border-lime/30 p-10 md:p-14">
+                <div className="pointer-events-none absolute inset-0 grain-bg" />
+                <div className="relative">
+                  <div className="grid h-14 w-14 place-items-center rounded-2xl border border-lime/30 bg-lime/10">
+                    <CheckCircle2 className="h-7 w-7 text-lime" />
+                  </div>
+                  <p className="mt-8 text-xs uppercase tracking-[0.28em] text-lime">Received</p>
+                  <h3 className="mt-4 font-display text-4xl font-semibold md:text-5xl">
+                    Thanks. Talk <span className="text-gold">soon</span>.
+                  </h3>
+                  <p className="mt-4 max-w-md text-lg text-muted-foreground">
+                    Your brief is in front of a senior right now. Expect a reply within one business
+                    day.
+                  </p>
+                  <div className="mt-10 space-y-3 border-t border-black/10 pt-8">
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                      While you wait
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      <Link
+                        to="/works"
+                        className="inline-flex items-center gap-2 rounded-full glass px-5 py-2.5 text-sm font-medium hover:bg-white/5"
+                      >
+                        Browse recent work
+                        <ArrowUpRight className="h-4 w-4" />
+                      </Link>
+                      <Link
+                        to="/pricing"
+                        className="inline-flex items-center gap-2 rounded-full glass px-5 py-2.5 text-sm font-medium hover:bg-white/5"
+                      >
+                        Check the pricing floors
+                        <ArrowUpRight className="h-4 w-4" />
+                      </Link>
+                    </div>
+                    <p className="pt-2 text-sm text-muted-foreground">
+                      In a hurry? Email{" "}
+                      <a
+                        href={`mailto:${s("contact_email", "hello@auxtech.studio")}`}
+                        className="link-underline text-foreground"
+                      >
+                        {s("contact_email", "hello@auxtech.studio")}
+                      </a>{" "}
+                      with "urgent" in the subject and we'll bump you up the queue.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <form
+                onSubmit={handleSubmit}
+                className="glass-strong space-y-6 rounded-3xl p-8 md:p-10"
+              >
+                <div className="grid gap-6 md:grid-cols-2">
+                  <Field label="Your name">
+                    <input
+                      required
+                      className={inputCls}
+                      placeholder="Jane Doe"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </Field>
+                  <Field label="Work email">
+                    <input
+                      required
+                      type="email"
+                      className={inputCls}
+                      placeholder="jane@company.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </Field>
+                  <Field label="Company">
+                    <input
+                      className={inputCls}
+                      placeholder="Acme Inc."
+                      value={company}
+                      onChange={(e) => setCompany(e.target.value)}
+                    />
+                  </Field>
+                  <Field label="Website">
+                    <input
+                      className={inputCls}
+                      placeholder="acme.com"
+                      value={website}
+                      onChange={(e) => setWebsite(e.target.value)}
+                    />
+                  </Field>
+                </div>
+
+                <Field label="What do you need?">
+                  <div className="flex flex-wrap gap-2">
+                    {serviceOptions.map((s) => (
+                      <label
+                        key={s}
+                        className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
+                      >
+                        <input
+                          type="checkbox"
+                          className="accent-lime"
+                          checked={selectedServices.includes(s)}
+                          onChange={() => toggleService(s)}
+                        />
+                        {s}
+                      </label>
+                    ))}
+                  </div>
+                </Field>
+
+                <Field label="Budget">
+                  <div className="flex flex-wrap gap-2">
+                    {budgetOptions.map((b) => (
+                      <label
+                        key={b}
+                        className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
+                      >
+                        <input
+                          type="radio"
+                          name="budget"
+                          className="accent-lime"
+                          checked={budget === b}
+                          onChange={() => setBudget(b)}
+                        />
+                        {b}
+                      </label>
+                    ))}
+                  </div>
+                </Field>
+
+                <Field label="Tell us about your project">
+                  <textarea
+                    rows={5}
                     required
                     className={inputCls}
-                    placeholder="Jane Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Goals, timeline, links to anything relevant..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
                   />
                 </Field>
-                <Field label="Work email">
-                  <input
-                    required
-                    type="email"
-                    className={inputCls}
-                    placeholder="jane@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </Field>
-                <Field label="Company">
-                  <input
-                    className={inputCls}
-                    placeholder="Acme Inc."
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                  />
-                </Field>
-                <Field label="Website">
-                  <input
-                    className={inputCls}
-                    placeholder="acme.com"
-                    value={website}
-                    onChange={(e) => setWebsite(e.target.value)}
-                  />
-                </Field>
-              </div>
 
-              <Field label="What do you need?">
-                <div className="flex flex-wrap gap-2">
-                  {serviceOptions.map((s) => (
-                    <label
-                      key={s}
-                      className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
-                    >
-                      <input
-                        type="checkbox"
-                        className="accent-lime"
-                        checked={selectedServices.includes(s)}
-                        onChange={() => toggleService(s)}
-                      />
-                      {s}
-                    </label>
-                  ))}
+                <div className="flex flex-wrap items-center gap-5 pt-2">
+                  <button
+                    type="submit"
+                    data-magnetic
+                    className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold hover:border-lime/40"
+                  >
+                    Send message
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </button>
+                  <p className="text-sm text-muted-foreground">
+                    Reply within one business day —{" "}
+                    <span className="text-foreground">a senior, not a sales rep</span>.
+                  </p>
                 </div>
-              </Field>
-
-              <Field label="Budget">
-                <div className="flex flex-wrap gap-2">
-                  {budgetOptions.map((b) => (
-                    <label
-                      key={b}
-                      className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
-                    >
-                      <input
-                        type="radio"
-                        name="budget"
-                        className="accent-lime"
-                        checked={budget === b}
-                        onChange={() => setBudget(b)}
-                      />
-                      {b}
-                    </label>
-                  ))}
-                </div>
-              </Field>
-
-              <Field label="Tell us about your project">
-                <textarea
-                  rows={5}
-                  required
-                  className={inputCls}
-                  placeholder="Goals, timeline, links to anything relevant..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                />
-              </Field>
-
-              <div className="flex flex-wrap items-center gap-5 pt-2">
-                <button
-                  type="submit"
-                  data-magnetic
-                  className="group inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold hover:border-lime/40"
-                >
-                  Send message
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </button>
-                <p className="text-sm text-muted-foreground">
-                  Reply within one business day — <span className="text-foreground">a senior, not a sales rep</span>.
-                </p>
-              </div>
-            </form>
-          )}
+              </form>
+            )}
+          </div>
         </div>
-      </div>
       </section>
     </SiteShell>
   );
@@ -412,7 +433,9 @@ const inputCls =
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="text-xs font-medium uppercase tracking-[0.2em] text-foreground/75">{label}</span>
+      <span className="text-xs font-medium uppercase tracking-[0.2em] text-foreground/75">
+        {label}
+      </span>
       <div className="mt-2">{children}</div>
     </label>
   );

@@ -48,3 +48,50 @@ export function canonicalPath(matches: ReadonlyArray<{ pathname: string }>): str
   const trimmed = deepest.replace(/\/+$/, "");
   return trimmed === "" ? "/" : trimmed;
 }
+
+/**
+ * The two entities every page of a company site shares, plus the page itself.
+ *
+ * Emitted once from the root, so every route carries it. A `@graph` with
+ * `@id` references is used rather than three loose objects because that is
+ * what lets the WebPage point at the WebSite and the WebSite at its
+ * publisher, instead of three unrelated things that happen to share a page.
+ *
+ * **No telephone, email or address.** The contact details currently in the
+ * CMS are placeholders — the number is in the +1 (415) 555-01xx range
+ * reserved for fiction — and structured data is precisely the wrong place to
+ * publish a fake: it is machine-read, cached and reused. Add a `contactPoint`
+ * here once the real details are in, not before.
+ */
+export function siteJsonLd(pageUrl: string) {
+  const org = `${SITE}/#organization`;
+  const site = `${SITE}/#website`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": org,
+        name: "Auxtech",
+        url: SITE,
+        description:
+          "A senior-only software studio designing and engineering websites, apps, ecommerce and SaaS products.",
+        image: absolute(OG_IMAGE),
+      },
+      {
+        "@type": "WebSite",
+        "@id": site,
+        url: SITE,
+        name: "Auxtech",
+        inLanguage: "en",
+        publisher: { "@id": org },
+      },
+      {
+        "@type": "WebPage",
+        "@id": pageUrl,
+        url: pageUrl,
+        isPartOf: { "@id": site },
+      },
+    ],
+  };
+}

@@ -10,7 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { OG_IMAGE, OG_IMAGE_ALT, absolute, canonicalPath } from "@/lib/seo";
+import { OG_IMAGE, OG_IMAGE_ALT, absolute, canonicalPath, siteJsonLd } from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -120,6 +120,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         // /blog are one page and only one of them is the address.
         { rel: "canonical", href: url },
       ],
+      // Attributes go flat here, not nested under `attrs` — this router
+      // version spreads the object's own keys onto the tag, and a nested one
+      // renders as attrs="[object Object]".
+      scripts: [{ type: "application/ld+json", children: JSON.stringify(siteJsonLd(url)) }],
     };
   },
   shellComponent: RootShell,
