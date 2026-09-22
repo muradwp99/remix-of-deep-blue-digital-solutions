@@ -15,11 +15,15 @@
  * never hard-fails if the CMS is unreachable; callers fall back to their
  * built-in defaults. Full contract: WP-MIGRATION.md.
  *
- * Set `VITE_CMS_URL` to point at the deployed WordPress instance in prod.
+ * `VITE_CMS_URL` selects the instance, and Vite bakes it in at BUILD time —
+ * changing it needs a rebuild, not a restart. The fallback is production, so
+ * a build that forgets the variable serves real content instead of silently
+ * failing soft on every fetch. Point it at a local WordPress in `.env.local`
+ * to develop against one.
  */
 const CMS_URL =
   (import.meta.env.VITE_CMS_URL as string | undefined)?.replace(/\/$/, "") ||
-  "http://auxtech-v2.local";
+  "https://admin.auxtechint.com";
 
 type FindOpts = {
   limit?: number;

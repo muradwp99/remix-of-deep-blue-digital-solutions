@@ -372,49 +372,59 @@ function shortDesc(s?: string | null): string | undefined {
   return `${(space > 20 ? cut.slice(0, space) : cut).replace(/[,.;:]$/, "")}…`;
 }
 
-type CmsServiceRow = { slug?: string; title?: string; summary?: string | null };
+type CmsNavRow = { slug?: string; title?: string; summary?: string | null };
 
 /**
- * The `service` collection, for the Services mega panel.
+ * A catalog collection, for the mega panel it drives.
  *
  * Same fail-soft contract as the nav config above: until this resolves (and
  * if it never does) the coded NAV stands on its own, so the menu is never
  * empty or half-rendered.
  */
-function useCmsServices(): CmsServiceRow[] {
+function useCmsNavRows(collection: "services" | "tools"): CmsNavRow[] {
   const { data } = useQuery({
-    queryKey: ["nav-services"],
-    queryFn: () => cmsFind<CmsServiceRow>("services", { sort: "order", limit: 100 }),
+    queryKey: ["nav-collection", collection],
+    queryFn: () => cmsFind<CmsNavRow>(collection, { sort: "order", limit: 100 }),
     staleTime: 5 * 60 * 1000,
   });
   return Array.isArray(data) ? data.filter((d) => d.slug && d.title) : [];
 }
 
 /**
- * Drive the Services mega panel from the CMS.
+ * Drive one mega panel from a CMS collection.
  *
  * Two halves, because the coded panel is a curated thing worth keeping: every
- * `/services/{slug}` link takes its label and description from the matching
- * CMS doc, so renaming a service in WordPress renames it in the nav; and any
- * service with no coded link at all is appended in its own column, so a
- * service added in WordPress reaches the menu without a code change.
+ * link under `prefix` takes its label and description from the matching CMS
+ * doc, so renaming a service in WordPress renames it in the nav; and any doc
+ * with no coded link at all is added too, so one added in WordPress reaches
+ * the menu without a code change.
  *
- * Links that are not `/services/{slug}` (Web Applications points at
- * /custom-software, for instance) are left exactly as they are.
+ * Where the unlinked ones land depends on `kicker`: with one they get their
+ * own column (Services has several columns already, and crowding one of them
+ * would unbalance the panel), without one they are appended to whichever
+ * group already holds links under `prefix` (Free Tools is a single list, and a
+ * fourth column beside Learning and Blog would not fit).
+ *
+ * Links outside `prefix` are left exactly as they are — Web Applications
+ * points at /custom-software, for instance.
  */
-function withCmsServices(items: NavItem[], services: CmsServiceRow[]): NavItem[] {
-  if (!services.length) return items;
+function withCmsNav(
+  items: NavItem[],
+  opts: { navHref: string; prefix: string; kicker?: string },
+  docs: CmsNavRow[],
+): NavItem[] {
+  if (!docs.length) return items;
 
-  const bySlug = new Map(services.map((s) => [s.slug as string, s]));
+  const bySlug = new Map(docs.map((d) => [d.slug as string, d]));
   const linked = new Set<string>();
 
-  const next = items.map((item) => {
-    if (item.href !== "/services" || !item.mega) return item;
+  return items.map((item) => {
+    if (item.href !== opts.navHref || !item.mega) return item;
 
     const groups = item.mega.groups.map((group) => ({
       ...group,
       items: group.items.map((li) => {
-        const slug = li.href.startsWith("/services/") ? li.href.slice("/services/".length) : null;
+        const slug = li.href.startsWith(opts.prefix) ? li.href.slice(opts.prefix.length) : null;
         const doc = slug ? bySlug.get(slug) : undefined;
         if (!doc) return li;
         linked.add(slug as string);
@@ -422,28 +432,38 @@ function withCmsServices(items: NavItem[], services: CmsServiceRow[]): NavItem[]
       }),
     }));
 
-    const extra = services
-      .filter((s) => !linked.has(s.slug as string))
-      .map((s) => ({
-        label: s.title as string,
-        href: `/services/${s.slug}`,
-        desc: shortDesc(s.summary),
+    const extra = docs
+      .filter((d) => !linked.has(d.slug as string))
+      .map((d) => ({
+        label: d.title as string,
+        href: `${opts.prefix}${d.slug}`,
+        desc: shortDesc(d.summary),
       }));
 
-    return {
-      ...item,
-      mega: {
-        ...item.mega,
-        groups: extra.length ? [...groups, { kicker: "More", items: extra }] : groups,
-      },
-    };
-  });
+    if (!extra.length) return { ...item, mega: { ...item.mega, groups } };
 
-  return next;
+    const next = opts.kicker
+      ? [...groups, { kicker: opts.kicker, items: extra }]
+      : groups.map((group) =>
+          group.items.some((li) => li.href.startsWith(opts.prefix))
+            ? { ...group, items: [...group.items, ...extra] }
+            : group,
+        );
+
+    return { ...item, mega: { ...item.mega, groups: next } };
+  });
 }
 
 export function SiteHeader() {
-  const nav = withCmsServices(useNavItems(), useCmsServices());
+  // Both panels are CMS-driven; the coded NAV is the fallback for each.
+  const coded = useNavItems();
+  const cmsServices = useCmsNavRows("services");
+  const cmsTools = useCmsNavRows("tools");
+  const nav = withCmsNav(
+    withCmsNav(coded, { navHref: "/services", prefix: "/services/", kicker: "More" }, cmsServices),
+    { navHref: "/resources", prefix: "/tools/" },
+    cmsTools,
+  );
   const [mobileOpen, setMobileOpen] = useState(false);
   // Which mega is hovered/focused right now (null = closed)
   const [openMega, setOpenMega] = useState<string | null>(null);

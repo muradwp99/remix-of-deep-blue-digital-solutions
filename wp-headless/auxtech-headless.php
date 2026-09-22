@@ -10,6 +10,38 @@ defined( 'ABSPATH' ) || exit;
 /** Option keys holding the site globals (JSON-encoded arrays). */
 const AUXTECH_GLOBAL_KEYS = array( 'site_settings', 'header', 'footer', 'design', 'nav' );
 
+/**
+ * Globals that LivePress owns, i.e. that its own admin screens read and write.
+ *
+ * LivePress stores its options as `livepress_<key>` (see its REST
+ * `option/<key>` handler), while everything here is stored as `auxtech_<key>`.
+ * For a key LivePress owns, its screen is the only editor, so its row is the
+ * authoritative one — without this the Design screen saves to a row nothing
+ * reads and editing colours/radius appears to do nothing on the live site.
+ */
+const AUXTECH_LIVEPRESS_OWNED = array( 'design' );
+
+/**
+ * Read one global, from whichever of the two option rows owns it.
+ *
+ * Falls back to the other name when the owner's row is unset, so a value
+ * written before this existed is still served and neither editor can strand
+ * content.
+ */
+function auxtech_global( string $key ) {
+	$names = in_array( $key, AUXTECH_LIVEPRESS_OWNED, true )
+		? array( 'livepress_' . $key, 'auxtech_' . $key )
+		: array( 'auxtech_' . $key, 'livepress_' . $key );
+
+	foreach ( $names as $name ) {
+		$value = get_option( $name, null );
+		if ( null !== $value && array() !== $value && '' !== $value ) {
+			return $value;
+		}
+	}
+	return null;
+}
+
 /** Origins allowed to read the API. Filter `auxtech_allowed_origins` to extend in prod. */
 function auxtech_allowed_origins(): array {
 	return apply_filters( 'auxtech_allowed_origins', array(
@@ -25,7 +57,7 @@ add_action( 'rest_api_init', function () {
 		'callback'            => function () {
 			$out = array();
 			foreach ( AUXTECH_GLOBAL_KEYS as $key ) {
-				$out[ $key ] = get_option( 'auxtech_' . $key, null );
+				$out[ $key ] = auxtech_global( $key );
 			}
 			return rest_ensure_response( $out );
 		},
@@ -39,7 +71,7 @@ add_action( 'rest_api_init', function () {
 			if ( ! in_array( $key, AUXTECH_GLOBAL_KEYS, true ) ) {
 				return new WP_Error( 'not_found', 'Unknown global', array( 'status' => 404 ) );
 			}
-			return rest_ensure_response( get_option( 'auxtech_' . $key, null ) );
+			return rest_ensure_response( auxtech_global( $key ) );
 		},
 	) );
 } );
@@ -173,7 +205,10 @@ add_action( 'rest_api_init', function () {
 			if ( null === $data ) {
 				return new WP_Error( 'bad_request', 'Body must be JSON', array( 'status' => 400 ) );
 			}
-			update_option( 'auxtech_' . $key, $data );
+			// Write to the row that `auxtech_global()` reads first, or the write
+			// lands in a row the read path shadows.
+			$prefix = in_array( $key, AUXTECH_LIVEPRESS_OWNED, true ) ? 'livepress_' : 'auxtech_';
+			update_option( $prefix . $key, $data );
 			return rest_ensure_response( array( 'ok' => true ) );
 		},
 	) );
