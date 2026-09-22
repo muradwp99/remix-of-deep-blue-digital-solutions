@@ -14,6 +14,19 @@ import {
 import { useLiveEdits } from "@/lib/edit-bridge";
 
 export const Route = createFileRoute("/contact")({
+  /**
+   * `?role=` turns this into an application form. The careers page sends
+   * candidates here, and without it they are asked for a budget and which
+   * services they would like to buy — a client's questions, put to someone
+   * applying for a job.
+   */
+  validateSearch: (search: Record<string, unknown>): { role?: string } => {
+    const role = typeof search.role === "string" ? search.role.trim() : "";
+    // Only return the key when it has a value — a schema that always carries
+    // `role` makes `search` a required prop on every `<Link to="/contact">`
+    // on the site.
+    return role ? { role } : {};
+  },
   // Resolve the CMS "Contact" form id so submissions can be saved, plus the
   // `contact` Site Page doc for LivePress copy. Both fail soft.
   loader: async (): Promise<{ formId: string | number | null; doc: SitePageDoc }> => {
@@ -94,6 +107,8 @@ function ContactPage() {
   const [website, setWebsite] = useState("");
   // Named `selectedServices` to avoid shadowing the module-level `services`
   // options array used to render the checkboxes below.
+  const { role } = Route.useSearch();
+  const applying = Boolean(role);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [budget, setBudget] = useState("");
   const [message, setMessage] = useState("");
@@ -111,6 +126,7 @@ function ContactPage() {
       services: selectedServices.join(", "),
       budget,
       message,
+      ...(role ? { role } : {}),
     };
     // Save to the CMS when the form exists; never regress the UX — always show
     // the success state, even if the POST fails or the form id is unavailable.
@@ -136,14 +152,19 @@ function ContactPage() {
               className="mt-6 max-w-[15ch] font-display text-5xl font-semibold leading-[0.98] md:text-7xl"
               data-reveal
             >
-              {s("hero_title", "Tell us about your")}{" "}
-              <span className="text-gold">{s("hero_title_em", "project")}</span>.
+              {applying ? "Tell us why you'd be" : s("hero_title", "Tell us about your")}{" "}
+              <span className="text-gold">
+                {applying ? "a fit" : s("hero_title_em", "project")}
+              </span>
+              .
             </h1>
             <p className="mt-7 max-w-md text-lg leading-relaxed text-muted-foreground" data-reveal>
-              {s(
-                "hero_subtitle",
-                "Answer a few questions and we'll reply within one business day with a plan, a timeline, and a fair budget.",
-              )}
+              {applying
+                ? `Applying for ${role}. Tell us what you would own and show us one thing you have shipped — we reply within one business day.`
+                : s(
+                    "hero_subtitle",
+                    "Answer a few questions and we'll reply within one business day with a plan, a timeline, and a fair budget.",
+                  )}
             </p>
           </div>
           <figure className="relative" data-reveal>
@@ -236,9 +257,7 @@ function ContactPage() {
                 </div>
                 <div>
                   <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Studio</p>
-                  <p className="mt-1 text-foreground">
-                    {s("contact_studio", "Remote-first")}
-                  </p>
+                  <p className="mt-1 text-foreground">{s("contact_studio", "Remote-first")}</p>
                   <p className="mt-1 text-sm text-muted-foreground">
                     {s(
                       "contact_studio_note",
@@ -354,46 +373,56 @@ function ContactPage() {
                   </Field>
                 </div>
 
-                <Field label="What do you need?">
-                  <div className="flex flex-wrap gap-2">
-                    {serviceOptions.map((s) => (
-                      <label
-                        key={s}
-                        className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
-                      >
-                        <input
-                          type="checkbox"
-                          className="accent-lime"
-                          checked={selectedServices.includes(s)}
-                          onChange={() => toggleService(s)}
-                        />
-                        {s}
-                      </label>
-                    ))}
-                  </div>
-                </Field>
+                {!applying && (
+                  <>
+                    <Field label="What do you need?">
+                      <div className="flex flex-wrap gap-2">
+                        {serviceOptions.map((s) => (
+                          <label
+                            key={s}
+                            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
+                          >
+                            <input
+                              type="checkbox"
+                              className="accent-lime"
+                              checked={selectedServices.includes(s)}
+                              onChange={() => toggleService(s)}
+                            />
+                            {s}
+                          </label>
+                        ))}
+                      </div>
+                    </Field>
 
-                <Field label="Budget">
-                  <div className="flex flex-wrap gap-2">
-                    {budgetOptions.map((b) => (
-                      <label
-                        key={b}
-                        className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
-                      >
-                        <input
-                          type="radio"
-                          name="budget"
-                          className="accent-lime"
-                          checked={budget === b}
-                          onChange={() => setBudget(b)}
-                        />
-                        {b}
-                      </label>
-                    ))}
-                  </div>
-                </Field>
+                    <Field label="Budget">
+                      <div className="flex flex-wrap gap-2">
+                        {budgetOptions.map((b) => (
+                          <label
+                            key={b}
+                            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm transition-colors hover:border-lime/40 hover:bg-surface has-checked:border-lime/50 has-checked:bg-lime/10 has-checked:text-foreground"
+                          >
+                            <input
+                              type="radio"
+                              name="budget"
+                              className="accent-lime"
+                              checked={budget === b}
+                              onChange={() => setBudget(b)}
+                            />
+                            {b}
+                          </label>
+                        ))}
+                      </div>
+                    </Field>
+                  </>
+                )}
 
-                <Field label="Tell us about your project">
+                <Field
+                  label={
+                    applying
+                      ? "Why this role, and one thing you have shipped"
+                      : "Tell us about your project"
+                  }
+                >
                   <textarea
                     rows={5}
                     required

@@ -3,12 +3,7 @@ import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
 import { StatsRow } from "@/components/sections";
-import {
-  cmsFind,
-  cmsFindOne,
-  pageStr,
-  type SitePageDoc,
-} from "@/lib/cms";
+import { cmsFind, cmsFindOne, pageStr, type SitePageDoc } from "@/lib/cms";
 import { MapPin, ArrowUpRight, ArrowDown } from "lucide-react";
 
 type JobCard = {
@@ -32,8 +27,12 @@ type CmsJob = {
 export const Route = createFileRoute("/careers")({
   head: ({ loaderData }) => {
     const d = loaderData?.doc ?? null;
-    const title = pageStr(d, "meta_title", 'Careers — Auxtech');
-    const description = pageStr(d, "meta_description", 'Join a senior-only, remote-first studio. Open roles across design and engineering.');
+    const title = pageStr(d, "meta_title", "Careers — Auxtech");
+    const description = pageStr(
+      d,
+      "meta_description",
+      "Join a senior-only, remote-first studio. Open roles across design and engineering.",
+    );
     return {
       meta: [
         { title },
@@ -70,27 +69,85 @@ export const Route = createFileRoute("/careers")({
 });
 
 const jobs = [
-  { role: "Senior Full-Stack Engineer", dept: "Engineering", loc: "Remote · Worldwide", salary: "$130k–$175k", tags: ["TypeScript", "React", "Node"] },
-  { role: "Senior Product Designer", dept: "Design", loc: "Remote · Worldwide", salary: "$110k–$150k", tags: ["Product", "Systems", "Figma"] },
-  { role: "Mobile Engineer (React Native)", dept: "Engineering", loc: "Remote · Worldwide", salary: "$115k–$155k", tags: ["React Native", "Swift", "Kotlin"] },
-  { role: "Design Engineer (Motion)", dept: "Design × Engineering", loc: "Remote · EU overlap", salary: "$125k–$165k", tags: ["GSAP", "WebGL", "CSS"] },
-  { role: "Senior Growth Marketer", dept: "Marketing", loc: "Remote · EU overlap", salary: "$95k–$130k", tags: ["Paid", "Lifecycle", "CRO"] },
+  {
+    role: "Senior Full-Stack Engineer",
+    dept: "Engineering",
+    loc: "Remote · Worldwide",
+    salary: "$130k–$175k",
+    tags: ["TypeScript", "React", "Node"],
+  },
+  {
+    role: "Senior Product Designer",
+    dept: "Design",
+    loc: "Remote · Worldwide",
+    salary: "$110k–$150k",
+    tags: ["Product", "Systems", "Figma"],
+  },
+  {
+    role: "Mobile Engineer (React Native)",
+    dept: "Engineering",
+    loc: "Remote · Worldwide",
+    salary: "$115k–$155k",
+    tags: ["React Native", "Swift", "Kotlin"],
+  },
+  {
+    role: "Design Engineer (Motion)",
+    dept: "Design × Engineering",
+    loc: "Remote · EU overlap",
+    salary: "$125k–$165k",
+    tags: ["GSAP", "WebGL", "CSS"],
+  },
+  {
+    role: "Senior Growth Marketer",
+    dept: "Marketing",
+    loc: "Remote · EU overlap",
+    salary: "$95k–$130k",
+    tags: ["Paid", "Lifecycle", "CRO"],
+  },
 ];
 
 const benefits = [
   { t: "Remote-first, always", d: "Work from anywhere. Async by default, meetings by exception." },
-  { t: "Salary published, equity real", d: "Every band is public before you apply. Ownership that actually vests." },
-  { t: "A budget to grow", d: "A generous learning stipend and conference time, no approval theatre." },
-  { t: "Health and real time off", d: "Comprehensive coverage and a minimum-holiday policy we enforce." },
-  { t: "Gear, your choice", d: "Top-tier equipment arrives before your first day. Pick your stack." },
+  {
+    t: "Salary published, equity real",
+    d: "Every band is public before you apply. Ownership that actually vests.",
+  },
+  {
+    t: "A budget to grow",
+    d: "A generous learning stipend and conference time, no approval theatre.",
+  },
+  {
+    t: "Health and real time off",
+    d: "Comprehensive coverage and a minimum-holiday policy we enforce.",
+  },
+  {
+    t: "Gear, your choice",
+    d: "Top-tier equipment arrives before your first day. Pick your stack.",
+  },
   { t: "Hours you own", d: "Ship on your rhythm. We measure output, not hours at a keyboard." },
 ];
 
 const weekOne = [
-  { day: "Day 1", t: "Keys to everything", d: "Gear arrives before you do. Repos, Figma, Slack — full access by lunch." },
-  { day: "Day 2", t: "Onto a live project", d: "Paired with a lead on real client work. No sandbox, no shadowing period." },
-  { day: "Day 3", t: "First PR merged", d: "Something small and real, reviewed within hours. Seniors ship early." },
-  { day: "Day 5", t: "Demo Friday", d: "Show what you shipped to the whole studio — everyone does, every week." },
+  {
+    day: "Day 1",
+    t: "Keys to everything",
+    d: "Gear arrives before you do. Repos, Figma, Slack — full access by lunch.",
+  },
+  {
+    day: "Day 2",
+    t: "Onto a live project",
+    d: "Paired with a lead on real client work. No sandbox, no shadowing period.",
+  },
+  {
+    day: "Day 3",
+    t: "First PR merged",
+    d: "Something small and real, reviewed within hours. Seniors ship early.",
+  },
+  {
+    day: "Day 5",
+    t: "Demo Friday",
+    d: "Show what you shipped to the whole studio — everyone does, every week.",
+  },
 ];
 
 function Page() {
@@ -113,7 +170,10 @@ function Page() {
             {s("hero_title", "Do the best work of your career.")}
           </h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-            {s("hero_subtitle", "Join one senior team, remote-first. Senior-only. No juniors, no handoffs, no red tape.")}
+            {s(
+              "hero_subtitle",
+              "Join one senior team, remote-first. Senior-only. No juniors, no handoffs, no red tape.",
+            )}
           </p>
           <div className="mt-10" data-reveal>
             <a
@@ -144,12 +204,15 @@ function Page() {
       <section id="roles" className="block-light scroll-mt-24">
         <div className="container-page py-24">
           <div className="flex max-w-4xl flex-wrap items-end justify-between gap-6">
-            <h2 className="font-display text-4xl font-semibold leading-tight md:text-6xl" data-split>
+            <h2
+              className="font-display text-4xl font-semibold leading-tight md:text-6xl"
+              data-split
+            >
               We're hiring.
             </h2>
             <p className="max-w-sm text-sm text-muted-foreground" data-reveal>
-              Every role is senior, every salary is published. Interviews are two calls and a
-              paid working session — never a take-home marathon.
+              Every role is senior, every salary is published. Interviews are two calls and a paid
+              working session — never a take-home marathon.
             </p>
           </div>
           <div className="mt-12 grid gap-4" data-cards data-cards-stagger="0.07">
@@ -157,6 +220,7 @@ function Page() {
               <Link
                 key={j.role}
                 to="/contact"
+                search={{ role: j.role }}
                 className="group glare-card gradient-card lift shine flex flex-wrap items-center justify-between gap-5 rounded-2xl p-6 hover:border-gold/40 md:p-7"
                 data-card
               >
@@ -174,7 +238,10 @@ function Page() {
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {j.tags.map((t) => (
-                      <span key={t} className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted-foreground">
+                      <span
+                        key={t}
+                        className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted-foreground"
+                      >
                         {t}
                       </span>
                     ))}
@@ -195,7 +262,10 @@ function Page() {
       {/* ---- Benefits (tint band, editorial 2-col list — no icon-card grid) ---- */}
       <section className="block-tint">
         <div className="container-page py-24">
-          <h2 className="max-w-2xl font-display text-4xl font-semibold leading-tight md:text-6xl" data-reveal>
+          <h2
+            className="max-w-2xl font-display text-4xl font-semibold leading-tight md:text-6xl"
+            data-reveal
+          >
             What you get for saying yes.
           </h2>
           <div className="mt-12 grid gap-x-12 md:grid-cols-2" data-reveal-group>
@@ -225,7 +295,10 @@ function Page() {
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal-child>
               After you sign
             </p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl" data-split>
+            <h2
+              className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl"
+              data-split
+            >
               Week one at Auxtech.
             </h2>
           </div>
@@ -235,7 +308,9 @@ function Page() {
               {weekOne.map((step) => (
                 <div key={step.day} data-reveal-child>
                   <div className="timeline-dot hidden md:block" />
-                  <p className="text-xs uppercase tracking-[0.24em] text-gold md:mt-5">{step.day}</p>
+                  <p className="text-xs uppercase tracking-[0.24em] text-gold md:mt-5">
+                    {step.day}
+                  </p>
                   <h3 className="mt-2 font-display text-xl font-semibold">{step.t}</h3>
                   <p className="mt-2 max-w-[30ch] text-sm text-muted-foreground">{step.d}</p>
                 </div>
@@ -253,8 +328,8 @@ function Page() {
               Don't see your role? Pitch us.
             </h2>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-              Half the studio joined through a cold note, not a job post. Tell us what
-              you'd own here and show us one thing you've shipped that you're proud of.
+              Half the studio joined through a cold note, not a job post. Tell us what you'd own
+              here and show us one thing you've shipped that you're proud of.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
