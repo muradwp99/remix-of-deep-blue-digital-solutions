@@ -1,3 +1,4 @@
+import { shareImageMeta } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
@@ -35,8 +36,7 @@ const CATEGORY_KEY: Record<string, PostCategory> = {
 
 const catKeyFromCms = (doc: CmsPost): PostCategory => {
   const first = (doc.categories || []).find((c) => c && typeof c === "object") as
-    | { title?: string }
-    | undefined;
+    { title?: string } | undefined;
   return CATEGORY_KEY[(first?.title || "").toLowerCase()] ?? "news";
 };
 
@@ -111,6 +111,8 @@ export const Route = createFileRoute("/blog_/$slug")({
         { name: "description", content: description },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
+        // An article shares as itself, not as the brand card.
+        ...shareImageMeta(post?.image),
       ],
     };
   },
@@ -191,7 +193,9 @@ function Page() {
             {post.body.map((block, i) => (
               <div key={i} data-reveal>
                 {block.h && (
-                  <h2 className="pt-4 font-display text-2xl md:text-3xl font-semibold">{block.h}</h2>
+                  <h2 className="pt-4 font-display text-2xl md:text-3xl font-semibold">
+                    {block.h}
+                  </h2>
                 )}
                 {block.p && (
                   <p className="mt-3 text-[17px] leading-relaxed text-foreground/85">{block.p}</p>

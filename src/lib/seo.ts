@@ -50,6 +50,39 @@ export function canonicalPath(matches: ReadonlyArray<{ pathname: string }>): str
 }
 
 /**
+ * A page's own share image, for a route that has one.
+ *
+ * This lives per-route rather than in the root: the root's `head()` runs
+ * before child loaders resolve, so `matches[last].loaderData` is empty there —
+ * measured, not assumed. A route's own `head()` receives its loader data and
+ * is the only place that knows what the page is about.
+ *
+ * Returns nothing when there is no image, so the root's brand card stands.
+ * The CMS's `<key>_alt` text is not carried into these DTOs, so no
+ * `og:image:alt` is claimed for a picture this code has not seen.
+ */
+/**
+ * Hosts that serve a different picture every time, or a grey rectangle.
+ *
+ * The blog's coded fallback is a picsum seed, so a post with no cover in the
+ * CMS would otherwise share a random stock photo — which is worse than the
+ * brand card, not better, and looks like a broken integration in an unfurl.
+ * When a real cover is set in WordPress this stops matching and the post
+ * starts sharing itself, with no code change.
+ */
+const PLACEHOLDER_HOSTS = ["picsum.photos", "placehold.co", "via.placeholder.com"];
+
+export function shareImageMeta(image?: string | null) {
+  const src = (image ?? "").trim();
+  if (!src || PLACEHOLDER_HOSTS.some((host) => src.includes(host))) return [];
+  const url = absolute(src);
+  return [
+    { property: "og:image", content: url },
+    { name: "twitter:image", content: url },
+  ];
+}
+
+/**
  * The two entities every page of a company site shares, plus the page itself.
  *
  * Emitted once from the root, so every route carries it. A `@graph` with

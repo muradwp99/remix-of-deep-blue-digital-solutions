@@ -196,7 +196,11 @@ const COLLECTIONS: Record<
       slug: d.slug ?? "",
       title: wpTitle(d),
       excerpt: stripHtml(d.excerpt?.rendered ?? "") || null,
-      heroImage: undefined,
+      // Was hard-coded `undefined`, so a post could never carry a cover
+      // however one was set and every article fell back to a picsum seed —
+      // the same bug `catalogDoc` had with `image`. The mu-plugin registers
+      // `image` on core posts, so that is the key.
+      heroImage: m(d, "image") || undefined,
       content: d.content?.rendered ?? "", // HTML string — lexicalTo* handle it
       categories: (d._embedded?.["wp:term"] ?? [])
         .flat()

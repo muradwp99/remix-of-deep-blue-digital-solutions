@@ -1,3 +1,4 @@
+import { shareImageMeta } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
@@ -62,7 +63,9 @@ const cmsToCard = (p: CmsProject): NextCard => ({
 });
 
 export const Route = createFileRoute("/works_/$slug")({
-  loader: async ({ params }): Promise<{ study: DetailStudy | null; next: NextCard | null; doc?: CmsProject | null }> => {
+  loader: async ({
+    params,
+  }): Promise<{ study: DetailStudy | null; next: NextCard | null; doc?: CmsProject | null }> => {
     const [one, all] = await Promise.all([
       cmsFindOne<CmsProject>("projects", params.slug, { depth: 2 }),
       cmsFind<CmsProject>("projects", { sort: "-featured", limit: 20, depth: 1 }),
@@ -78,7 +81,13 @@ export const Route = createFileRoute("/works_/$slug")({
     const nextCs = getNextCaseStudy(cs.slug);
     return {
       study: cs,
-      next: { slug: nextCs.slug, name: nextCs.name, summary: nextCs.summary, hero: nextCs.hero, heroAlt: nextCs.heroAlt },
+      next: {
+        slug: nextCs.slug,
+        name: nextCs.name,
+        summary: nextCs.summary,
+        hero: nextCs.hero,
+        heroAlt: nextCs.heroAlt,
+      },
     };
   },
   head: ({ loaderData }) => {
@@ -93,6 +102,9 @@ export const Route = createFileRoute("/works_/$slug")({
         { name: "description", content: description },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
+        // The cover comes off the CMS project doc, which the study view does
+        // not carry — `doc` is loaded beside it for exactly this kind of use.
+        ...shareImageMeta(loaderData?.doc?.coverImage as string | undefined),
       ],
     };
   },
@@ -179,20 +191,31 @@ function CaseStudyPage() {
               <div className="glass-strong space-y-7 rounded-3xl p-8">
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Industry</div>
-                    <div className="mt-1.5 font-display text-lg font-semibold">{study.industry}</div>
+                    <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                      Industry
+                    </div>
+                    <div className="mt-1.5 font-display text-lg font-semibold">
+                      {study.industry}
+                    </div>
                   </div>
                   <div>
-                    <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Year</div>
+                    <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                      Year
+                    </div>
                     <div className="mt-1.5 font-display text-lg font-semibold">{study.year}</div>
                   </div>
                 </div>
                 {!!study.services?.length && (
                   <div>
-                    <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Services</div>
+                    <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                      Services
+                    </div>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {study.services.map((s) => (
-                        <span key={s} className="rounded-full border border-gold/30 bg-gold/10 px-3 py-1.5 text-xs text-gold">
+                        <span
+                          key={s}
+                          className="rounded-full border border-gold/30 bg-gold/10 px-3 py-1.5 text-xs text-gold"
+                        >
                           {s}
                         </span>
                       ))}
@@ -201,10 +224,15 @@ function CaseStudyPage() {
                 )}
                 {!!study.stack?.length && (
                   <div>
-                    <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Stack</div>
+                    <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                      Stack
+                    </div>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {study.stack.map((s) => (
-                        <span key={s} className="glass rounded-full px-3 py-1.5 text-xs text-muted-foreground">
+                        <span
+                          key={s}
+                          className="glass rounded-full px-3 py-1.5 text-xs text-muted-foreground"
+                        >
                           {s}
                         </span>
                       ))}
@@ -261,13 +289,19 @@ function CaseStudyPage() {
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal-child>
               The outcome
             </p>
-            <h2 className="mt-4 max-w-2xl font-display text-4xl font-semibold leading-tight md:text-6xl" data-reveal-child>
+            <h2
+              className="mt-4 max-w-2xl font-display text-4xl font-semibold leading-tight md:text-6xl"
+              data-reveal-child
+            >
               What changed.
             </h2>
             <div className="mt-12 grid gap-10 md:grid-cols-3">
               {study.outcomes.map((o) => (
                 <div key={o.label} data-reveal-child>
-                  <div className="font-display text-5xl font-semibold text-gradient-lime md:text-6xl" data-counter>
+                  <div
+                    className="font-display text-5xl font-semibold text-gradient-lime md:text-6xl"
+                    data-counter
+                  >
                     {o.value}
                   </div>
                   <div className="mt-3 max-w-[26ch] text-sm text-muted-foreground">{o.label}</div>
@@ -313,11 +347,16 @@ function CaseStudyPage() {
               In their words
             </p>
             <blockquote className="mt-8 max-w-4xl">
-              <p className="font-display text-3xl font-semibold leading-[1.12] md:text-5xl" data-reveal-child>
+              <p
+                className="font-display text-3xl font-semibold leading-[1.12] md:text-5xl"
+                data-reveal-child
+              >
                 &ldquo;{study.testimonial.quote}&rdquo;
               </p>
               <footer className="mt-10" data-reveal-child>
-                <div className="font-display text-base font-semibold">{study.testimonial.author}</div>
+                <div className="font-display text-base font-semibold">
+                  {study.testimonial.author}
+                </div>
                 <div className="mt-1 text-sm text-muted-foreground">{study.testimonial.role}</div>
               </footer>
             </blockquote>
@@ -328,7 +367,11 @@ function CaseStudyPage() {
       {/* ---- Next case study ---- */}
       {next && (
         <section className="block-light">
-          <Link to="/works/$slug" params={{ slug: next.slug }} className="group block border-t border-border">
+          <Link
+            to="/works/$slug"
+            params={{ slug: next.slug }}
+            className="group block border-t border-border"
+          >
             <div className="container-page grid items-center gap-10 py-20 md:grid-cols-[1fr_auto] md:py-24">
               <div>
                 <p className="text-xs uppercase tracking-[0.28em] text-gold">Next case study</p>
