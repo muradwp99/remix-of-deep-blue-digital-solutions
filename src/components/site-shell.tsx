@@ -4,14 +4,19 @@ import { SiteFooter } from "./site-footer";
 import { Preloader } from "./preloader";
 import { CostCalculator, Chatbot } from "./floating-widgets";
 import { DesignTokensStyle } from "./design-tokens";
+import { shiftSurfaces, useDesignTokens } from "@/lib/design-tokens";
 import { useScrollReveal } from "@/lib/animations";
 import type { PageTheme } from "@/lib/themes";
 
 export function SiteShell({ children, theme }: { children: ReactNode; theme?: PageTheme }) {
   useScrollReveal();
+  // A themed page's surfaces are authored against the stylesheet's page base.
+  // If the CMS moved that base, move them with it, or the cards end up darker
+  // than the page they sit on.
+  const vars = shiftSurfaces(theme?.vars, useDesignTokens());
   return (
     <div
-      style={theme?.vars}
+      style={vars}
       data-theme={theme?.id}
       className="min-h-screen flex flex-col bg-background text-foreground"
     >

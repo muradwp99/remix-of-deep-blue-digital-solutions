@@ -213,30 +213,39 @@ builders/QA at effort 'medium'; everything local, **no push**.
 ## Other open items
 - WordPress site title/tagline were "Born To Be Wild" / empty; set to
   "Auxtech" / "A studio, not a factory." on 2026-09-22.
-- **`design` global — the frontend half is fixed, the server half is not.**
-  It was broken on three axes at once. (a) LivePress stores options as
-  `livepress_<key>` and the bridge read `auxtech_<key>`, so the Design screen
-  saved to a row nothing read. `auxtech_global()` in
-  `wp-headless/auxtech-headless.php` now resolves each global from whichever
-  row owns it and falls back to the other name, and the write path follows the
-  same rule. Copied to the server by hand on 2026-09-22 and verified: a write
-  through `auxtech/v1/option/design` lands in `livepress_design` (LivePress's
-  own `livepress/v1/globals/design` reads it back) and the bridge serves it,
-  while `footer` and `nav` still come from their `auxtech_*` rows. Note that
-  **writes into `wp-content/` are refused in these sessions** as a production
-  deploy, so any future mu-plugin change has to be copied across by hand too. (b) The Design screen edits `gold500`, `gold400`,
-  `gold300` and `ink950` — names from the codebase LivePress was first written
-  against. Only the accent has a variable here to land on, so
-  design-tokens.tsx maps `gold500` → `--gold` and reads the other three
-  without using them: there is no separate hover or light shade, and `ink950`
-  would mean writing `--background`, which the per-page theme system owns.
-  (c) The radius consumer appended `px` unconditionally, so the stylesheet's
-  own `0.75rem` would have rendered as `0.75px` and flattened every rounded
-  corner; a value carrying a unit is now passed through and only a bare number
-  gets `px`. Verified with `{"gold500":"#ff0000","radius":"0.75rem"}` written
-  to the option and read back off the page as `--gold: #ff0000` /
-  `--radius: 0.75rem`, then cleared. The option is empty again, which is the
-  right default — empty means "use the stylesheet".
+- ~~**`design` global**~~ — **done, all four controls.** It was broken on three
+  axes at once. (a) LivePress stores options as `livepress_<key>` and the
+  bridge read `auxtech_<key>`, so the Design screen saved to a row nothing
+  read. `auxtech_global()` in `wp-headless/auxtech-headless.php` resolves each
+  global from whichever row owns it and falls back to the other name, and the
+  write path follows the same rule; copied to the server by hand on 2026-09-22.
+  Note that **writes into `wp-content/` are refused in these sessions** as a
+  production deploy, so any future mu-plugin change has to be copied across by
+  hand too. (b) The screen edits `gold500`, `gold400`, `gold300` and `ink950` —
+  names from the codebase LivePress was first written against, none of which
+  exist here. `src/lib/design-tokens.ts` maps them onto this stylesheet: the
+  accent runs through `makeTheme`, the same generator the per-page themes use,
+  so all ~25 derived tokens follow it rather than `--gold` alone; light and
+  lightest override the tokens their labels name; the background rebuilds the
+  neutral ramp on the picked base. (c) The radius consumer appended `px`
+  unconditionally, so the stylesheet's own `0.75rem` would have rendered as
+  `0.75px` and flattened every rounded corner.
+
+  Two things to know before using it. **The background is clamped to
+  L ≤ 0.32** — it tunes the near-black, it is not a light-mode switch, and
+  every foreground token in the stylesheet is near-white. And **themed pages
+  keep their own accent**: they set the same variables as an inline style on
+  the shell root, which outranks `:root`. They do take the background, which
+  is why `shiftSurfaces` in SiteShell moves a theme's `--surface`,
+  `--surface-2` and `--card` by the same delta the base moved — without it the
+  cards end up darker than the page and the depth reads inside out.
+
+  `oklchFromHex` in themes.ts is the bridge between the hex the editor sends
+  and the hue `makeTheme` wants; checked against the canonical OKLCH for
+  `#ff0000` (L .628 C .258 H 29.2). Verified live with all four set to
+  primaries and with LivePress's own default palette, on a themed and an
+  untuned page, then cleared. The option is empty, which is the right default —
+  empty means "use the stylesheet".
 - `header` and `site_settings` globals are read by nothing; seeding them would
   give an editor fields with no effect.
 - The homepage's `work_items` meta key is not in the LivePress schema, so it

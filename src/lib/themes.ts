@@ -56,6 +56,38 @@ function maxGamutChroma(L: number, H: number): number {
   return lo;
 }
 
+/**
+ * Hex -> OKLCH, the inverse of the matrices above (Ottosson's reference
+ * values). The CMS Design screen hands out hex, and `makeTheme` takes a hue,
+ * so something has to bridge the two — this is that something.
+ *
+ * Returns null for anything that is not a 3- or 6-digit hex colour, which is
+ * how the caller decides whether a token can drive the derived palette or has
+ * to be assigned verbatim.
+ */
+export function oklchFromHex(hex: string): { l: number; c: number; h: number } | null {
+  const t = hex.trim().replace(/^#/, "");
+  const full = t.length === 3 ? t.replace(/./g, (ch) => ch + ch) : t;
+  if (!/^[0-9a-f]{6}$/i.test(full)) return null;
+
+  const srgb = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16) / 255);
+  const [rr, gg, bb] = srgb.map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+
+  const l_ = Math.cbrt(0.4122214708 * rr + 0.5363325363 * gg + 0.0514459929 * bb);
+  const m_ = Math.cbrt(0.2119034982 * rr + 0.6806995451 * gg + 0.1073969566 * bb);
+  const s_ = Math.cbrt(0.0883024619 * rr + 0.2817188376 * gg + 0.6299787005 * bb);
+
+  const L = 0.2104542553 * l_ + 0.793617785 * m_ - 0.0040720468 * s_;
+  const a = 1.9779984951 * l_ - 2.428592205 * m_ + 0.4505937099 * s_;
+  const b = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.808675766 * s_;
+
+  return {
+    l: r(L),
+    c: r(Math.sqrt(a * a + b * b)),
+    h: r(((Math.atan2(b, a) * 180) / Math.PI + 360) % 360),
+  };
+}
+
 export function makeTheme(
   id: string,
   {
