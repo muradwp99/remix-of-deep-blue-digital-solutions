@@ -21,9 +21,28 @@ export function SiteShell({ children, theme }: { children: ReactNode; theme?: Pa
       className="min-h-screen flex flex-col bg-background text-foreground"
     >
       <DesignTokensStyle />
+      {/*
+        First thing in the tab order, hidden until it has focus. The header is
+        a mega menu: ten tab stops stand between the top of the page and the
+        content, on every page, and without this a keyboard user walks all of
+        them again after every navigation.
+
+        `tabIndex={-1}` on <main> is what makes the jump actually move focus —
+        a plain anchor to a non-focusable element scrolls the page but leaves
+        focus behind, so the next Tab returns to the nav.
+
+        The z-index clears the header's 9999. A skip link that reveals behind
+        the fixed header is invisible in exactly the situation it exists for.
+      */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[10000] focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2.5 focus:text-sm focus:font-medium focus:text-foreground focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-gold"
+      >
+        Skip to content
+      </a>
       <Preloader />
       <SiteHeader />
-      <main className="flex-1" data-entrance>
+      <main id="main" tabIndex={-1} className="flex-1 outline-none" data-entrance>
         {children}
       </main>
       <SiteFooter />
@@ -77,10 +96,7 @@ export function PageHeader({
           {title}
         </h1>
         {subtitle && (
-          <p
-            className="mt-6 max-w-2xl text-lg text-muted-foreground"
-            data-reveal
-          >
+          <p className="mt-6 max-w-2xl text-lg text-muted-foreground" data-reveal>
             {subtitle}
           </p>
         )}
