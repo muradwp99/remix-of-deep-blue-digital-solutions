@@ -1,4 +1,5 @@
 import { shareImageMeta } from "@/lib/seo";
+import { notFound } from "@tanstack/react-router";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
@@ -88,7 +89,12 @@ export const Route = createFileRoute("/blog_/$slug")({
       return { post: cmsToPost(doc, params.slug), more };
     }
     const p = getPost(params.slug);
-    if (!p) return { post: null, more: [] };
+    // Neither the CMS nor the built-in set has this slug, so the page does not
+    // exist. Returning `post: null` rendered the empty shell with a 200, which
+    // is a soft 404: a crawler keeps the URL indexed and a reader gets a blank
+    // article instead of being told it is gone. Unpublishing a post in
+    // WordPress leaves exactly this kind of dangling URL behind.
+    if (!p) throw notFound();
     const related = posts.filter((x) => x.slug !== p.slug && x.category === p.category).slice(0, 2);
     const fill = posts
       .filter((x) => x.slug !== p.slug && !related.includes(x))
