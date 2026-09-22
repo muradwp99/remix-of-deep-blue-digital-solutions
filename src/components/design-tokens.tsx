@@ -15,9 +15,12 @@
  * the extra three are read and ignored rather than mapped onto something
  * approximate.
  *
- * `--gold` is also redefined inside the theme classes, which outrank a
- * `:root` rule, so a themed page keeps its own accent and only the default
- * pages follow the editor. That is the intended behaviour, not a limitation.
+ * A themed page also sets `--gold` as an inline style on the shell root, and
+ * an inline style on an ancestor of the content beats a `:root` rule, so it
+ * keeps its own accent and only the untuned pages follow the editor. That is
+ * the intended behaviour, not a limitation — confirmed live with the editor's
+ * accent forced to red: /services/brand-identity stayed on its magenta-rose
+ * hue while the homepage went red.
  */
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";

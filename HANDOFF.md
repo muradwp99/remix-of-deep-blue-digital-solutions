@@ -219,10 +219,12 @@ builders/QA at effort 'medium'; everything local, **no push**.
   saved to a row nothing read. `auxtech_global()` in
   `wp-headless/auxtech-headless.php` now resolves each global from whichever
   row owns it and falls back to the other name, and the write path follows the
-  same rule. **That file is not on the server** — uploading into
-  `wp-content/mu-plugins/` is a production deploy this session could not
-  perform, so copy it there by hand. It also fixes the mojibake em-dashes in
-  the server's current copy. (b) The Design screen edits `gold500`, `gold400`,
+  same rule. Copied to the server by hand on 2026-09-22 and verified: a write
+  through `auxtech/v1/option/design` lands in `livepress_design` (LivePress's
+  own `livepress/v1/globals/design` reads it back) and the bridge serves it,
+  while `footer` and `nav` still come from their `auxtech_*` rows. Note that
+  **writes into `wp-content/` are refused in these sessions** as a production
+  deploy, so any future mu-plugin change has to be copied across by hand too. (b) The Design screen edits `gold500`, `gold400`,
   `gold300` and `ink950` — names from the codebase LivePress was first written
   against. Only the accent has a variable here to land on, so
   design-tokens.tsx maps `gold500` → `--gold` and reads the other three
