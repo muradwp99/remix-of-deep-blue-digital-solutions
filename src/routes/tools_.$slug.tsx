@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { SiteShell, PageHeader } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
@@ -12,6 +12,10 @@ import type { Tool } from "@/lib/tools";
 export const Route = createFileRoute("/tools_/$slug")({
   loader: async ({ params }): Promise<{ tool: Tool | null }> => {
     const doc = await cmsFindOne<CmsTool>("tools", params.slug, { depth: 1 });
+    // Neither the CMS nor the built-in set has this slug. Returning null
+    // rendered the empty shell with a 200 — a soft 404, which keeps the URL
+    // indexed and shows a reader a blank page instead of telling them.
+    if (!doc && !getTool(params.slug)) throw notFound();
     return { tool: doc ? cmsToTool(doc, getTool(params.slug)) : null };
   },
   head: ({ loaderData, params }) => {

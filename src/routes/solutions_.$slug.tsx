@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { SubpageTemplate, SubpageNotFound } from "@/components/subpage-template";
 import { getSubpage } from "@/lib/subpages";
 import { cmsFindOne } from "@/lib/cms";
@@ -17,6 +17,10 @@ import {
 export const Route = createFileRoute("/solutions_/$slug")({
   loader: async ({ params }): Promise<{ dto: SubpageDTO | null }> => {
     const doc = await cmsFindOne<CmsSubpage>("solutions", params.slug, { depth: 1 });
+    // Neither the CMS nor the built-in set has this slug. Returning null
+    // rendered the empty shell with a 200 — a soft 404, which keeps the URL
+    // indexed and shows a reader a blank page instead of telling them.
+    if (!doc && !getSubpage("solutions", params.slug)) throw notFound();
     return { dto: doc ? cmsToSubpageDTO(doc, "solutions") : null };
   },
   head: ({ loaderData, params }) => {
@@ -25,9 +29,11 @@ export const Route = createFileRoute("/solutions_/$slug")({
     // A CMS solution with no meta_title should still get its own name in the
     // tab, not the generic hub title.
     const title =
-      dto?.metaTitle || (dto?.nav ? `${dto.nav} — Auxtech` : "") || fb?.metaTitle || "Solutions — Auxtech";
-    const description =
-      dto?.metaDesc || fb?.metaDesc || "Outcome-led solutions from Auxtech.";
+      dto?.metaTitle ||
+      (dto?.nav ? `${dto.nav} — Auxtech` : "") ||
+      fb?.metaTitle ||
+      "Solutions — Auxtech";
+    const description = dto?.metaDesc || fb?.metaDesc || "Outcome-led solutions from Auxtech.";
     return {
       meta: [
         { title },

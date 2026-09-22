@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { CmsBlocks, type CmsBlockData, type CmsBlockRow } from "@/components/cms-blocks";
@@ -27,11 +27,10 @@ type CmsPage = {
 };
 
 export const Route = createFileRoute("/pages_/$slug")({
-  loader: async ({
-    params,
-  }): Promise<{ page: CmsPage | null; data: CmsBlockData }> => {
+  loader: async ({ params }): Promise<{ page: CmsPage | null; data: CmsBlockData }> => {
     const page = await cmsFindOne<CmsPage>("pages", params.slug);
-    if (!page) return { page: null, data: {} };
+    // /pages/{slug} is CMS-only, so a missing doc means the page is gone.
+    if (!page) throw notFound();
     return { page, data: await cmsBlockData(page.pageBlocks ?? []) };
   },
   head: ({ loaderData }) => {

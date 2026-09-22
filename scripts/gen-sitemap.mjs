@@ -35,7 +35,11 @@ const COLLECTIONS = [
   ["industry", "/industries"],
   ["tool", "/tools"],
   ["project", "/works"],
-  ["learning", "/learning"],
+  // `learning` is deliberately absent. Its 22 docs are list entries on the
+  // four coded category pages (/learning/templates and friends), not pages
+  // of their own — there is no /learning/{item} route, so advertising one
+  // URL per doc listed 22 addresses that have never resolved. Add this back
+  // the day an item detail route exists.
   ["posts", "/blog"],
   ["pages", "/pages"],
 ];

@@ -1,5 +1,5 @@
 import { shareImageMeta } from "@/lib/seo";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useLiveEdits } from "@/lib/edit-bridge";
 import { SiteShell } from "@/components/site-shell";
 import { pageThemes } from "@/lib/themes";
@@ -77,7 +77,10 @@ export const Route = createFileRoute("/works_/$slug")({
     }
     // Fallback to the built-in case studies
     const cs = getCaseStudy(params.slug);
-    if (!cs) return { study: null, next: null };
+    // Neither the CMS nor the built-in set has this slug. Returning null
+    // rendered the empty shell with a 200 — a soft 404, which keeps the URL
+    // indexed and shows a reader a blank page instead of telling them.
+    if (!cs) throw notFound();
     const nextCs = getNextCaseStudy(cs.slug);
     return {
       study: cs,

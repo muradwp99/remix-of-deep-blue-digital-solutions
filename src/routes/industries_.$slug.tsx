@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { SiteShell, PageHeader } from "@/components/site-shell";
 import { FeatureGrid, StatsRow } from "@/components/sections";
@@ -18,6 +18,10 @@ import {
 export const Route = createFileRoute("/industries_/$slug")({
   loader: async ({ params }): Promise<{ dto: IndustryDTO | null }> => {
     const doc = await cmsFindOne<CmsIndustry>("industries", params.slug, { depth: 1 });
+    // Neither the CMS nor the built-in set has this slug. Returning null
+    // rendered the empty shell with a 200 — a soft 404, which keeps the URL
+    // indexed and shows a reader a blank page instead of telling them.
+    if (!doc && !getIndustry(params.slug)) throw notFound();
     return { dto: doc ? cmsToIndustryDTO(doc) : null };
   },
   head: ({ loaderData, params }) => {

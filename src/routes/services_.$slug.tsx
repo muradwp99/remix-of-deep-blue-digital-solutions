@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { SubpageTemplate, SubpageNotFound } from "@/components/subpage-template";
 import { getSubpage } from "@/lib/subpages";
 import { cmsFindOne } from "@/lib/cms";
@@ -24,6 +24,10 @@ import {
 export const Route = createFileRoute("/services_/$slug")({
   loader: async ({ params }): Promise<{ dto: SubpageDTO | null }> => {
     const doc = await cmsFindOne<CmsSubpage>("services", params.slug, { depth: 1 });
+    // Neither the CMS nor the built-in set has this slug. Returning null
+    // rendered the empty shell with a 200 — a soft 404, which keeps the URL
+    // indexed and shows a reader a blank page instead of telling them.
+    if (!doc && !getSubpage("services", params.slug)) throw notFound();
     return { dto: doc ? cmsToSubpageDTO(doc, "services") : null };
   },
   head: ({ loaderData, params }) => {
@@ -32,7 +36,10 @@ export const Route = createFileRoute("/services_/$slug")({
     // A CMS service with no meta_title should still get its own name in the
     // tab, not the generic hub title.
     const title =
-      dto?.metaTitle || (dto?.nav ? `${dto.nav} — Auxtech` : "") || fb?.metaTitle || "Services — Auxtech";
+      dto?.metaTitle ||
+      (dto?.nav ? `${dto.nav} — Auxtech` : "") ||
+      fb?.metaTitle ||
+      "Services — Auxtech";
     const description =
       dto?.metaDesc || fb?.metaDesc || "Design and engineering services from Auxtech.";
     return {

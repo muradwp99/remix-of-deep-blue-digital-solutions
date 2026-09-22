@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { BannerCTA } from "@/components/banner-cta";
@@ -6,6 +6,19 @@ import { learningCategories, getLearningCategory } from "@/lib/learning";
 import { pageThemes } from "@/lib/themes";
 
 export const Route = createFileRoute("/learning_/$slug")({
+  /**
+   * The category list is code, not CMS, so existence is knowable before render.
+   * The component already had a hand-written "doesn't exist" page, but it
+   * rendered with a 200 — a soft 404 that keeps the URL indexed and tells a
+   * crawler the page is fine. Throwing here sets the status; the same markup
+   * moves to `notFoundComponent` so the contextual page is kept rather than
+   * traded for the generic one.
+   */
+  loader: ({ params }) => {
+    const cat = getLearningCategory(params.slug);
+    if (!cat) throw notFound();
+    return { cat };
+  },
   head: ({ params }) => {
     const cat = getLearningCategory(params.slug);
     const title = cat?.metaTitle ?? "Learning — Auxtech";
@@ -20,37 +33,38 @@ export const Route = createFileRoute("/learning_/$slug")({
     };
   },
   component: Page,
+  notFoundComponent: LearningNotFound,
 });
 
-function Page() {
-  const { slug } = Route.useParams();
-  const cat = getLearningCategory(slug);
+/** Shown for a slug with no learning category, with a 404 status behind it. */
+function LearningNotFound() {
+  return (
+    <SiteShell>
+      <section className="block-light">
+        <div className="container-page py-36">
+          <p className="text-xs uppercase tracking-[0.28em] text-gold">404</p>
+          <h1 className="mt-5 max-w-3xl font-display text-5xl font-semibold leading-[0.95] md:text-7xl">
+            That learning page doesn't exist.
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            Everything we publish lives on the resources page.
+          </p>
+          <Link
+            to="/resources"
+            data-magnetic
+            className="group mt-10 inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+            Back to resources
+          </Link>
+        </div>
+      </section>
+    </SiteShell>
+  );
+}
 
-  if (!cat) {
-    return (
-      <SiteShell>
-        <section className="block-light">
-          <div className="container-page py-36">
-            <p className="text-xs uppercase tracking-[0.28em] text-gold">404</p>
-            <h1 className="mt-5 max-w-3xl font-display text-5xl font-semibold leading-[0.95] md:text-7xl">
-              That learning page doesn't exist.
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-              Everything we publish lives on the resources page.
-            </p>
-            <Link
-              to="/resources"
-              data-magnetic
-              className="group mt-10 inline-flex items-center gap-2 rounded-full btn-gold shine px-6 py-3.5 text-sm font-semibold"
-            >
-              <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-              Back to resources
-            </Link>
-          </div>
-        </section>
-      </SiteShell>
-    );
-  }
+function Page() {
+  const { cat } = Route.useLoaderData();
 
   const others = learningCategories.filter((c) => c.slug !== cat.slug);
 
