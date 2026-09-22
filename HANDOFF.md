@@ -246,9 +246,9 @@ builders/QA at effort 'medium'; everything local, **no push**.
   **Radius now has a control too**, added to LivePress 1.5.2 by
   `wp-headless/livepress/radius-control-1.5.2.patch` — a fifth token with
   `kind => 'length'` that renders as a slider and a number instead of a swatch.
-  It stores a bare number and the frontend appends `px`. The patch header says
-  what was and was not verified; the rendered control is the part that could
-  not be, because installing it means writing into `wp-content/`.
+  It stores a bare number and the frontend appends `px`. Installed and
+  confirmed on the Design screen on 2026-09-22; the patch header records how
+  each link was verified. **All five controls now work.**
 
   `oklchFromHex` in themes.ts is the bridge between the hex the editor sends
   and the hue `makeTheme` wants; checked against the canonical OKLCH for

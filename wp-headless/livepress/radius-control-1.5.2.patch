@@ -36,12 +36,20 @@ contract was confirmed live end to end: writing {"radius":"4"} to the design
 global rendered `:root{--radius: 4px}` on auxtechint.com and visibly squared
 the cards.
 
-NOT VERIFIED
-The rendered control itself. Writes into wp-content are refused in these
-sessions, so the patched files could not be installed, and wp-admin is not
-reachable with an application password. Upload the three files and the screen
-will show it; if anything is off, the originals are recoverable from the
-LivePress distribution.
+INSTALLED 2026-09-22
+All three files uploaded and confirmed byte-identical on the server
+(sha256 + size), with WordPress healthy afterwards — REST, login and the
+Design screen all answering, no fatal. `livepress_asset_version()` is
+filemtime-based, so the version string bumped itself and nobody gets a cached
+editor.js.
+
+The control was then rendered from the *served* editor.js against the *live*
+editor.css and driven in a browser: slider and number stay in step, returning
+to the default deletes the override rather than storing 12, 0 is kept, an
+out-of-range number clamps on blur, Reset clears. The row lines up with the
+colour rows above it. The owner confirmed it appears on the Design screen in
+wp-admin, which is the one link a session cannot reach — an application
+password does not authenticate wp-admin.
 
 To apply: git apply --directory=<livepress plugin dir> radius-control-1.5.2.patch
 or just upload the three patched files.
