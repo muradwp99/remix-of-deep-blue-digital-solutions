@@ -5,6 +5,12 @@ Applies to **LivePress 1.5.2**, the version installed at admin.auxtechint.com
 and does not contain the Design screen this patches. Paths are relative to
 wp-content/plugins/livepress/.
 
+The LivePress product repo was brought up to 1.5.2 on 2026-09-22 and now
+carries this change, so a future fix belongs there first and here second. The
+`livepress.php` and `livepress-schema.php` beside this patch are still the old
+snapshot and this site's schema respectively — confusing names, left alone
+because the schema is live content.
+
 WHY
 The Design screen shipped four colour controls and no radius, on the reasoning
 recorded in its own source: "Radius is gone: there is no radius token to
