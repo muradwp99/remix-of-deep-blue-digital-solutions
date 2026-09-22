@@ -277,8 +277,8 @@ function Page() {
               Every screen is critiqued twice before you ever see it.
             </h2>
             <p className="mt-5 max-w-xl text-lg text-muted-foreground" data-reveal>
-              A 50+ senior, remote-first team means your work is reviewed across three time zones
-              overnight. What reaches your inbox has already survived our hardest room.
+              A senior-only team means every screen is reviewed by the people who will build
+              it. What reaches your inbox has already survived our hardest room.
             </p>
             <Link to="/our-story" className="link-underline mt-8 inline-flex items-center gap-2 text-sm font-semibold text-lime" data-reveal>
               How the studio works <ArrowUpRight className="h-4 w-4" />

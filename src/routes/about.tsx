@@ -71,7 +71,7 @@ const teamFallback = [
 
 const statsFallback = [
   { value: "2014", label: "Founded" },
-  { value: "50+", label: "Senior designers & engineers" },
+  { value: "100%", label: "Senior-only, no juniors" },
   { value: "15", label: "Countries, remote-first" },
   { value: "98%", label: "Client retention" },
 ];
@@ -106,7 +106,7 @@ function AboutPage() {
             <p className="mt-7 max-w-md text-lg leading-relaxed text-muted-foreground" data-reveal>
               {s(
                 "hero_subtitle",
-                "50+ senior designers and engineers, remote-first across 15 countries, for teams who care how things are made.",
+                "One senior team, senior-only and remote-first, for teams who care how things are made.",
               )}
             </p>
           </div>
@@ -154,7 +154,7 @@ function AboutPage() {
             <p>
               {s(
                 "story_p2",
-                "More than a decade later, we've grown to 50+ senior designers and engineers, remote-first across 15 countries — and stayed deliberately flat. Senior-only: no juniors, no handoffs. Just the people doing the work, in the same channel as the people making decisions.",
+                "More than a decade later, we are still one senior team, remote-first and deliberately flat. Senior-only: no juniors, no handoffs. Just the people doing the work, in the same channel as the people making decisions.",
               )}
             </p>
             <p>

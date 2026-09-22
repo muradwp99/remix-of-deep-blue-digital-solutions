@@ -88,7 +88,7 @@ const groups = [
       },
       {
         q: "Who will actually work on my project?",
-        a: "Senior designers and engineers only — we're a remote-first team of 50+, and nobody on your build is learning on your dime. The people on the kickoff call are the people who ship.",
+        a: "Senior designers and engineers only — one remote-first team, and nobody on your build is learning on your dime. The people on the kickoff call are the people who ship.",
       },
       {
         q: "Can you sign an NDA?",

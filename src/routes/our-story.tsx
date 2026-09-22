@@ -41,7 +41,7 @@ const timelineFallback = [
   { year: "2016", t: "First enterprise client", d: "Delivered a mission-critical platform, ahead of schedule." },
   { year: "2019", t: "Design + engineering merge", d: "One senior team, from strategy to ship." },
   { year: "2021", t: "SaaS practice launched", d: "Helping founders go from idea to funded product." },
-  { year: "2024", t: "Global team", d: "50+ senior designers and engineers across 15 countries, remote-first." },
+  { year: "2024", t: "Still one team", d: "Senior-only and remote-first, deliberately flat." },
 ];
 
 const statsFallback = [

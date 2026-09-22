@@ -242,7 +242,7 @@ function ContactPage() {
                   <p className="mt-1 text-sm text-muted-foreground">
                     {s(
                       "contact_studio_note",
-                      "Remote-first since 2014 — 50+ senior designers and engineers across nine time zones. Someone is awake when you are.",
+                      "Remote-first since 2014 — one senior team, and the people who answer are the people who build.",
                     )}
                   </p>
                 </div>

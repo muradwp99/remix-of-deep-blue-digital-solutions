@@ -94,7 +94,7 @@ function Page() {
                 Proof, not promises.
               </h2>
               <p className="mt-6 text-lg text-muted-foreground max-w-xl" data-reveal-child>
-                We've been shipping custom software since 2014 with a 50+ senior, remote-first team.
+                We've been shipping custom software since 2014 with one senior, remote-first team.
                 These are the numbers we hold ourselves to on every engagement — ask us for the ones we missed, too.
               </p>
             </div>

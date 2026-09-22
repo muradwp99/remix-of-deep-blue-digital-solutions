@@ -113,7 +113,7 @@ function Page() {
             {s("hero_title", "Do the best work of your career.")}
           </h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground" data-reveal>
-            {s("hero_subtitle", "Join 50+ senior designers and engineers, remote-first across 15 countries. Senior-only. No juniors, no handoffs, no red tape.")}
+            {s("hero_subtitle", "Join one senior team, remote-first. Senior-only. No juniors, no handoffs, no red tape.")}
           </p>
           <div className="mt-10" data-reveal>
             <a
@@ -132,7 +132,7 @@ function Page() {
       <div className="block-light">
         <StatsRow
           stats={[
-            { value: "50+", label: "Senior designers & engineers" },
+            { value: "2014", label: "Founded" },
             { value: "15", label: "Countries, remote-first" },
             { value: "98%", label: "Team retention" },
             { value: "100%", label: "Remote" },

@@ -198,7 +198,7 @@ function Page() {
                 How leadership works here.
               </h2>
               <p className="mt-6 max-w-md text-lg text-muted-foreground" data-reveal-child>
-                A studio of 50+ seniors doesn't need a management layer. It needs leaders who
+                A studio this size doesn't need a management layer. It needs leaders who
                 still do the work — and stay close enough to it to keep the standard.
               </p>
             </div>
