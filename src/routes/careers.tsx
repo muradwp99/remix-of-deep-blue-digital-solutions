@@ -78,7 +78,7 @@ const jobs = [
 ];
 
 const benefits = [
-  { t: "Remote-first, always", d: "Work from anywhere in 15 countries. Async by default, meetings by exception." },
+  { t: "Remote-first, always", d: "Work from anywhere. Async by default, meetings by exception." },
   { t: "Salary published, equity real", d: "Every band is public before you apply. Ownership that actually vests." },
   { t: "A budget to grow", d: "A generous learning stipend and conference time, no approval theatre." },
   { t: "Health and real time off", d: "Comprehensive coverage and a minimum-holiday policy we enforce." },
@@ -133,7 +133,7 @@ function Page() {
         <StatsRow
           stats={[
             { value: "2014", label: "Founded" },
-            { value: "15", label: "Countries, remote-first" },
+            { value: "98", label: "Median Lighthouse at launch" },
             { value: "98%", label: "Team retention" },
             { value: "100%", label: "Remote" },
           ]}

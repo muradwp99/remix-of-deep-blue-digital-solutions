@@ -237,7 +237,7 @@ function ContactPage() {
                 <div>
                   <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Studio</p>
                   <p className="mt-1 text-foreground">
-                    {s("contact_studio", "San Francisco · London · Lisbon")}
+                    {s("contact_studio", "Remote-first")}
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
                     {s(

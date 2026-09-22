@@ -48,7 +48,7 @@ const valuesFallback = [
 const wiredFallback = [
   "Senior-only",
   "No handoffs",
-  "Remote-first, 15 countries",
+  "Remote-first",
   "First demo, day 7",
   "Shippable slice, day 14",
   "98 median Lighthouse",
@@ -72,7 +72,7 @@ const teamFallback = [
 const statsFallback = [
   { value: "2014", label: "Founded" },
   { value: "100%", label: "Senior-only, no juniors" },
-  { value: "15", label: "Countries, remote-first" },
+  { value: "120+", label: "Products shipped" },
   { value: "98%", label: "Client retention" },
 ];
 
@@ -122,7 +122,7 @@ function AboutPage() {
               data-parallax-img
             />
             <figcaption className="absolute bottom-4 left-4 rounded-full bg-background/90 px-4 py-2 text-xs font-medium tracking-wide backdrop-blur">
-              {s("hero_caption", "Est. 2014 · 15 countries")}
+              {s("hero_caption", "Est. 2014 · Remote-first")}
             </figcaption>
           </figure>
         </div>
@@ -178,12 +178,12 @@ function AboutPage() {
           <div className="grid items-center gap-12 md:grid-cols-[0.9fr_1.1fr]">
             <div data-reveal>
               <h2 className="font-display text-4xl font-semibold leading-[1.02] md:text-6xl">
-                {s("studio_heading", "Fifteen time zones. One standard.")}
+                {s("studio_heading", "One team. One standard.")}
               </h2>
               <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
                 {s(
                   "studio_text",
-                  "Somewhere between Lisbon and Osaka, someone from Auxtech is shipping right now. The sun never fully sets on a review.",
+                  "The same people review every piece of work that leaves here. The standard does not shift depending on who picked the ticket up.",
                 )}
               </p>
             </div>
