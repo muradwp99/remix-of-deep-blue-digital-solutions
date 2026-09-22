@@ -1,0 +1,244 @@
+Add a corner-radius control to the LivePress Design screen.
+
+Applies to **LivePress 1.5.2**, the version installed at admin.auxtechint.com
+— not to the 1.0.0 copy sitting next to this file, which is an older snapshot
+and does not contain the Design screen this patches. Paths are relative to
+wp-content/plugins/livepress/.
+
+WHY
+The Design screen shipped four colour controls and no radius, on the reasoning
+recorded in its own source: "Radius is gone: there is no radius token to
+drive." That was true of the codebase LivePress was first written against.
+This frontend has --radius, and src/lib/design-tokens.ts already reads a
+`radius` key off the design global — it simply had no UI, so the only way to
+set it was to POST the option by hand.
+
+WHAT
+- livepress.php: a fifth token, `kind => 'length'`, with min/max/step/unit.
+  A token is a colour unless it says otherwise, so the four existing entries
+  are untouched.
+- assets/editor.js: a `lengthRow()` branch — slider plus number, in px. It
+  keeps the colours' rule that a value equal to the brand default is not an
+  override and is deleted, so Reset hands the token back to the stylesheet.
+  The colour path is not modified.
+- assets/editor.css: track widths for the four-control row, and the slider,
+  number and unit.
+
+The value is stored bare ("4", not "4px") and the frontend appends the unit,
+which is what makes 0 a real setting rather than an empty one.
+
+VERIFIED
+`node --check` on the patched editor.js; brace balance unchanged against the
+originals; 13 behaviour tests against lengthRow() lifted out of the patched
+file (clamping, delete-on-default, 0 stored, empty-box-while-typing ignored,
+reset, Reset-all registration, re-render from a saved value). The storage
+contract was confirmed live end to end: writing {"radius":"4"} to the design
+global rendered `:root{--radius: 4px}` on auxtechint.com and visibly squared
+the cards.
+
+NOT VERIFIED
+The rendered control itself. Writes into wp-content are refused in these
+sessions, so the patched files could not be installed, and wp-admin is not
+reachable with an application password. Upload the three files and the screen
+will show it; if anything is off, the originals are recoverable from the
+LivePress distribution.
+
+To apply: git apply --directory=<livepress plugin dir> radius-control-1.5.2.patch
+or just upload the three patched files.
+
+--- a/livepress.php
++++ b/livepress.php
+@@ -367,6 +367,12 @@
+  * counted rather than guessed (gold-500 is used 455 times, gold-400 221,
+  * gold-300 100, ink-950 302). `gold-700` is used three times and is not worth
+  * a control.
++ *
++ * A token is a colour unless it says otherwise. `kind => 'length'` gets a
++ * slider and a number instead of a swatch, and carries min/max/step/unit; the
++ * value is stored bare and the frontend appends the unit, which is what makes
++ * 0 a legitimate setting rather than an empty one. `check-design-tokens.ts`
++ * compares hexes, so a length has nothing there to disagree with.
+  */
+ function livepress_design_tokens(): array {
+ 	return array(
+@@ -394,6 +400,17 @@
+ 			'hint'     => __( 'The near-black the whole site sits on.', 'livepress' ),
+ 			'fallback' => '#05060a',
+ 		),
++		array(
++			'key'      => 'radius',
++			'kind'     => 'length',
++			'label'    => __( 'Corner radius', 'livepress' ),
++			'hint'     => __( 'How round every card, button, input and image is. 0 squares the site off.', 'livepress' ),
++			'fallback' => 12,
++			'min'      => 0,
++			'max'      => 24,
++			'step'     => 1,
++			'unit'     => 'px',
++		),
+ 	);
+ }
+ 
+--- a/assets/editor.js
++++ b/assets/editor.js
+@@ -1295,7 +1295,11 @@
+ 	 * Now it edits the real custom properties from the frontend's globals.css,
+ 	 * the list arrives from PHP (`livepress_design_tokens()`), and the frontend
+ 	 * both applies them live over postMessage and renders them server-side from
+-	 * the saved option. Radius is gone: there is no radius token to drive.
++	 * the saved option.
++	 *
++	 * Radius came back once the frontend grew a `--radius` token to drive. It
++	 * is a length, not a colour, so it renders as a slider and a number rather
++	 * than a swatch — `kind` on the token says which.
+ 	 */
+ 	function designSection() {
+ 		var d = globals.design || {};
+@@ -1314,7 +1318,106 @@
+ 			return /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test( d[ t.key ] || "" ) ? d[ t.key ] : t.fallback;
+ 		}
+ 
++		/* A length token gets a slider for feel and a number for precision, both
++		   in the unit PHP declared. Stored bare — the frontend appends the unit,
++		   which is why 0 is a real setting here and not an empty one.
++
++		   Same rule as the colours: a value equal to the brand default is not an
++		   override and is deleted, so Reset hands the token back to the
++		   stylesheet instead of pinning it to whatever the stylesheet says
++		   today. */
++		function lengthRow( t ) {
++			var min = Number( t.min != null ? t.min : 0 );
++			var max = Number( t.max != null ? t.max : 32 );
++			var step = Number( t.step || 1 );
++			var unit = t.unit || "px";
++			var fallback = Number( t.fallback );
++
++			function currentLen() {
++				var v = parseFloat( d[ t.key ] );
++				return isNaN( v ) ? fallback : Math.min( max, Math.max( min, v ) );
++			}
++
++			var range = el( "input", {
++				class: "lp-range",
++				type: "range",
++				min: min,
++				max: max,
++				step: step,
++				"aria-label": t.label,
++			} );
++			var num = el( "input", {
++				class: "lp-input lp-num",
++				type: "number",
++				min: min,
++				max: max,
++				step: step,
++				"aria-label": t.label + " in " + unit,
++			} );
++			var suffix = el( "span", { class: "lp-unit", text: unit } );
++			var reset = el( "button", {
++				class: "lp-mini",
++				type: "button",
++				text: __( "Reset", "livepress" ),
++				title: __( "Back to the brand value, ", "livepress" ) + fallback + unit,
++			} );
++
++			var row = el( "div", { class: "lp-field lp-token" + ( d[ t.key ] ? " is-changed" : "" ) }, [
++				el( "label", { class: "lp-label", text: t.label } ),
++				el( "div", { class: "lp-token-row is-length" }, [ range, num, suffix, reset ] ),
++				el( "p", { class: "lp-hint", text: t.hint } ),
++			] );
++
++			function paint( value, alsoNum ) {
++				var v = parseFloat( value );
++				if ( isNaN( v ) ) { return; }
++				v = Math.min( max, Math.max( min, v ) );
++				range.value = v;
++				if ( alsoNum ) { num.value = v; }
++				if ( v === fallback ) {
++					delete d[ t.key ];
++				} else {
++					d[ t.key ] = String( v );
++				}
++				row.classList.toggle( "is-changed", Boolean( d[ t.key ] ) );
++			}
++
++			range.value = currentLen();
++			num.value = currentLen();
++
++			range.addEventListener( "focus", endEdit );
++			range.addEventListener( "blur", endEdit );
++			range.addEventListener( "input", function () {
++				noteEdit( __( "change", "livepress" ) + " " + t.label, "token:" + t.key );
++				paint( range.value, true );
++				push();
++			} );
++
++			/* An empty box is mid-typing, not a zero — wait for a number. */
++			num.addEventListener( "input", function () {
++				if ( "" === num.value.trim() ) { return; }
++				noteEdit( __( "change", "livepress" ) + " " + t.label, "token:" + t.key );
++				paint( num.value, false );
++				push();
++			} );
++			num.addEventListener( "blur", function () { num.value = currentLen(); } );
++
++			reset.addEventListener( "click", function () {
++				pushUndo( "reset " + t.label );
++				paint( fallback, true );
++				push();
++			} );
++
++			rows.push( { def: t, paint: paint, row: row } );
++			return row;
++		}
++
+ 		tokens.forEach( function ( t ) {
++			if ( "length" === t.kind ) {
++				box.appendChild( lengthRow( t ) );
++				return;
++			}
++
+ 			var swatch = el( "input", { class: "lp-swatch", type: "color", "aria-label": t.label } );
+ 			var hex = el( "input", {
+ 				class: "lp-input lp-hex",
+@@ -1399,8 +1502,8 @@
+ 				type: "button",
+ 				text: __( "Reset all to brand", "livepress" ),
+ 				onclick: function () {
+-					if ( ! window.confirm( __( "Put every colour back to the brand default?", "livepress" ) ) ) { return; }
+-					pushUndo( "reset every colour" );
++					if ( ! window.confirm( __( "Put every value back to the brand default?", "livepress" ) ) ) { return; }
++					pushUndo( "reset every token" );
+ 					rows.forEach( function ( r ) { r.paint( r.def.fallback, true ); } );
+ 					push();
+ 				},
+--- a/assets/editor.css
++++ b/assets/editor.css
+@@ -615,6 +615,27 @@
+   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+   text-transform: lowercase;
+ }
++
++/* A length token carries four controls where a colour carries three, and the
++   slider wants the room rather than the readout, so the track order is
++   reversed: value last, control first. */
++.lp-token-row.is-length {
++  grid-template-columns: 1fr 72px auto auto;
++}
++.lp-range {
++  width: 100%;
++  accent-color: var(--accent);
++  cursor: pointer;
++}
++.lp-range:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
++.lp-num {
++  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
++  text-align: right;
++}
++.lp-unit {
++  font-size: var(--t-sm);
++  color: var(--ink-3);
++}
+ /* Typing a half-finished hex is normal, so this marks the field rather than
+    rejecting the keystroke — the preview simply waits for a real colour. */
+ .lp-hex.is-invalid { border-color: var(--warn); }

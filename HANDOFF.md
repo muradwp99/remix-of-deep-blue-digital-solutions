@@ -221,7 +221,10 @@ builders/QA at effort 'medium'; everything local, **no push**.
   write path follows the same rule; copied to the server by hand on 2026-09-22.
   Note that **writes into `wp-content/` are refused in these sessions** as a
   production deploy, so any future mu-plugin change has to be copied across by
-  hand too. (b) The screen edits `gold500`, `gold400`, `gold300` and `ink950` —
+  hand too. (An earlier note here claimed the server copy had mojibake
+  em-dashes. It does not — that was Windows decoding a curl pipe as the console
+  codepage. Read cPanel file content to a file and json.load it, never through
+  a pipe.) (b) The screen edits `gold500`, `gold400`, `gold300` and `ink950` —
   names from the codebase LivePress was first written against, none of which
   exist here. `src/lib/design-tokens.ts` maps them onto this stylesheet: the
   accent runs through `makeTheme`, the same generator the per-page themes use,
@@ -239,6 +242,13 @@ builders/QA at effort 'medium'; everything local, **no push**.
   is why `shiftSurfaces` in SiteShell moves a theme's `--surface`,
   `--surface-2` and `--card` by the same delta the base moved — without it the
   cards end up darker than the page and the depth reads inside out.
+
+  **Radius now has a control too**, added to LivePress 1.5.2 by
+  `wp-headless/livepress/radius-control-1.5.2.patch` — a fifth token with
+  `kind => 'length'` that renders as a slider and a number instead of a swatch.
+  It stores a bare number and the frontend appends `px`. The patch header says
+  what was and was not verified; the rendered control is the part that could
+  not be, because installing it means writing into `wp-content/`.
 
   `oklchFromHex` in themes.ts is the bridge between the hex the editor sends
   and the hue `makeTheme` wants; checked against the canonical OKLCH for
