@@ -109,12 +109,19 @@ chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
    the `ICONS` map in cms-catalog.ts silently becomes Sparkles — add the icon
    there first. The coded arrays remain as the fallback when the repeater is
    empty.
-2. ~~Header mega menu~~ — **done.** Every `/services/{slug}` link takes its
-   label and description from the CMS doc, and a service with no coded link is
-   appended in a "More" column, so a service added in WordPress reaches the nav
-   on its own. The curated Build/Design/Mobile/Ongoing grouping and the
-   non-service links (Web Applications → /custom-software) are untouched. Top
-   level order/rename/hide still comes from the `nav` global.
+2. ~~Header mega menu~~ — **done, both panels.** One `withCmsNav` in
+   site-header.tsx takes the panel and the link prefix; Services and Free Tools
+   both go through it. Every `/services/{slug}` and `/tools/{slug}` link takes
+   its label and description from the matching CMS doc, so a rename in
+   WordPress renames it in the nav, and a doc with no coded link is added on
+   its own. Where the un-linked ones land is per panel: Services gets a "More"
+   column (it has four already, and crowding one would unbalance it), tools are
+   appended to Free Tools (a fourth column beside Learning and Blog & News
+   would not fit). Tools were hardcoded until 2026-09-22, which is why Speed
+   Test and Brand Grader had pages but no nav entry — the CMS held eight tool
+   docs and the menu listed six. The curated Build/Design/Mobile/Ongoing
+   grouping and the non-service links (Web Applications → /custom-software) are
+   untouched. Top level order/rename/hide still comes from the `nav` global.
 3. ~~Images~~ — **done.** `catalogDoc` in cms.ts used to hard-code
    `image: undefined`, so a CMS image could never reach a catalog page however
    it was set; it now reads the `image` meta. Hero images on service, solution,
@@ -180,9 +187,12 @@ chat (floating-widgets) answers via `runChat`. Mega menu lists the 6 strongest.
    against `collection:page` (`wp-headless/livepress/schema-page-extra.php`).
    The bespoke sections' internals remain code, by design: they are what makes
    those pages look like themselves. This adds composition alongside them.
-5. `DEPLOY.md` still describes the abandoned `rsautomartllc.com` hosts, and
-   `src/lib/cms.ts:21` still defaults to `http://auxtech-v2.local`. Harmless
-   (the build bakes `VITE_CMS_URL`) but both are stale.
+5. ~~Stale deploy docs and CMS default~~ — **done.** `DEPLOY.md` described
+   the abandoned `rsautomartllc.com` hosts and was rewritten. `cms.ts` fell
+   back to `http://auxtech-v2.local`, so a build that forgot `VITE_CMS_URL`
+   returned 200 on every page while fetching nothing — the exact failure this
+   layer is built to hide. The fallback is production now; developing against a
+   local WordPress is the explicit case, set in `.env.local`.
 
 ## ROUND 4 — still queued (user-approved scope)
 Same WORKFLOW.md team pattern:
@@ -203,13 +213,28 @@ builders/QA at effort 'medium'; everything local, **no push**.
 ## Other open items
 - WordPress site title/tagline were "Born To Be Wild" / empty; set to
   "Auxtech" / "A studio, not a factory." on 2026-09-22.
-- **`design` global is wired to nothing.** LivePress writes `livepress_design`;
-  the bridge reads `auxtech_design`. Its Design screen therefore edits a row the
-  site never reads. Left empty deliberately — empty means "use the stylesheet",
-  which is correct — but if you want it working, one of the two sides has to
-  move. Note its consumer emits `--radius: <value>px` while the stylesheet uses
-  `0.75rem`, so seeding the current value verbatim would render `0.75px` and
-  flatten every rounded corner.
+- **`design` global — the frontend half is fixed, the server half is not.**
+  It was broken on three axes at once. (a) LivePress stores options as
+  `livepress_<key>` and the bridge read `auxtech_<key>`, so the Design screen
+  saved to a row nothing read. `auxtech_global()` in
+  `wp-headless/auxtech-headless.php` now resolves each global from whichever
+  row owns it and falls back to the other name, and the write path follows the
+  same rule. **That file is not on the server** — uploading into
+  `wp-content/mu-plugins/` is a production deploy this session could not
+  perform, so copy it there by hand. It also fixes the mojibake em-dashes in
+  the server's current copy. (b) The Design screen edits `gold500`, `gold400`,
+  `gold300` and `ink950` — names from the codebase LivePress was first written
+  against. Only the accent has a variable here to land on, so
+  design-tokens.tsx maps `gold500` → `--gold` and reads the other three
+  without using them: there is no separate hover or light shade, and `ink950`
+  would mean writing `--background`, which the per-page theme system owns.
+  (c) The radius consumer appended `px` unconditionally, so the stylesheet's
+  own `0.75rem` would have rendered as `0.75px` and flattened every rounded
+  corner; a value carrying a unit is now passed through and only a bare number
+  gets `px`. Verified with `{"gold500":"#ff0000","radius":"0.75rem"}` written
+  to the option and read back off the page as `--gold: #ff0000` /
+  `--radius: 0.75rem`, then cleared. The option is empty again, which is the
+  right default — empty means "use the stylesheet".
 - `header` and `site_settings` globals are read by nothing; seeding them would
   give an editor fields with no effect.
 - The homepage's `work_items` meta key is not in the LivePress schema, so it

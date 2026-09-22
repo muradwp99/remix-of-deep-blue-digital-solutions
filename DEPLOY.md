@@ -25,9 +25,9 @@ Both are required, and neither is optional in the way it looks:
   **cloudflare**, which emits a `wrangler.json` and an entry the server cannot
   run. Build without this and you get a clean, useless bundle.
 - **`VITE_CMS_URL`** — Vite bakes this into the bundle at build time. Changing
-  where the CMS lives means a **rebuild**, not a restart. Without it the build
-  falls back to a LocalWP address and the live site silently serves its
-  built-in copy instead of CMS content.
+  where the CMS lives means a **rebuild**, not a restart. The fallback is
+  production, so forgetting it is no longer fatal, but set it anyway: it is the
+  only thing that says which CMS a bundle is talking to.
 
 `npm run build` also regenerates `public/robots.txt` and `public/sitemap.xml`
 (`scripts/gen-sitemap.mjs`), pulling dynamic URLs from the CMS.
