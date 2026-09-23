@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { runChat } from "@/lib/tools-api";
 import { Calculator, X, MessageCircle, Send, Sparkles } from "lucide-react";
 import gsap from "gsap";
@@ -126,9 +127,7 @@ export function CostCalculator() {
           </div>
 
           <div className="gradient-card rounded-xl p-4 mb-3">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Estimated
-            </p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Estimated</p>
             <div className="mt-1 font-display text-3xl font-semibold text-gradient-lime">
               ${total.toLocaleString()}
             </div>
@@ -136,12 +135,18 @@ export function CostCalculator() {
               Final pricing depends on scope. Book a call for a firm quote.
             </p>
           </div>
-          <a
-            href="/contact"
+          {/*
+            A router Link, not an anchor: this is the calculator's only exit and
+            it sits on every page. A raw href reloads the document, which throws
+            away the estimate the visitor just built and makes the primary
+            conversion action the slowest click on the site.
+          */}
+          <Link
+            to="/contact"
             className="block text-center rounded-full bg-lime px-4 py-2.5 text-sm font-semibold text-lime-foreground"
           >
             Get exact quote
-          </a>
+          </Link>
         </div>
       )}
 
@@ -267,9 +272,7 @@ export function Chatbot() {
               </div>
               <div>
                 <h4 className="font-display text-base font-semibold">Nova</h4>
-                <p className="text-[10px] uppercase tracking-widest text-lime">
-                  Online
-                </p>
+                <p className="text-[10px] uppercase tracking-widest text-lime">Online</p>
               </div>
             </div>
             <button
