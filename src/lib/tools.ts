@@ -27,12 +27,12 @@ export const tools: Tool[] = [
     nav: "Website Audit Tool",
     metaTitle: "Free Website Audit — Auxtech",
     metaDesc:
-      "A 12-point human audit of your website: speed, SEO, accessibility, and conversion — delivered as an annotated report within two business days.",
+      "Run an instant check of your site's speed, SEO, accessibility and conversion, then book the free call where two senior engineers take it through the full twelve points.",
     eyebrow: "Free Tool · Website Audit",
     title: "Twelve points, zero",
     titleEm: "spin",
     subtitle:
-      "Send us your URL. Two senior engineers run a 12-point audit — speed, SEO, accessibility, conversion — and you get an annotated report within two business days. Human-written, not a PDF from a crawler.",
+      "Paste your URL for an instant read on speed, SEO, accessibility and conversion. The full twelve-point audit is human-written by two senior engineers, not a PDF from a crawler, and it comes with the free call.",
     image: u("photo-1551288049-bebda4e38f71"),
     checks: [
       "Core Web Vitals against field data",
@@ -69,12 +69,12 @@ export const tools: Tool[] = [
     nav: "Speed Test",
     metaTitle: "Website Speed Review — Auxtech",
     metaDesc:
-      "A human Core Web Vitals review of your site: lab data, field data, and the prioritized fix list — free, within two business days.",
+      "An instant Core Web Vitals check of your site, and a free human review — field data, real devices, and the prioritized fix list — when you book the call.",
     eyebrow: "Free Tool · Speed Review",
     title: "Find the seconds you're",
     titleEm: "losing",
     subtitle:
-      "Automated speed scores lie in both directions. Send your URL and we'll review lab and field Core Web Vitals on real devices, then send the prioritized fix list — free, within two business days.",
+      "Automated speed scores lie in both directions. The instant check gives you real server timings and Core Web Vitals estimates. The human review — field data, mid-range Android, the fixes ranked by return — comes with the free call.",
     image: u("photo-1558494949-ef010cbdcc31"),
     checks: [
       "LCP, INP, and CLS from real-user field data",

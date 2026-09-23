@@ -35,7 +35,8 @@ export function AuditRequest({ checks, ctaLabel }: { checks: string[]; ctaLabel:
         <div className="glass-strong rounded-3xl p-8 md:p-10" data-reveal-child>
           <h3 className="font-display text-2xl font-semibold">Request yours</h3>
           <p className="mt-2 text-sm text-muted-foreground">
-            Free, human-written, delivered within two business days. No drip campaign follows it.
+            Free and human-written. Send it through the form and you'll have it within two
+            business days. No drip campaign follows it.
           </p>
           <label
             className="mt-6 block text-xs uppercase tracking-[0.2em] text-muted-foreground"

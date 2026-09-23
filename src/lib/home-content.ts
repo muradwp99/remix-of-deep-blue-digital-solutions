@@ -289,7 +289,7 @@ export const homeDefaults: HomeContent = {
   audit: {
     eyebrow: "Not ready to commit?",
     heading: "Get a free 48-hour technical audit instead.",
-    text: "Send us your URL. Within two business days you get a prioritized action plan covering speed, SEO, accessibility, and conversion — yours to keep, whoever you build with.",
+    text: "Send your URL through the form and you'll have a prioritized action plan within two business days, covering speed, SEO, accessibility, and conversion — yours to keep, whoever you build with.",
     bullets: [
       "Core Web Vitals breakdown with the three highest-impact fixes",
       "Conversion leaks ranked by estimated revenue impact",
