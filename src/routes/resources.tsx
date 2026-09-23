@@ -4,12 +4,8 @@ import { pageThemes } from "@/lib/themes";
 import { BannerCTA } from "@/components/banner-cta";
 import { ArrowUpRight, Send } from "lucide-react";
 import { useState } from "react";
-import {
-  cmsFindOne,
-  pageRows,
-  pageStr,
-  type SitePageDoc,
-} from "@/lib/cms";
+import { cmsSubmitForm } from "@/lib/cms";
+import { cmsFindOne, pageRows, pageStr, type SitePageDoc } from "@/lib/cms";
 import { useLiveEdits } from "@/lib/edit-bridge";
 
 export const Route = createFileRoute("/resources")({
@@ -46,16 +42,44 @@ const tools = [
 ];
 
 const learning = [
-  { title: "Design System Course", desc: "8 modules on tokens, components, and governance — drawn from client systems.", tag: "Course" },
-  { title: "Ship-Fast Playbook", desc: "How we get a first demo up by day 7 and a shippable slice by day 14.", tag: "Guide" },
-  { title: "Founder Handbook", desc: "Scoping, hiring, and budget notes for early-stage teams buying their first build.", tag: "Guide" },
-  { title: "Video Tutorials", desc: "Short-form, hands-on walkthroughs from the engineers who ship.", tag: "Video" },
+  {
+    title: "Design System Course",
+    desc: "8 modules on tokens, components, and governance — drawn from client systems.",
+    tag: "Course",
+  },
+  {
+    title: "Ship-Fast Playbook",
+    desc: "How we get a first demo up by day 7 and a shippable slice by day 14.",
+    tag: "Guide",
+  },
+  {
+    title: "Founder Handbook",
+    desc: "Scoping, hiring, and budget notes for early-stage teams buying their first build.",
+    tag: "Guide",
+  },
+  {
+    title: "Video Tutorials",
+    desc: "Short-form, hands-on walkthroughs from the engineers who ship.",
+    tag: "Video",
+  },
 ];
 
 const writing = [
-  { title: "Engineering Notes", desc: "Deep-dives from the team: performance budgets, migrations, hard-won fixes.", tag: "Series" },
-  { title: "Design Essays", desc: "Craft, taste, process — why the details clients notice aren't the ones you expect.", tag: "Series" },
-  { title: "Studio Updates", desc: "What we shipped this month, with the numbers that moved.", tag: "Monthly" },
+  {
+    title: "Engineering Notes",
+    desc: "Deep-dives from the team: performance budgets, migrations, hard-won fixes.",
+    tag: "Series",
+  },
+  {
+    title: "Design Essays",
+    desc: "Craft, taste, process — why the details clients notice aren't the ones you expect.",
+    tag: "Series",
+  },
+  {
+    title: "Studio Updates",
+    desc: "What we shipped this month, with the numbers that moved.",
+    tag: "Monthly",
+  },
   { title: "Announcements", desc: "New partnerships, new hires, new capabilities.", tag: "News" },
 ];
 
@@ -84,13 +108,22 @@ function ResourcesPage() {
               <span className="text-gold">{s("hero_title_em", "writing")}</span>.
             </h1>
             <p className="mt-7 max-w-md text-lg leading-relaxed text-muted-foreground" data-reveal>
-              {s("hero_subtitle", "Everything we've built to help teams ship better software — no signup, no gate.")}
+              {s(
+                "hero_subtitle",
+                "Everything we've built to help teams ship better software — no signup, no gate.",
+              )}
             </p>
           </div>
           <figure className="relative" data-reveal>
-            <div className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border border-gold/30" aria-hidden />
+            <div
+              className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border border-gold/30"
+              aria-hidden
+            />
             <img
-              src={s("hero_img", "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1920&q=70")}
+              src={s(
+                "hero_img",
+                "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1920&q=70",
+              )}
               alt="Open notebooks and reading material from the Auxtech studio"
               className="aspect-[4/5] w-full rounded-[2rem] border border-black/10 object-cover shadow-elegant transition-transform duration-700 hover:scale-[1.015]"
               data-parallax-img
@@ -107,12 +140,18 @@ function ResourcesPage() {
               <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
                 {s("tools_eyebrow", "Free tools")}
               </p>
-              <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl" data-reveal>
+              <h2
+                className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl"
+                data-reveal
+              >
                 {s("tools_heading", "Run by us, for you.")}
               </h2>
             </div>
             <p className="max-w-sm text-sm text-muted-foreground" data-reveal>
-              {s("tools_note", "These run as part of our free audit — a senior runs the tool on your site and walks you through the results. No self-serve dashboard, no upsell script.")}
+              {s(
+                "tools_note",
+                "These run as part of our free audit — a senior runs the tool on your site and walks you through the results. No self-serve dashboard, no upsell script.",
+              )}
             </p>
           </div>
           <div className="border-t border-black/10" data-cards>
@@ -152,9 +191,14 @@ function ResourcesPage() {
             />
             <div className="absolute inset-0 bg-linear-to-t from-background/90 via-background/30 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">
-              <p className="text-xs uppercase tracking-[0.28em] text-gold">{s("prov_eyebrow", "Since 2014")}</p>
+              <p className="text-xs uppercase tracking-[0.28em] text-gold">
+                {s("prov_eyebrow", "Since 2014")}
+              </p>
               <p className="mt-3 max-w-xl font-display text-2xl font-semibold leading-snug md:text-4xl">
-                {s("prov_text", "Everything here comes from paid client work — published once it's proven.")}
+                {s(
+                  "prov_text",
+                  "Everything here comes from paid client work — published once it's proven.",
+                )}
               </p>
             </div>
           </div>
@@ -168,11 +212,18 @@ function ResourcesPage() {
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
               {s("learning_eyebrow", "Learning")}
             </p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl" data-reveal>
+            <h2
+              className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl"
+              data-reveal
+            >
               {s("learning_heading", "Courses & guides.")}
             </h2>
           </div>
-          <div className="grid gap-x-12 gap-y-10 md:grid-cols-2" data-cards data-cards-stagger="0.08">
+          <div
+            className="grid gap-x-12 gap-y-10 md:grid-cols-2"
+            data-cards
+            data-cards-stagger="0.08"
+          >
             {learningRows.map((it) => (
               <article key={it.title} className="border-t border-black/10 pt-6" data-card>
                 <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold">
@@ -208,7 +259,10 @@ function ResourcesPage() {
             <p className="text-xs uppercase tracking-[0.28em] text-gold" data-reveal>
               {s("writing_eyebrow", "Blog & news")}
             </p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl" data-reveal>
+            <h2
+              className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl"
+              data-reveal
+            >
               {s("writing_heading", "Writing from the studio.")}
             </h2>
           </div>
@@ -239,6 +293,32 @@ function ResourcesPage() {
 
 function NewsletterBand() {
   const [subscribed, setSubscribed] = useState(false);
+  const [email, setEmail] = useState("");
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  /**
+   * The address used to go nowhere: the input was uncontrolled, nothing was
+   * read from it, and submit set a boolean. Every visitor who subscribed was
+   * told they were on a list that never received them.
+   *
+   * There is no newsletter endpoint on the CMS and adding one means editing a
+   * mu-plugin, so this reuses the contact endpoint — the one storage path that
+   * exists and works. `source` is what lets the inbox tell a subscriber from a
+   * project enquiry.
+   */
+  async function handleSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+    if (sending) return;
+    setSending(true);
+    setFailed(false);
+    const ok = await cmsSubmitForm(0, { email, source: "Newsletter" });
+    setSending(false);
+    // Unlike the contact form, a failure here is not papered over. Claiming a
+    // subscription that was not stored is the bug this replaces.
+    if (ok) setSubscribed(true);
+    else setFailed(true);
+  }
 
   return (
     <section className="container-page py-24" data-reveal>
@@ -256,7 +336,8 @@ function NewsletterBand() {
               New guides land here <span className="text-gold">first</span>.
             </h2>
             <p className="mt-5 max-w-md text-lg text-muted-foreground">
-              One email a month: what we shipped, what we learned, and the next free guide. No drip sequence, unsubscribe any time.
+              One email a month: what we shipped, what we learned, and the next free guide. No drip
+              sequence, unsubscribe any time.
             </p>
           </div>
           <div>
@@ -269,18 +350,16 @@ function NewsletterBand() {
                 </p>
               </div>
             ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setSubscribed(true);
-                }}
-                className="glass rounded-2xl p-8"
-              >
+              <form onSubmit={handleSubscribe} className="glass rounded-2xl p-8">
                 <label className="block">
-                  <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Work email</span>
+                  <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    Work email
+                  </span>
                   <input
                     required
                     type="email"
+                    value={email}
+                    onChange={(ev) => setEmail(ev.target.value)}
                     placeholder="you@company.com"
                     className="mt-2 w-full rounded-lg border border-border bg-background/60 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:outline-none focus:border-lime/50 focus:ring-1 focus:ring-lime/30"
                   />
@@ -288,11 +367,17 @@ function NewsletterBand() {
                 <button
                   type="submit"
                   data-magnetic
-                  className="group mt-5 inline-flex items-center gap-2 rounded-full btn-navy shine px-6 py-3 text-sm font-semibold hover:border-lime/40"
+                  disabled={sending}
+                  className="group mt-5 inline-flex items-center gap-2 rounded-full btn-navy shine px-6 py-3 text-sm font-semibold hover:border-lime/40 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Subscribe
+                  {sending ? "Subscribing…" : "Subscribe"}
                   <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </button>
+                {failed && (
+                  <p role="alert" className="mt-4 text-xs text-destructive">
+                    That didn&apos;t save. Check your connection and try again.
+                  </p>
+                )}
                 <p className="mt-4 text-xs text-muted-foreground">
                   Read by 12,000+ founders and product leaders.
                 </p>
